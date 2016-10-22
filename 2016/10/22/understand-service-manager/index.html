@@ -6,34 +6,40 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <title>Android中Service Manager介绍 | Programmer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1.结构体binder_node
-struct binder_node {
-    int debug_id; //标识一个Binder实体对象，用于调试。
-    struct binder_work work; //描述所要处理的工作项。
-    union {
-        /* 链在宿主进程的红黑树nodes上，结构体binder_proc的nodes成员用于
-           维护">
+  <meta name="description" content="Service Manager的启动过程：#define BINDER_SERVICE_MANAGER ((void*) 0)
+int main(int argc, char **argv)
+{
+struct binder_state *bs;
+void *svcmgr = BINDER_SERVICE_MANAGER;
+
+bs = binder_open(128*1024);
+
+if (bind">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android中Service Manager介绍">
 <meta property="og:url" content="http://yoursite.com/2016/10/22/understand-service-manager/index.html">
 <meta property="og:site_name" content="Programmer">
-<meta property="og:description" content="1.结构体binder_node
-struct binder_node {
-    int debug_id; //标识一个Binder实体对象，用于调试。
-    struct binder_work work; //描述所要处理的工作项。
-    union {
-        /* 链在宿主进程的红黑树nodes上，结构体binder_proc的nodes成员用于
-           维护">
-<meta property="og:updated_time" content="2016-10-22T02:47:00.650Z">
+<meta property="og:description" content="Service Manager的启动过程：#define BINDER_SERVICE_MANAGER ((void*) 0)
+int main(int argc, char **argv)
+{
+struct binder_state *bs;
+void *svcmgr = BINDER_SERVICE_MANAGER;
+
+bs = binder_open(128*1024);
+
+if (bind">
+<meta property="og:updated_time" content="2016-10-22T02:57:43.765Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android中Service Manager介绍">
-<meta name="twitter:description" content="1.结构体binder_node
-struct binder_node {
-    int debug_id; //标识一个Binder实体对象，用于调试。
-    struct binder_work work; //描述所要处理的工作项。
-    union {
-        /* 链在宿主进程的红黑树nodes上，结构体binder_proc的nodes成员用于
-           维护">
+<meta name="twitter:description" content="Service Manager的启动过程：#define BINDER_SERVICE_MANAGER ((void*) 0)
+int main(int argc, char **argv)
+{
+struct binder_state *bs;
+void *svcmgr = BINDER_SERVICE_MANAGER;
+
+bs = binder_open(128*1024);
+
+if (bind">
   
     <link rel="alternative" href="/atom.xml" title="Programmer" type="application/atom+xml">
   
@@ -175,59 +181,24 @@ struct binder_node {
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.结构体binder_node</p>
-<pre><code>struct binder_node {
-    int debug_id; //标识一个Binder实体对象，用于调试。
-    struct binder_work work; //描述所要处理的工作项。
-    union {
-        /* 链在宿主进程的红黑树nodes上，结构体binder_proc的nodes成员用于
-           维护该进程的所有的Binder实体对象。 */
-        struct rb_node rb_node; 
-        struct hlist_node dead_node;
-    };
-    struct binder_proc *proc; //该Binder实体对象的宿主进程。
-    struct hlist_head refs;
-    int internal_strong_refs;
-    int local_weak_refs;
-    int local_strong_refs;
-
-    //指向用户空间的某一Service组件内部的引用计数对象(weakref_impl)的地址。
-    binder_uintptr_t ptr; 
-
-    //指向用户空间的某一Service组件的地址。
-    binder_uintptr_t cookie;
-
-    unsigned has_strong_ref:1;
-    unsigned pending_strong_ref:1;
-    unsigned has_weak_ref:1;
-    unsigned pending_weak_ref:1;
-
-    //描述该Binder实体对象是否正在处理一个异步事务。
-    unsigned has_async_transaction:1;
-    unsigned accept_fds:1;
-    unsigned min_priority:8;
-    struct list_head async_todo;
-};
-</code></pre><p>#Service Manager的启动过程：</p>
-<pre><code>#define BINDER_SERVICE_MANAGER ((void*) 0)
+        <h1 id="Service-Manager的启动过程："><a href="#Service-Manager的启动过程：" class="headerlink" title="Service Manager的启动过程："></a>Service Manager的启动过程：</h1><pre><code>#define BINDER_SERVICE_MANAGER ((void*) 0)
 int main(int argc, char **argv)
 {
-    struct binder_state *bs;
-    void *svcmgr = BINDER_SERVICE_MANAGER;
+struct binder_state *bs;
+void *svcmgr = BINDER_SERVICE_MANAGER;
 
-    bs = binder_open(128*1024);
+bs = binder_open(128*1024);
 
-    if (binder_become_context_manager(bs)) {
-        ALOGE(&quot;cannot become context manager (%s)\n&quot;, strerror(errno));
-        return -1;
-    }
+if (binder_become_context_manager(bs)) {
+    ALOGE(&quot;cannot become context manager (%s)\n&quot;, strerror(errno));
+    return -1;
+}
 
     svcmgr_handle = svcmgr;
     binder_loop(bs, svcmgr_handler);
     return 0;
 }
-</code></pre><p>###1. 打开和映射Binder设备文件</p>
-<pre><code>//描述映射状态
+</code></pre><h3 id="1-打开和映射Binder设备文件"><a href="#1-打开和映射Binder设备文件" class="headerlink" title="1. 打开和映射Binder设备文件"></a>1. 打开和映射Binder设备文件</h3><pre><code>//描述映射状态
 struct binder_state
 {
     int fd;
@@ -274,8 +245,7 @@ fail_open:
     free(bs);
     return 0;
 }
-</code></pre><p>###2. 注册为Binder上下文管理者</p>
-<pre><code>int binder_become_context_manager(struct binder_state *bs)
+</code></pre><h3 id="2-注册为Binder上下文管理者"><a href="#2-注册为Binder上下文管理者" class="headerlink" title="2. 注册为Binder上下文管理者"></a>2. 注册为Binder上下文管理者</h3><pre><code>int binder_become_context_manager(struct binder_state *bs)
 {
     return ioctl(bs-&gt;fd, BINDER_SET_CONTEXT_MGR, 0);
 }
@@ -456,8 +426,40 @@ out:
              (u64)node-&gt;ptr, (u64)node-&gt;cookie);
     return node;
 }
-</code></pre><p>###3. 循环等待Client进程的请求</p>
+</code></pre><h3 id="3-循环等待Client进程的请求"><a href="#3-循环等待Client进程的请求" class="headerlink" title="3. 循环等待Client进程的请求"></a>3. 循环等待Client进程的请求</h3><p>1.结构体binder_node</p>
+<pre><code>struct binder_node {
+    int debug_id; //标识一个Binder实体对象，用于调试。
+    struct binder_work work; //描述所要处理的工作项。
+    union {
+        /* 链在宿主进程的红黑树nodes上，结构体binder_proc的nodes成员用于
+           维护该进程的所有的Binder实体对象。 */
+        struct rb_node rb_node; 
+        struct hlist_node dead_node;
+    };
+    struct binder_proc *proc; //该Binder实体对象的宿主进程。
+    struct hlist_head refs;
+    int internal_strong_refs;
+    int local_weak_refs;
+    int local_strong_refs;
 
+    //指向用户空间的某一Service组件内部的引用计数对象(weakref_impl)的地址。
+    binder_uintptr_t ptr; 
+
+    //指向用户空间的某一Service组件的地址。
+    binder_uintptr_t cookie;
+
+    unsigned has_strong_ref:1;
+    unsigned pending_strong_ref:1;
+    unsigned has_weak_ref:1;
+    unsigned pending_weak_ref:1;
+
+    //描述该Binder实体对象是否正在处理一个异步事务。
+    unsigned has_async_transaction:1;
+    unsigned accept_fds:1;
+    unsigned min_priority:8;
+    struct list_head async_todo;
+};
+</code></pre>
       
     </div>
     <div class="article-info article-info-index">
