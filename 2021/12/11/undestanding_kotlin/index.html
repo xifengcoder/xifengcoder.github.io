@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=-apple-system:300,300italic,400,400italic,700,700italic%7CBlinkMacSystemFont:300,300italic,400,400italic,700,700italic%7C"Apple+Color+Emoji":300,300italic,400,400italic,700,700italic%7C"Segoe+UI+Emoji":300,300italic,400,400italic,700,700italic%7C"Segoe+UI+Symbol":300,300italic,400,400italic,700,700italic%7C"Segoe+UI":300,300italic,400,400italic,700,700italic%7C"PingFang+SC":300,300italic,400,400italic,700,700italic%7C"Hiragino+Sans+GB":300,300italic,400,400italic,700,700italic%7C"Microsoft+YaHei":300,300italic,400,400italic,700,700italic%7C"Helvetica+Neue":300,300italic,400,400italic,700,700italic%7CHelvetica:300,300italic,400,400italic,700,700italic%7CArial:300,300italic,400,400italic,700,700italic%7Csans-serif:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xifengcoder.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":false,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<meta name="description" content="Kotlin协程实践">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解Kotlin协程">
+<meta property="og:url" content="https://xifengcoder.github.io/2021/12/11/undestanding_kotlin/index.html">
+<meta property="og:site_name" content="西风飞扬">
+<meta property="og:description" content="Kotlin协程实践">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xifengcoder.github.io/images/coroutine_state.JPG">
+<meta property="og:image" content="https://xifengcoder.github.io/images/coroutine_context.JPG">
+<meta property="og:image" content="https://xifengcoder.github.io/images/coroutine_context_default.JPG">
+<meta property="og:image" content="https://xifengcoder.github.io/images/coroutine_exception_handler.JPG">
+<meta property="og:image" content="https://xifengcoder.github.io/images/coroutine_exception.gif">
+<meta property="article:published_time" content="2021-12-11T05:36:51.000Z">
+<meta property="article:modified_time" content="2022-03-11T13:19:57.322Z">
+<meta property="article:author" content="xifengcoder">
+<meta property="article:tag" content="Kotlin">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xifengcoder.github.io/images/coroutine_state.JPG">
+
+
+<link rel="canonical" href="https://xifengcoder.github.io/2021/12/11/undestanding_kotlin/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xifengcoder.github.io/2021/12/11/undestanding_kotlin/","path":"2021/12/11/undestanding_kotlin/","title":"深入理解Kotlin协程"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>深入理解Kotlin协程 | 西风飞扬</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">西风飞扬</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="th fa-fw"></i>分类</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-suspend%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-text">1. suspend关键字</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Coroutine%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-text">2. Coroutine的生命周期</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-CoroutineContext"><span class="nav-text">3. CoroutineContext</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#3-1-Job"><span class="nav-text">3.1 Job</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-Dispatchers"><span class="nav-text">3.2 Dispatchers</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-3-CoroutineExceptionHandler"><span class="nav-text">3.3 CoroutineExceptionHandler</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#3-3-1-%E5%9C%A8%E6%9E%84%E5%BB%BACoroutineScope%E6%97%B6%EF%BC%8C%E4%BC%A0%E5%85%A5handler%E5%8F%AF%E4%BB%A5%E6%8D%95%E6%8D%89%E5%88%B0%E5%BC%82%E5%B8%B8"><span class="nav-text">3.3.1 在构建CoroutineScope时，传入handler可以捕捉到异常</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#3-3-2-%E5%9C%A8scope%E7%9A%84launch%E5%87%BD%E6%95%B0%E4%B8%AD%E5%AE%89%E8%A3%85handler%EF%BC%8C%E5%8F%AF%E4%BB%A5%E6%8D%95%E6%8D%89%E5%88%B0%E5%BC%82%E5%B8%B8"><span class="nav-text">3.3.2 在scope的launch函数中安装handler，可以捕捉到异常</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#3-3-3-handler%E8%A2%AB%E5%AE%89%E8%A3%85%E5%88%B0%E5%86%85%E9%83%A8%E5%8D%8F%E7%A8%8B%E6%97%B6%EF%BC%8C%E6%97%A0%E6%B3%95%E6%8D%95%E8%8E%B7%E5%88%B0%E5%BC%82%E5%B8%B8"><span class="nav-text">3.3.3 handler被安装到内部协程时，无法捕获到异常</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#coroutineScope-vs-supervisorScope"><span class="nav-text">coroutineScope vs supervisorScope</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-CoroutineScope"><span class="nav-text">4. CoroutineScope</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-%E5%8D%8F%E7%A8%8B%E7%9A%84%E5%90%AF%E5%8A%A8"><span class="nav-text">5. 协程的启动</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#5-1-launch"><span class="nav-text">5.1 launch</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-2-async"><span class="nav-text">5.2 async</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-3-runBlocking"><span class="nav-text">5.3 runBlocking</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-4-coroutineScope"><span class="nav-text">5.4 coroutineScope</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-5-supervisorScope"><span class="nav-text">5.5 supervisorScope</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2withContext"><span class="nav-text">6. 上下文切换withContext</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-Kotlin%E5%8D%8F%E7%A8%8B%E4%B8%AD%E7%9A%84%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86"><span class="nav-text">7. Kotlin协程中的异常处理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#7-1-launch%E6%88%96async%E5%AF%B9%E5%BC%82%E5%B8%B8%E7%9A%84%E9%BB%98%E8%AE%A4%E5%A4%84%E7%90%86"><span class="nav-text">7.1 launch或async对异常的默认处理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-2-%E6%9F%90%E4%B8%AA%E5%8D%8F%E7%A8%8B%E7%AA%81%E7%84%B6%E8%BF%90%E8%A1%8C%E5%A4%B1%E8%B4%A5%E6%80%8E%E4%B9%88%E5%8A%9E-%E2%80%94Job-VS-SupervisorJob"><span class="nav-text">7.2 某个协程突然运行失败怎么办? —Job VS SupervisorJob</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-3-%E5%A4%9A%E4%B8%AA%E5%AD%90%E4%BB%BB%E5%8A%A1%E5%90%8C%E6%97%B6%E6%8A%9B%E5%87%BA%E5%BC%82%E5%B8%B8%E7%9A%84%E5%A4%84%E7%90%86"><span class="nav-text">7.3 多个子任务同时抛出异常的处理</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-Coroutine%E7%9A%84%E5%8F%96%E6%B6%88"><span class="nav-text">8. Coroutine的取消</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#8-1-join"><span class="nav-text">8.1 join()</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#8-2-wait"><span class="nav-text">8.2 wait()</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">xifengcoder</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/xifengcoder" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;xifengcoder" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/xifengcoder" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xifengcoder.github.io/2021/12/11/undestanding_kotlin/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="xifengcoder">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="西风飞扬">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          深入理解Kotlin协程
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-12-11 13:36:51" itemprop="dateCreated datePublished" datetime="2021-12-11T13:36:51+08:00">2021-12-11</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2022-03-11 21:19:57" itemprop="dateModified" datetime="2022-03-11T21:19:57+08:00">2022-03-11</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Kotlin/" itemprop="url" rel="index"><span itemprop="name">Kotlin</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+		
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h4 id="1-suspend关键字"><a href="#1-suspend关键字" class="headerlink" title="1. suspend关键字"></a>1. suspend关键字</h4><p>suspend关键字用在function前面，表示一个function在执行期间可以被paused或resumed。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">sample</span><span class="params">()</span></span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意：一个suspend函数只能在coroutine或者另一个suspend函数中被调用。</p>
+<h4 id="2-Coroutine的生命周期"><a href="#2-Coroutine的生命周期" class="headerlink" title="2. Coroutine的生命周期"></a>2. Coroutine的生命周期</h4><p><img src="/images/coroutine_state.JPG" alt="Coroutine的状态"></p>
+<h4 id="3-CoroutineContext"><a href="#3-CoroutineContext" class="headerlink" title="3. CoroutineContext"></a>3. CoroutineContext</h4><p>CoroutineContext是CoroutineScope的上下文（context）。CoroutineContext是封裝在CoroutineScope中的一个属性，在实现CoroutineBuilders时会用到，CoroutineBuilders是定义在CoroutineScope上的扩展。通常情况下，不推荐直接使用coroutineContext，除了访问Job实例进行一些高级用法之外。</p>
+<p>一个CoroutineContext通过使用如下的四种元素来定义coroutine的行为：</p>
+<ul>
+<li>Job：控制coroutine的生命周期；</li>
+<li>CoroutineDispatcher：将任务分发到相应的线程上，默认值为Dispatchers.Default；</li>
+<li>CoroutineName：coroutine的名称，调试时很有用，默认值为”coroutine”；</li>
+<li>CoroutineExceptionHandler：处理未捕获的异常 ，默认值为None。</li>
+</ul>
+<p>每个元素的默认值如下：</p>
+<p><img src="/images/coroutine_context.JPG" alt="CoroutineContext的元素"></p>
+<h5 id="3-1-Job"><a href="#3-1-Job" class="headerlink" title="3.1 Job"></a>3.1 Job</h5><p>Job是coroutine的句柄（handle），每一个使用launch或者async创建的coroutine会返回一个Job实例，用来唯一标识该coroutine、并且管理其生命周期。</p>
+<h5 id="3-2-Dispatchers"><a href="#3-2-Dispatchers" class="headerlink" title="3.2 Dispatchers"></a>3.2 Dispatchers</h5><p>用于指定操作是在哪个线程上执行。Android系统有是三个Dispatchers。</p>
+<ul>
+<li>Dispatchers.Main</li>
+<li>Dispatchers.Default</li>
+<li>Dispatchers.IO</li>
+</ul>
+<p>通过使用withContext来在不同的Dispatchers中切换。</p>
+<p>CoroutineContext的获取：</p>
+<p><img src="/images/coroutine_context_default.JPG" alt="CoroutineContext获取"></p>
+<h5 id="3-3-CoroutineExceptionHandler"><a href="#3-3-CoroutineExceptionHandler" class="headerlink" title="3.3 CoroutineExceptionHandler"></a>3.3 CoroutineExceptionHandler</h5><p><img src="/images/coroutine_exception_handler.JPG" alt="Coroutine Exception Handler"></p>
+<h6 id="3-3-1-在构建CoroutineScope时，传入handler可以捕捉到异常"><a href="#3-3-1-在构建CoroutineScope时，传入handler可以捕捉到异常" class="headerlink" title="3.3.1 在构建CoroutineScope时，传入handler可以捕捉到异常"></a>3.3.1 在构建CoroutineScope时，传入handler可以捕捉到异常</h6><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> handler = CoroutineExceptionHandler &#123; _, exception -&gt;</span><br><span class="line">    println(<span class="string">&quot;Caught <span class="variable">$exception</span>&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">val</span> scope = CoroutineScope(Job() + handler)</span><br><span class="line"><span class="keyword">val</span> job = scope.launch(handler) &#123;</span><br><span class="line">    launch &#123;</span><br><span class="line">        <span class="keyword">throw</span> Exception(<span class="string">&quot;Failed coroutine&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">job.join()</span><br></pre></td></tr></table></figure>
+
+<h6 id="3-3-2-在scope的launch函数中安装handler，可以捕捉到异常"><a href="#3-3-2-在scope的launch函数中安装handler，可以捕捉到异常" class="headerlink" title="3.3.2 在scope的launch函数中安装handler，可以捕捉到异常"></a>3.3.2 在scope的launch函数中安装handler，可以捕捉到异常</h6><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">val</span> handler = CoroutineExceptionHandler &#123; _, exception -&gt;</span><br><span class="line">    println(<span class="string">&quot;Caught <span class="variable">$exception</span>&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> scope = CoroutineScope(Job())</span><br><span class="line"><span class="keyword">val</span> job = scope.launch(handler) &#123;</span><br><span class="line">    launch &#123;</span><br><span class="line">        <span class="keyword">throw</span> Exception(<span class="string">&quot;Failed coroutine&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">job.join()</span><br></pre></td></tr></table></figure>
+
+<h6 id="3-3-3-handler被安装到内部协程时，无法捕获到异常"><a href="#3-3-3-handler被安装到内部协程时，无法捕获到异常" class="headerlink" title="3.3.3 handler被安装到内部协程时，无法捕获到异常"></a>3.3.3 handler被安装到内部协程时，无法捕获到异常</h6><p> 异常不会被捕获的原因是因为 handler 没有被安装给正确的 CoroutineContext。内部协程会在异常出现时传播异常并传递给它的父级，由于父级并不知道 handler 的存在，异常就没有被捕获。 </p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> handler = CoroutineExceptionHandler &#123; _, exception -&gt;</span><br><span class="line">    println(<span class="string">&quot;Caught <span class="variable">$exception</span>&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> scope = CoroutineScope(Job())</span><br><span class="line"><span class="keyword">val</span> job = scope.launch &#123;</span><br><span class="line">    <span class="comment">//WARN: handler被安装到内部协程时，无法捕获异常</span></span><br><span class="line">    launch(handler) &#123;</span><br><span class="line">        <span class="keyword">throw</span> Exception(<span class="string">&quot;Failed coroutine&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">job.join()</span><br></pre></td></tr></table></figure>
+
+<h5 id="coroutineScope-vs-supervisorScope"><a href="#coroutineScope-vs-supervisorScope" class="headerlink" title="coroutineScope vs supervisorScope"></a>coroutineScope vs supervisorScope</h5><p>（1）使用coroutineScope</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    runBlocking &#123;</span><br><span class="line">        <span class="keyword">val</span> handler = CoroutineExceptionHandler &#123; _, exception -&gt;</span><br><span class="line">            println(<span class="string">&quot;Caught <span class="variable">$exception</span>&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> scope = coroutineScope &#123;</span><br><span class="line">            launch(handler) &#123;</span><br><span class="line">                <span class="keyword">throw</span> Exception(<span class="string">&quot;Failed coroutine&quot;</span>)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        scope.join();</span><br><span class="line">        println(<span class="string">&quot;Done!&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//output:</span></span><br><span class="line">Exception <span class="keyword">in</span> thread <span class="string">&quot;main&quot;</span> java.lang.Exception: Failed coroutine</span><br><span class="line">	at com.yxf.kotlin.coroutines.exception_handling.CoroutineExceptionHandlerKt$main$<span class="number">1</span>$scope$<span class="number">1</span>$<span class="number">1.</span>invokeSuspend(CoroutineExceptionHandler.kt:<span class="number">15</span>)</span><br><span class="line">	at kotlin.coroutines.jvm.<span class="keyword">internal</span>.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:<span class="number">33</span>)</span><br><span class="line">	at kotlinx.coroutines.DispatchedTask.run(Dispatched.kt:<span class="number">233</span>)</span><br><span class="line">	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.kt:<span class="number">116</span>)</span><br><span class="line">	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:<span class="number">76</span>)</span><br><span class="line">	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:<span class="number">53</span>)</span><br><span class="line">	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source)</span><br><span class="line">	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:<span class="number">35</span>)</span><br><span class="line">	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source)</span><br><span class="line">	at com.yxf.kotlin.coroutines.exception_handling.CoroutineExceptionHandlerKt.main(CoroutineExceptionHandler.kt:<span class="number">8</span>)</span><br><span class="line">	at com.yxf.kotlin.coroutines.exception_handling.CoroutineExceptionHandlerKt.main(CoroutineExceptionHandler.kt)</span><br><span class="line"></span><br><span class="line">Process finished with exit code <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>（2）使用supervisorScope</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    runBlocking &#123;</span><br><span class="line">        <span class="keyword">val</span> handler = CoroutineExceptionHandler &#123; _, exception -&gt;</span><br><span class="line">            println(<span class="string">&quot;Caught <span class="variable">$exception</span>&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> scope = supervisorScope &#123;</span><br><span class="line">            launch(handler) &#123;</span><br><span class="line">                <span class="keyword">throw</span> Exception(<span class="string">&quot;Failed coroutine&quot;</span>)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        scope.join();</span><br><span class="line">        println(<span class="string">&quot;Done!&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//output:</span></span><br><span class="line">Caught java.lang.Exception: Failed coroutine</span><br><span class="line">Done!</span><br><span class="line"></span><br><span class="line">Process finished with exit code <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="4-CoroutineScope"><a href="#4-CoroutineScope" class="headerlink" title="4. CoroutineScope"></a>4. CoroutineScope</h4><p>CoroutineScope会追踪每一个您通过launch或async创建的协程，任何时候都可以通过scope.cancel()来取消正在运行的协程。</p>
+<ul>
+<li>管理Coroutines的生命周期</li>
+</ul>
+<p>​    一个CoroutineScope定义了在其上启动的Coroutines的生命周期。CoroutineScope在一旦创建后就会启动，在它被取消时、或者它关联的Job或 SupervisorJob完成时结束。</p>
+<ul>
+<li>CoroutineScope的创建</li>
+</ul>
+<p>如果传入的context参数不包含Job元素，则会使用默认的Job( )，否则会使用传入的Job对象。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Suppress(<span class="meta-string">&quot;FunctionName&quot;</span>)</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">fun</span> <span class="title">CoroutineScope</span><span class="params">(context: <span class="type">CoroutineContext</span>)</span></span>: CoroutineScope =</span><br><span class="line">    ContextScope(<span class="keyword">if</span> (context[Job] != <span class="literal">null</span>) context <span class="keyword">else</span> context + Job())</span><br></pre></td></tr></table></figure>
+<p>举例：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> scope1 = CoroutineScope(Dispatchers.Main + SupervisorJob())</span><br><span class="line"><span class="keyword">val</span> scope2 = MainScope();</span><br></pre></td></tr></table></figure>
+<p>另外一种用法：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SomethingWithALifecycle</span> : <span class="type">CoroutineScope &#123;</span></span></span><br><span class="line">    <span class="keyword">override</span> <span class="keyword">val</span> coroutineContext = Dispatchers.IO + SupervisorJob()</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//或者</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SomethingWithALifecycle</span> </span>&#123;</span><br><span class="line">    <span class="keyword">val</span> scope = CoroutineScope(Dispatchers.IO + SupervisorJob())</span><br><span class="line">    ...</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">destroy</span><span class="params">()</span></span> &#123;</span><br><span class="line">        scope.cancel()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>GlobalScope: 没有绑定任何Job的Scope。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">object</span> GlobalScope : CoroutineScope &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Returns [EmptyCoroutineContext].</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">override</span> <span class="keyword">val</span> coroutineContext: CoroutineContext</span><br><span class="line">        <span class="keyword">get</span>() = EmptyCoroutineContext</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="5-协程的启动"><a href="#5-协程的启动" class="headerlink" title="5. 协程的启动"></a>5. 协程的启动</h4><p>启动一个新的协程, 常用的主要有以下几种方式，它们被称为<code>coroutine builders</code>。</p>
+<h5 id="5-1-launch"><a href="#5-1-launch" class="headerlink" title="5.1 launch"></a>5.1 launch</h5><p>launch为定义在CoroutineScope上的扩展函数，接受一个CoroutineContext参数（默认为EmptyCoroutineContext）、一个CoroutineStart参数（默认为CoroutineStart.DEFAULT），以及一个定义在CoroutineScope上的suspend函数，类型为suspend CoroutineScope.() -&gt; Unit，返回类型为Job。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">fun</span> CoroutineScope.<span class="title">launch</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    context: <span class="type">CoroutineContext</span> = EmptyCoroutineContext,</span></span></span><br><span class="line"><span class="params"><span class="function">    start: <span class="type">CoroutineStart</span> = CoroutineStart.DEFAULT,</span></span></span><br><span class="line"><span class="params"><span class="function">    block: <span class="type">suspend</span> <span class="type">CoroutineScope</span>.() -&gt; <span class="type">Unit</span></span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span>: Job &#123;</span><br><span class="line">    <span class="keyword">val</span> newContext = newCoroutineContext(context)</span><br><span class="line">    <span class="keyword">val</span> coroutine = <span class="keyword">if</span> (start.isLazy)</span><br><span class="line">        LazyStandaloneCoroutine(newContext, block) <span class="keyword">else</span></span><br><span class="line">        StandaloneCoroutine(newContext, active = <span class="literal">true</span>)</span><br><span class="line">    coroutine.start(start, coroutine, block)</span><br><span class="line">    <span class="keyword">return</span> coroutine</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="5-2-async"><a href="#5-2-async" class="headerlink" title="5.2 async"></a>5.2 async</h5><p>async为定义在CoroutineScope上的扩展函数，接受一个CoroutineContext参数（默认为EmptyCoroutineContext）、一个CoroutineStart参数（默认为CoroutineStart.DEFAULT），以及一个定义在CoroutineScope上的suspend函数，类型为suspend CoroutineScope.() -&gt; Unit，返回类型为Deferred<T>。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">fun</span> <span class="type">&lt;T&gt;</span> CoroutineScope.<span class="title">async</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    context: <span class="type">CoroutineContext</span> = EmptyCoroutineContext,</span></span></span><br><span class="line"><span class="params"><span class="function">    start: <span class="type">CoroutineStart</span> = CoroutineStart.DEFAULT,</span></span></span><br><span class="line"><span class="params"><span class="function">    block: <span class="type">suspend</span> <span class="type">CoroutineScope</span>.() -&gt; <span class="type">T</span></span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span>: Deferred&lt;T&gt; &#123;</span><br><span class="line">    <span class="keyword">val</span> newContext = newCoroutineContext(context)</span><br><span class="line">    <span class="keyword">val</span> coroutine = <span class="keyword">if</span> (start.isLazy)</span><br><span class="line">        LazyDeferredCoroutine(newContext, block) <span class="keyword">else</span></span><br><span class="line">        DeferredCoroutine&lt;T&gt;(newContext, active = <span class="literal">true</span>)</span><br><span class="line">    coroutine.start(start, coroutine, block)</span><br><span class="line">    <span class="keyword">return</span> coroutine</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="5-3-runBlocking"><a href="#5-3-runBlocking" class="headerlink" title="5.3 runBlocking"></a>5.3 runBlocking</h5><p>runBlocking用来连接non-coroutine世界的代码和协程代码的桥梁。<br>runBlocking可以建立一个阻塞当前线程的协程. 所以它主要被用来在main函数中或者测试中使用, 作为连接函数。</p>
+<h5 id="5-4-coroutineScope"><a href="#5-4-coroutineScope" class="headerlink" title="5.4 coroutineScope"></a>5.4 coroutineScope</h5><h5 id="5-5-supervisorScope"><a href="#5-5-supervisorScope" class="headerlink" title="5.5 supervisorScope"></a>5.5 supervisorScope</h5><h4 id="6-上下文切换withContext"><a href="#6-上下文切换withContext" class="headerlink" title="6. 上下文切换withContext"></a>6. 上下文切换withContext</h4><p>withContext是一个suspend函数，它会等待代码块中所有的corotines都完成以后再结束。如果其中任一coroutine失败，则整个代码块会抛出异常、并会自动取消代码块中其他的coroutines。但是withContext外的coroutines不受影响。</p>
+<h4 id="7-Kotlin协程中的异常处理"><a href="#7-Kotlin协程中的异常处理" class="headerlink" title="7. Kotlin协程中的异常处理"></a>7. Kotlin协程中的异常处理</h4><h5 id="7-1-launch或async对异常的默认处理"><a href="#7-1-launch或async对异常的默认处理" class="headerlink" title="7.1 launch或async对异常的默认处理"></a>7.1 launch或async对异常的默认处理</h5><p>Coroutine Builders处理异常一般分两种情况：</p>
+<ol>
+<li>自动传播异常（通过launch启动时）；</li>
+<li>将异常抛给用户（通过async启动时）：依赖用户去捕获该异常，否则程序会崩溃；</li>
+</ol>
+<p>举例：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.yxf.kotlin.coroutines.exception_handling</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> kotlinx.coroutines.GlobalScope</span><br><span class="line"><span class="keyword">import</span> kotlinx.coroutines.async</span><br><span class="line"><span class="keyword">import</span> kotlinx.coroutines.launch</span><br><span class="line"><span class="keyword">import</span> kotlinx.coroutines.runBlocking</span><br><span class="line"><span class="keyword">import</span> org.apache.logging.log4j.LogManager</span><br><span class="line"><span class="keyword">import</span> org.apache.logging.log4j.Logger</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> logger: Logger = LogManager.getLogger()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> = runBlocking &#123;</span><br><span class="line">    <span class="keyword">val</span> asyncJob = GlobalScope.launch &#123;</span><br><span class="line">        logger.info(<span class="string">&quot;1. Exception created via launch coroutine&quot;</span>)</span><br><span class="line">        <span class="comment">//异常信息由Thread.defaultUncaughtExceptionHandler打印在控制台</span></span><br><span class="line">        <span class="keyword">throw</span> IndexOutOfBoundsException()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    asyncJob.join()</span><br><span class="line">    logger.info(<span class="string">&quot;2. Joined failed job&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> deferred = GlobalScope.async &#123;</span><br><span class="line">        logger.info(<span class="string">&quot;Exception created via async coroutine&quot;</span>)</span><br><span class="line">        <span class="comment">//不会有异常信息打印，依赖用户调用await()</span></span><br><span class="line">        <span class="keyword">throw</span> ArithmeticException()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        deferred.await()</span><br><span class="line">        logger.info(<span class="string">&quot;4. Unreachable, this statement is never executed&quot;</span>)</span><br><span class="line">    &#125; <span class="keyword">catch</span> (e: Exception) &#123;</span><br><span class="line">        <span class="comment">//捕捉async()抛出的异常</span></span><br><span class="line">        logger.error(<span class="string">&quot;5. Caught <span class="subst">$&#123;e.javaClass.simpleName&#125;</span>&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//output:</span></span><br><span class="line"><span class="number">2022</span>-<span class="number">01</span>-<span class="number">30</span> <span class="number">20</span>:<span class="number">40</span>:<span class="number">57.760</span>[DefaultDispatcher-worker-<span class="number">2</span>] INFO Main.kt[<span class="number">14</span>]: <span class="number">1.</span> Exception created via launch coroutine</span><br><span class="line">Exception <span class="keyword">in</span> thread <span class="string">&quot;DefaultDispatcher-worker-2&quot;</span> java.lang.IndexOutOfBoundsException</span><br><span class="line">	at com.yxf.kotlin.coroutines.exception_handling.MainKt$main$<span class="number">1</span>$asyncJob$<span class="number">1.</span>invokeSuspend(Main.kt:<span class="number">17</span>)</span><br><span class="line">	at kotlin.coroutines.jvm.<span class="keyword">internal</span>.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:<span class="number">33</span>)</span><br><span class="line">	at kotlinx.coroutines.DispatchedTask.run(Dispatched.kt:<span class="number">233</span>)</span><br><span class="line">	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:<span class="number">594</span>)</span><br><span class="line">	at kotlinx.coroutines.scheduling.CoroutineScheduler.access$runSafely(CoroutineScheduler.kt:<span class="number">60</span>)</span><br><span class="line">	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:<span class="number">742</span>)</span><br><span class="line"><span class="number">2022</span>-<span class="number">01</span>-<span class="number">30</span> <span class="number">20</span>:<span class="number">40</span>:<span class="number">57.826</span>[main] INFO Main.kt[<span class="number">21</span>]: <span class="number">2.</span> Joined failed job</span><br><span class="line"><span class="number">2022</span>-<span class="number">01</span>-<span class="number">30</span> <span class="number">20</span>:<span class="number">40</span>:<span class="number">57.835</span>[DefaultDispatcher-worker-<span class="number">2</span>] INFO Main.kt[<span class="number">24</span>]: Exception created via async coroutine</span><br><span class="line"><span class="number">2022</span>-<span class="number">01</span>-<span class="number">30</span> <span class="number">20</span>:<span class="number">40</span>:<span class="number">57.840</span>[main] ERROR Main.kt[<span class="number">33</span>]: <span class="number">5.</span> Caught ArithmeticException</span><br></pre></td></tr></table></figure>
+
+<h5 id="7-2-某个协程突然运行失败怎么办-—Job-VS-SupervisorJob"><a href="#7-2-某个协程突然运行失败怎么办-—Job-VS-SupervisorJob" class="headerlink" title="7.2 某个协程突然运行失败怎么办? —Job VS SupervisorJob"></a>7.2 某个协程突然运行失败怎么办? —Job VS SupervisorJob</h5><p>​    当某一个协程由于异常而运行失败时，默认情况下它会传播这个异常并传递给它父级。接下来，父级会进行下面的操作：</p>
+<p>取消它自己的Child；</p>
+<p>取消它自己；</p>
+<p>将异常传播并传递给它的父级；</p>
+<p><img src="/images/coroutine_exception.gif" alt="Coroutine的状态"></p>
+<p>​    如果想要在某一个协程出现错误时，不会退出父级和影响其他的兄弟协程，就需要使用 SupervisorJob 或 supervisorScope 。具体实现有三种：</p>
+<p>(1) 在构造CoroutineScope时，使用SuperVisorJob()；</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//使用SupervisorJob()可以在jobs1异常中止时，不影响job2的正常运行。</span></span><br><span class="line"><span class="keyword">val</span> scope = CoroutineScope(SupervisorJob())</span><br><span class="line">        </span><br><span class="line"><span class="keyword">val</span> job1 = scope.launch &#123;</span><br><span class="line">    logger.info(<span class="string">&quot;Launching child1&quot;</span>)</span><br><span class="line">    delay(<span class="number">500L</span>)</span><br><span class="line">    <span class="keyword">throw</span> ArithmeticException()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> job2 = scope.launch &#123;</span><br><span class="line">    logger.info(<span class="string">&quot;Launching child2&quot;</span>)</span><br><span class="line">    delay(<span class="number">5000L</span>)</span><br><span class="line">    logger.info(<span class="string">&quot;Child2 completed&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">logger.info(<span class="string">&quot;Waiting for jobs finish...&quot;</span>)</span><br><span class="line">job1.join()</span><br><span class="line">job2.join()</span><br><span class="line">logger.info(<span class="string">&quot;Jobs Done...&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>(2) 将SupervisorJob安装在launch函数上；</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> scope = CoroutineScope(Job())</span><br><span class="line"><span class="keyword">val</span> supervisorJob = SupervisorJob()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将SupervisorJob安装在launch函数上；</span></span><br><span class="line"><span class="keyword">val</span> job1 = scope.launch(supervisorJob) &#123;</span><br><span class="line">    logger.info(<span class="string">&quot;Launching child1&quot;</span>)</span><br><span class="line">    delay(<span class="number">500L</span>)</span><br><span class="line">    <span class="keyword">throw</span> ArithmeticException()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> job2 = scope.launch(supervisorJob) &#123;</span><br><span class="line">    logger.info(<span class="string">&quot;Launching child2&quot;</span>)</span><br><span class="line">    delay(<span class="number">5000L</span>)</span><br><span class="line">    logger.info(<span class="string">&quot;Child2 completed&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">logger.info(<span class="string">&quot;Waiting for jobs finish...&quot;</span>)</span><br><span class="line">job1.join()</span><br><span class="line">job2.join()</span><br><span class="line">logger.info(<span class="string">&quot;Jobs Done...&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>(3) 使用coroutineScope</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">runBlocking &#123;</span><br><span class="line">    <span class="comment">//使用coroutineScope时，Child 1的异常不影响Child 2的正常执行完成。</span></span><br><span class="line">    coroutineScope &#123;</span><br><span class="line">        launch &#123;</span><br><span class="line">            <span class="comment">// Child 1</span></span><br><span class="line">            logger.info(<span class="string">&quot;Launching child1&quot;</span>)</span><br><span class="line">            delay(<span class="number">500L</span>)</span><br><span class="line">            <span class="keyword">throw</span> ArithmeticException()</span><br><span class="line">        &#125;</span><br><span class="line">        launch &#123;</span><br><span class="line">            <span class="comment">// Child 2</span></span><br><span class="line">            logger.info(<span class="string">&quot;Launching child2&quot;</span>)</span><br><span class="line">            delay(<span class="number">5000L</span>)</span><br><span class="line">            logger.info(<span class="string">&quot;Child2 completed&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    logger.info(<span class="string">&quot;Jobs Done...&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="7-3-多个子任务同时抛出异常的处理"><a href="#7-3-多个子任务同时抛出异常的处理" class="headerlink" title="7.3 多个子任务同时抛出异常的处理"></a>7.3 多个子任务同时抛出异常的处理</h5><p>​    如果多个子任务都会抛出异常时，CoroutineExceptionHandler只会捕捉到最先抛出的异常，后面的异常会被屏蔽掉，通过Throwable的getSuppressed()方法可以查看被屏蔽的异常。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.yxf.kotlin.coroutines.exception_handling</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> kotlinx.coroutines.*</span><br><span class="line"><span class="keyword">import</span> org.apache.logging.log4j.LogManager</span><br><span class="line"><span class="keyword">import</span> org.apache.logging.log4j.<span class="function">Logger</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">fun <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    val logger: Logger = LogManager.getLogger()</span><br><span class="line"></span><br><span class="line">    runBlocking &#123;</span><br><span class="line">        val handler = CoroutineExceptionHandler &#123; context, exception -&gt;</span><br><span class="line">            <span class="comment">//捕捉到的是Job2的IllegalStateException异常，Job1的ArithmeticException异常被屏蔽掉了，</span></span><br><span class="line">            <span class="comment">//通过Throwable的getSuppressed()方法可以查看。</span></span><br><span class="line">            logger.info(</span><br><span class="line">                <span class="string">&quot;Caught $exception with suppressed &quot;</span> +</span><br><span class="line">                        exception.suppressed?.contentToString()</span><br><span class="line">            )</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//Parent Job</span></span><br><span class="line">        val parentJob = GlobalScope.launch(handler) &#123;</span><br><span class="line">            <span class="comment">//Child Job 1</span></span><br><span class="line">            launch &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    delay(Long.MAX_VALUE)</span><br><span class="line">                &#125; <span class="keyword">catch</span> (e: Exception) &#123;</span><br><span class="line">                    <span class="comment">//JobCancellationException.</span></span><br><span class="line">                    logger.error(<span class="string">&quot;$&#123;e.javaClass.simpleName&#125; in Child Job 1&quot;</span>)</span><br><span class="line">                &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                    <span class="keyword">throw</span> ArithmeticException()</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">//Child Job 2            </span></span><br><span class="line">            launch &#123;</span><br><span class="line">                delay(<span class="number">100</span>)</span><br><span class="line">                <span class="keyword">throw</span> IllegalStateException()</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            delay(Long.MAX_VALUE)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//Wait until parentJob completes</span></span><br><span class="line">        parentJob.join()</span><br><span class="line">        logger.info(<span class="string">&quot;All Jobs completed&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//output:</span></span><br><span class="line"><span class="number">2022</span>-<span class="number">01</span>-<span class="number">30</span> <span class="number">22</span>:<span class="number">50</span>:<span class="number">07.273</span>[DefaultDispatcher-worker-<span class="number">2</span>] ERROR Main04.kt[<span class="number">28</span>]: JobCancellationException in Child Job <span class="number">1</span></span><br><span class="line"><span class="number">2022</span>-<span class="number">01</span>-<span class="number">30</span> <span class="number">22</span>:<span class="number">50</span>:<span class="number">07.333</span>[DefaultDispatcher-worker-<span class="number">2</span>] INFO CoroutineExceptionHandler.kt[<span class="number">101</span>]: Caught java.lang.IllegalStateException with suppressed [java.lang.ArithmeticException]</span><br><span class="line"><span class="number">2022</span>-<span class="number">01</span>-<span class="number">30</span> <span class="number">22</span>:<span class="number">50</span>:<span class="number">07.333</span>[main] INFO Main04.kt[<span class="number">44</span>]: All Jobs completed</span><br></pre></td></tr></table></figure>
+
+<h4 id="8-Coroutine的取消"><a href="#8-Coroutine的取消" class="headerlink" title="8. Coroutine的取消"></a>8. Coroutine的取消</h4><p>A <strong>cancelled</strong> scope cannot start more coroutines.</p>
+<p>A <strong>cancelled</strong> child doesn’t affect other siblings.</p>
+<p>A <strong>cancelling</strong> coroutine is not able to suspend.</p>
+<p>join()/await() — Suspend until the job is completed.</p>
+<p>join() — No action if completed</p>
+<p>await() — Throws if completed</p>
+<h5 id="8-1-join"><a href="#8-1-join" class="headerlink" title="8.1 join()"></a>8.1 join()</h5><p>① 先cancel( )后join( )</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> logger = LogManager.getLogger()</span><br><span class="line"></span><br><span class="line">    runBlocking &#123;</span><br><span class="line">        <span class="keyword">val</span> startTime = System.currentTimeMillis()</span><br><span class="line">        <span class="keyword">val</span> job = launch(Dispatchers.Default) &#123;</span><br><span class="line">            <span class="keyword">var</span> nextPrintTime = startTime</span><br><span class="line">            <span class="keyword">var</span> i = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">while</span>(i &lt; <span class="number">5</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span>(System.currentTimeMillis() - nextPrintTime &gt; <span class="number">500</span>) &#123;</span><br><span class="line">                    logger.info(<span class="string">&quot;Hello <span class="variable">$i</span>, isActive: &quot;</span> + isActive)</span><br><span class="line">                    nextPrintTime += <span class="number">500</span></span><br><span class="line">                    i++</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        delay(<span class="number">1000L</span>)</span><br><span class="line">        logger.info(<span class="string">&quot;Cancelling...&quot;</span>)</span><br><span class="line">        job.cancel()</span><br><span class="line">        logger.info(<span class="string">&quot;Cancelled&quot;</span>)</span><br><span class="line">        job.join()</span><br><span class="line">        logger.info(<span class="string">&quot;Joined&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//output:</span></span><br><span class="line"><span class="number">2022</span>-<span class="number">02</span>-<span class="number">05</span> <span class="number">12</span>:<span class="number">23</span>:<span class="number">08.635</span>[DefaultDispatcher-worker-<span class="number">1</span>] INFO Main.kt[<span class="number">19</span>]: Hello <span class="number">0</span>, isActive: <span class="literal">true</span></span><br><span class="line"><span class="number">2022</span>-<span class="number">02</span>-<span class="number">05</span> <span class="number">12</span>:<span class="number">23</span>:<span class="number">09.123</span>[DefaultDispatcher-worker-<span class="number">1</span>] INFO Main.kt[<span class="number">19</span>]: Hello <span class="number">1</span>, isActive: <span class="literal">true</span></span><br><span class="line"><span class="number">2022</span>-<span class="number">02</span>-<span class="number">05</span> <span class="number">12</span>:<span class="number">23</span>:<span class="number">09.162</span>[main] INFO Main.kt[<span class="number">27</span>]: Cancelling...</span><br><span class="line"><span class="number">2022</span>-<span class="number">02</span>-<span class="number">05</span> <span class="number">12</span>:<span class="number">23</span>:<span class="number">09.165</span>[main] INFO Main.kt[<span class="number">29</span>]: Cancelled</span><br><span class="line"><span class="number">2022</span>-<span class="number">02</span>-<span class="number">05</span> <span class="number">12</span>:<span class="number">23</span>:<span class="number">09.623</span>[DefaultDispatcher-worker-<span class="number">1</span>] INFO Main.kt[<span class="number">19</span>]: Hello <span class="number">2</span>, isActive: <span class="literal">false</span></span><br><span class="line"><span class="number">2022</span>-<span class="number">02</span>-<span class="number">05</span> <span class="number">12</span>:<span class="number">23</span>:<span class="number">10.123</span>[DefaultDispatcher-worker-<span class="number">1</span>] INFO Main.kt[<span class="number">19</span>]: Hello <span class="number">3</span>, isActive: <span class="literal">false</span></span><br><span class="line"><span class="number">2022</span>-<span class="number">02</span>-<span class="number">05</span> <span class="number">12</span>:<span class="number">23</span>:<span class="number">10.623</span>[DefaultDispatcher-worker-<span class="number">1</span>] INFO Main.kt[<span class="number">19</span>]: Hello <span class="number">4</span>, isActive: <span class="literal">false</span></span><br><span class="line"><span class="number">2022</span>-<span class="number">02</span>-<span class="number">05</span> <span class="number">12</span>:<span class="number">23</span>:<span class="number">10.626</span>[main] INFO Main.kt[<span class="number">31</span>]: Joined</span><br><span class="line"></span><br><span class="line">Process finished with exit code <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<p>② 先join( )后cancel( )</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">fun <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    val logger = LogManager.getLogger()</span><br><span class="line"></span><br><span class="line">    runBlocking &#123;</span><br><span class="line">        val startTime = System.currentTimeMillis()</span><br><span class="line">        val job = launch(Dispatchers.Default) &#123;</span><br><span class="line">            <span class="keyword">var</span> nextPrintTime = startTime</span><br><span class="line">            <span class="keyword">var</span> i = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">while</span>(i &lt; <span class="number">5</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span>(System.currentTimeMillis() - nextPrintTime &gt; <span class="number">500</span>) &#123;</span><br><span class="line">                    logger.info(<span class="string">&quot;Hello $i, isActive: &quot;</span> + isActive)</span><br><span class="line">                    nextPrintTime += <span class="number">500</span></span><br><span class="line">                    i++</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        delay(<span class="number">1000L</span>)</span><br><span class="line">        job.join()</span><br><span class="line">        logger.info(<span class="string">&quot;Joined&quot;</span>)</span><br><span class="line">        logger.info(<span class="string">&quot;Cancelling...&quot;</span>)</span><br><span class="line">        job.cancel()</span><br><span class="line">        logger.info(<span class="string">&quot;Cancelled&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//output:</span></span><br><span class="line"><span class="number">2022</span>-<span class="number">02</span>-<span class="number">05</span> <span class="number">12</span>:<span class="number">16</span>:<span class="number">59.058</span>[DefaultDispatcher-worker-<span class="number">1</span>] INFO Main.kt[<span class="number">19</span>]: Hello <span class="number">0</span>, isActive: <span class="keyword">true</span></span><br><span class="line"><span class="number">2022</span>-<span class="number">02</span>-<span class="number">05</span> <span class="number">12</span>:<span class="number">16</span>:<span class="number">59.544</span>[DefaultDispatcher-worker-<span class="number">1</span>] INFO Main.kt[<span class="number">19</span>]: Hello <span class="number">1</span>, isActive: <span class="keyword">true</span></span><br><span class="line"><span class="number">2022</span>-<span class="number">02</span>-<span class="number">05</span> <span class="number">12</span>:<span class="number">17</span>:<span class="number">00.044</span>[DefaultDispatcher-worker-<span class="number">1</span>] INFO Main.kt[<span class="number">19</span>]: Hello <span class="number">2</span>, isActive: <span class="keyword">true</span></span><br><span class="line"><span class="number">2022</span>-<span class="number">02</span>-<span class="number">05</span> <span class="number">12</span>:<span class="number">17</span>:<span class="number">00.544</span>[DefaultDispatcher-worker-<span class="number">1</span>] INFO Main.kt[<span class="number">19</span>]: Hello <span class="number">3</span>, isActive: <span class="keyword">true</span></span><br><span class="line"><span class="number">2022</span>-<span class="number">02</span>-<span class="number">05</span> <span class="number">12</span>:<span class="number">17</span>:<span class="number">01.044</span>[DefaultDispatcher-worker-<span class="number">1</span>] INFO Main.kt[<span class="number">19</span>]: Hello <span class="number">4</span>, isActive: <span class="keyword">true</span></span><br><span class="line"><span class="number">2022</span>-<span class="number">02</span>-<span class="number">05</span> <span class="number">12</span>:<span class="number">17</span>:<span class="number">01.047</span>[main] INFO Main.kt[<span class="number">28</span>]: Joined</span><br><span class="line"><span class="number">2022</span>-<span class="number">02</span>-<span class="number">05</span> <span class="number">12</span>:<span class="number">17</span>:<span class="number">01.048</span>[main] INFO Main.kt[<span class="number">29</span>]: Cancelling...</span><br><span class="line"><span class="number">2022</span>-<span class="number">02</span>-<span class="number">05</span> <span class="number">12</span>:<span class="number">17</span>:<span class="number">01.049</span>[main] INFO Main.kt[<span class="number">31</span>]: Cancelled</span><br><span class="line"></span><br><span class="line">Process finished with exit code <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="8-2-wait"><a href="#8-2-wait" class="headerlink" title="8.2 wait()"></a>8.2 wait()</h5><p>① 先await( )后cancel( )</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> logger = LogManager.getLogger()</span><br><span class="line"></span><br><span class="line">    runBlocking &#123;</span><br><span class="line">        <span class="keyword">val</span> job = async(Dispatchers.Default) &#123;</span><br><span class="line">            repeat(<span class="number">5</span>) &#123;</span><br><span class="line">                logger.info(<span class="string">&quot;Hello <span class="variable">$it</span>&quot;</span>)</span><br><span class="line">                delay(<span class="number">500</span>)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        delay(<span class="number">1000L</span>)</span><br><span class="line">        <span class="keyword">val</span> result = job.await()</span><br><span class="line">        logger.info(<span class="string">&quot;Awaited, result: <span class="variable">$result</span>&quot;</span>)</span><br><span class="line">        logger.info(<span class="string">&quot;Cancelling...&quot;</span>)</span><br><span class="line">        job.cancel()</span><br><span class="line">        logger.info(<span class="string">&quot;Cancelled&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//output:</span></span><br><span class="line"><span class="number">2022</span>-<span class="number">02</span>-<span class="number">05</span> <span class="number">12</span>:<span class="number">31</span>:<span class="number">58.399</span>[DefaultDispatcher-worker-<span class="number">2</span>] INFO Main01.kt[<span class="number">15</span>]: Hello <span class="number">0</span></span><br><span class="line"><span class="number">2022</span>-<span class="number">02</span>-<span class="number">05</span> <span class="number">12</span>:<span class="number">31</span>:<span class="number">58.915</span>[DefaultDispatcher-worker-<span class="number">2</span>] INFO Main01.kt[<span class="number">15</span>]: Hello <span class="number">1</span></span><br><span class="line"><span class="number">2022</span>-<span class="number">02</span>-<span class="number">05</span> <span class="number">12</span>:<span class="number">31</span>:<span class="number">59.416</span>[DefaultDispatcher-worker-<span class="number">3</span>] INFO Main01.kt[<span class="number">15</span>]: Hello <span class="number">2</span></span><br><span class="line"><span class="number">2022</span>-<span class="number">02</span>-<span class="number">05</span> <span class="number">12</span>:<span class="number">31</span>:<span class="number">59.924</span>[DefaultDispatcher-worker-<span class="number">3</span>] INFO Main01.kt[<span class="number">15</span>]: Hello <span class="number">3</span></span><br><span class="line"><span class="number">2022</span>-<span class="number">02</span>-<span class="number">05</span> <span class="number">12</span>:<span class="number">32</span>:<span class="number">00.426</span>[DefaultDispatcher-worker-<span class="number">4</span>] INFO Main01.kt[<span class="number">15</span>]: Hello <span class="number">4</span></span><br><span class="line"><span class="number">2022</span>-<span class="number">02</span>-<span class="number">05</span> <span class="number">12</span>:<span class="number">32</span>:<span class="number">00.932</span>[main] INFO Main01.kt[<span class="number">22</span>]: Awaited, result: kotlin.<span class="built_in">Unit</span></span><br><span class="line"><span class="number">2022</span>-<span class="number">02</span>-<span class="number">05</span> <span class="number">12</span>:<span class="number">32</span>:<span class="number">00.934</span>[main] INFO Main01.kt[<span class="number">23</span>]: Cancelling...</span><br><span class="line"><span class="number">2022</span>-<span class="number">02</span>-<span class="number">05</span> <span class="number">12</span>:<span class="number">32</span>:<span class="number">00.934</span>[main] INFO Main01.kt[<span class="number">25</span>]: Cancelled</span><br></pre></td></tr></table></figure>
+
+<p>② 先cancel( )后await( ) </p>
+<p>会抛出kotlinx.coroutines.JobCancellationException异常。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> logger = LogManager.getLogger()</span><br><span class="line"></span><br><span class="line">    runBlocking &#123;</span><br><span class="line">        <span class="keyword">val</span> job = async(Dispatchers.Default) &#123;</span><br><span class="line">            repeat(<span class="number">5</span>) &#123;</span><br><span class="line">                logger.info(<span class="string">&quot;Hello <span class="variable">$it</span>&quot;</span>)</span><br><span class="line">                delay(<span class="number">500</span>)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        delay(<span class="number">1000L</span>)</span><br><span class="line">        logger.info(<span class="string">&quot;Cancelling...&quot;</span>)</span><br><span class="line">        job.cancel()</span><br><span class="line">        logger.info(<span class="string">&quot;Cancelled&quot;</span>)</span><br><span class="line">        <span class="keyword">val</span> result = job.await()</span><br><span class="line">        logger.info(<span class="string">&quot;Awaited, result: <span class="variable">$result</span>&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//output:</span></span><br><span class="line"><span class="number">2022</span>-<span class="number">02</span>-<span class="number">05</span> <span class="number">12</span>:<span class="number">39</span>:<span class="number">49.933</span>[DefaultDispatcher-worker-<span class="number">1</span>] INFO Main01.kt[<span class="number">15</span>]: Hello <span class="number">0</span></span><br><span class="line"><span class="number">2022</span>-<span class="number">02</span>-<span class="number">05</span> <span class="number">12</span>:<span class="number">39</span>:<span class="number">50.452</span>[DefaultDispatcher-worker-<span class="number">1</span>] INFO Main01.kt[<span class="number">15</span>]: Hello <span class="number">1</span></span><br><span class="line"><span class="number">2022</span>-<span class="number">02</span>-<span class="number">05</span> <span class="number">12</span>:<span class="number">39</span>:<span class="number">50.924</span>[main] INFO Main01.kt[<span class="number">21</span>]: Cancelling...</span><br><span class="line"><span class="number">2022</span>-<span class="number">02</span>-<span class="number">05</span> <span class="number">12</span>:<span class="number">39</span>:<span class="number">50.939</span>[main] INFO Main01.kt[<span class="number">23</span>]: Cancelled</span><br><span class="line">Exception <span class="keyword">in</span> thread <span class="string">&quot;main&quot;</span> kotlinx.coroutines.JobCancellationException: Job was cancelled; job=DeferredCoroutine&#123;Cancelled&#125;@<span class="number">23986957</span></span><br><span class="line"></span><br><span class="line">Process finished with exit code <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>参考资料：</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1E7411M7Sj/">KotlinConf 2019: Coroutines! Gotta catch ‘em all! </a></li>
+<li>协程中的取消和异常 | 异常处理详解  <a target="_blank" rel="noopener" href="https://picture.iczhiku.com/weixin/message1595087419639.html">https://picture.iczhiku.com/weixin/message1595087419639.html</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+	<div>
+      
+          <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束 <i class="fa fa-paw"></i> 感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/11/25/dynamic_programming/" rel="prev" title="算法学习之动态规划">
+                  <i class="fa fa-chevron-left"></i> 算法学习之动态规划
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/12/15/kotlin_reified/" rel="next" title="Reified关键字">
+                  Reified关键字 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xifengcoder</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

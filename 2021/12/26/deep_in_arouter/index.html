@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=-apple-system:300,300italic,400,400italic,700,700italic%7CBlinkMacSystemFont:300,300italic,400,400italic,700,700italic%7C"Apple+Color+Emoji":300,300italic,400,400italic,700,700italic%7C"Segoe+UI+Emoji":300,300italic,400,400italic,700,700italic%7C"Segoe+UI+Symbol":300,300italic,400,400italic,700,700italic%7C"Segoe+UI":300,300italic,400,400italic,700,700italic%7C"PingFang+SC":300,300italic,400,400italic,700,700italic%7C"Hiragino+Sans+GB":300,300italic,400,400italic,700,700italic%7C"Microsoft+YaHei":300,300italic,400,400italic,700,700italic%7C"Helvetica+Neue":300,300italic,400,400italic,700,700italic%7CHelvetica:300,300italic,400,400italic,700,700italic%7CArial:300,300italic,400,400italic,700,700italic%7Csans-serif:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xifengcoder.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":false,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<meta name="description" content="ARouter使用总结，以及原理的探讨分析...">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ARouter使用指南与原理分析">
+<meta property="og:url" content="https://xifengcoder.github.io/2021/12/26/deep_in_arouter/index.html">
+<meta property="og:site_name" content="西风飞扬">
+<meta property="og:description" content="ARouter使用总结，以及原理的探讨分析...">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img2020.cnblogs.com/blog/368055/202110/368055-20211006214111989-1436169959.jpg">
+<meta property="og:image" content="https://img2020.cnblogs.com/blog/368055/202110/368055-20211006214135774-245463483.jpg">
+<meta property="og:image" content="https://img2020.cnblogs.com/blog/368055/202110/368055-20211006214149891-914672834.jpg">
+<meta property="article:published_time" content="2021-12-26T09:15:54.000Z">
+<meta property="article:modified_time" content="2022-03-11T13:19:57.319Z">
+<meta property="article:author" content="xifengcoder">
+<meta property="article:tag" content="路由组件">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img2020.cnblogs.com/blog/368055/202110/368055-20211006214111989-1436169959.jpg">
+
+
+<link rel="canonical" href="https://xifengcoder.github.io/2021/12/26/deep_in_arouter/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xifengcoder.github.io/2021/12/26/deep_in_arouter/","path":"2021/12/26/deep_in_arouter/","title":"ARouter使用指南与原理分析"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>ARouter使用指南与原理分析 | 西风飞扬</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">西风飞扬</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="th fa-fw"></i>分类</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#WareHouse%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%9A"><span class="nav-text">WareHouse的数据结构：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Arouter%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%EF%BC%9A"><span class="nav-text">Arouter的初始化：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Arouter-getInstance-build-String-path"><span class="nav-text">Arouter.getInstance().build(String path);</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Postcard-navigation"><span class="nav-text">Postcard$navigation()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%AB%E6%8F%8Fdex%E6%96%87%E4%BB%B6%E4%B8%AD%E5%8C%85%E5%90%8Dcom-alibaba-android-arouter-routes%E4%B8%8B%E7%9A%84%E6%89%80%E6%9C%89class%E6%96%87%E4%BB%B6"><span class="nav-text">扫描dex文件中包名com.alibaba.android.arouter.routes下的所有class文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#arouter-register"><span class="nav-text">arouter-register</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">xifengcoder</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/xifengcoder" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;xifengcoder" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/xifengcoder" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xifengcoder.github.io/2021/12/26/deep_in_arouter/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="xifengcoder">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="西风飞扬">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ARouter使用指南与原理分析
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-12-26 17:15:54" itemprop="dateCreated datePublished" datetime="2021-12-26T17:15:54+08:00">2021-12-26</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2022-03-11 21:19:57" itemprop="dateModified" datetime="2022-03-11T21:19:57+08:00">2022-03-11</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+		
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>Arouter通过APT技术生成的文件如下：<br>package: com.alibaba.android.arouter.routes;</p>
+<ul>
+<li>ARouter$$Group$$&lt;groupName&gt;.java</li>
+<li>ARouter$$Interceptors$$&lt;moduleName&gt;.java</li>
+<li>ARouter$$Providers$$&lt;moduleName&gt;.java</li>
+<li>ARouter$$Root$$&lt;moduleName&gt;.java</li>
+</ul>
+<p>如果使用AutoWired的话，会在原有的package下生成：</p>
+<ul>
+<li>&lt;ClassName&gt;$$ARouter$$Autowired.java</li>
+</ul>
+<p>下面分别举例说明：</p>
+<ol>
+<li>ARouter$$Group$$&lt;groupName&gt;.java<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.alibaba.android.arouter.routes;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.alibaba.android.arouter.facade.enums.RouteType;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.android.arouter.facade.model.RouteMeta;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.android.arouter.facade.template.IRouteGroup;</span><br><span class="line"><span class="keyword">import</span> com.yxf.arouter.other.OtherActivity;</span><br><span class="line"><span class="keyword">import</span> java.lang.Override;</span><br><span class="line"><span class="keyword">import</span> java.lang.String;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * DO NOT EDIT THIS FILE!!! IT WAS GENERATED BY AROUTER. */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ARouter</span>$$<span class="title">Group</span>$$<span class="title">other</span> <span class="keyword">implements</span> <span class="title">IRouteGroup</span> </span>&#123;</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">loadInto</span><span class="params">(Map&lt;String, RouteMeta&gt; atlas)</span> </span>&#123;</span><br><span class="line">    atlas.put(<span class="string">&quot;/other/otherActivity&quot;</span>, RouteMeta.build(RouteType.ACTIVITY, OtherActivity.class, <span class="string">&quot;/other/otheractivity&quot;</span>, <span class="string">&quot;other&quot;</span>, <span class="keyword">null</span>, -<span class="number">1</span>, -<span class="number">2147483648</span>));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>ARouter$$Providers$$&lt;moduleName&gt;.java<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.alibaba.android.arouter.routes;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.alibaba.android.arouter.facade.model.RouteMeta;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.android.arouter.facade.template.IProviderGroup;</span><br><span class="line"><span class="keyword">import</span> java.lang.Override;</span><br><span class="line"><span class="keyword">import</span> java.lang.String;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * DO NOT EDIT THIS FILE!!! IT WAS GENERATED BY AROUTER. */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ARouter</span>$$<span class="title">Providers</span>$$<span class="title">moduleother</span> <span class="keyword">implements</span> <span class="title">IProviderGroup</span> </span>&#123;</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">loadInto</span><span class="params">(Map&lt;String, RouteMeta&gt; providers)</span> </span>&#123;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>ARouter$$Root$$&lt;moduleName&gt;.java<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.alibaba.android.arouter.routes;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.alibaba.android.arouter.facade.template.IRouteGroup;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.android.arouter.facade.template.IRouteRoot;</span><br><span class="line"><span class="keyword">import</span> java.lang.Class;</span><br><span class="line"><span class="keyword">import</span> java.lang.Override;</span><br><span class="line"><span class="keyword">import</span> java.lang.String;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * DO NOT EDIT THIS FILE!!! IT WAS GENERATED BY AROUTER. */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ARouter</span>$$<span class="title">Root</span>$$<span class="title">moduleother</span> <span class="keyword">implements</span> <span class="title">IRouteRoot</span> </span>&#123;</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">loadInto</span><span class="params">(Map&lt;String, Class&lt;? extends IRouteGroup&gt;&gt; routes)</span> </span>&#123;</span><br><span class="line">    routes.put(<span class="string">&quot;other&quot;</span>, ARouter$$Group$$other.class);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="WareHouse的数据结构："><a href="#WareHouse的数据结构：" class="headerlink" title="WareHouse的数据结构："></a>WareHouse的数据结构：</h4><img src="https://img2020.cnblogs.com/blog/368055/202110/368055-20211006214111989-1436169959.jpg"><br><img src="https://img2020.cnblogs.com/blog/368055/202110/368055-20211006214135774-245463483.jpg"><br><img src="https://img2020.cnblogs.com/blog/368055/202110/368055-20211006214149891-914672834.jpg"></li>
+</ol>
+<h4 id="Arouter的初始化："><a href="#Arouter的初始化：" class="headerlink" title="Arouter的初始化："></a>Arouter的初始化：</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Arouter.init(<span class="keyword">this</span>);</span><br></pre></td></tr></table></figure>
+<p>主要工作：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//LogisticsCenter.init(mContext, executor);</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * LogisticsCenter init, load all metas in memory. Demand initialization</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(Context context, ThreadPoolExecutor tpe)</span> <span class="keyword">throws</span> HandlerException </span>&#123;</span><br><span class="line">        mContext = context;</span><br><span class="line">        executor = tpe;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">long</span> startInit = System.currentTimeMillis();</span><br><span class="line">            <span class="comment">//load by plugin first</span></span><br><span class="line">            loadRouterMap();</span><br><span class="line">            <span class="keyword">if</span> (registerByPlugin) &#123;</span><br><span class="line">                logger.info(TAG, <span class="string">&quot;Load router map by arouter-auto-register plugin.&quot;</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                Set&lt;String&gt; routerMap;</span><br><span class="line"></span><br><span class="line">                <span class="comment">// It will rebuild router map every times when debuggable.</span></span><br><span class="line">                <span class="keyword">if</span> (ARouter.debuggable() || PackageUtils.isNewVersion(context)) &#123;</span><br><span class="line">                    routerMap = ClassUtils.getFileNameByPackageName(mContext, ROUTE_ROOT_PAKCAGE);</span><br><span class="line">                    <span class="keyword">if</span> (!routerMap.isEmpty()) &#123;</span><br><span class="line">                        context.getSharedPreferences(AROUTER_SP_CACHE_KEY, Context.MODE_PRIVATE).edit().putStringSet(AROUTER_SP_KEY_MAP, routerMap).apply();</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    PackageUtils.updateVersion(context);    <span class="comment">// Save new version name when router map update finishes.</span></span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    routerMap = <span class="keyword">new</span> HashSet&lt;&gt;(context.getSharedPreferences(AROUTER_SP_CACHE_KEY, Context.MODE_PRIVATE).getStringSet(AROUTER_SP_KEY_MAP, <span class="keyword">new</span> HashSet&lt;String&gt;()));</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                startInit = System.currentTimeMillis();</span><br><span class="line"></span><br><span class="line">                <span class="keyword">for</span> (String className : routerMap) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (className.startsWith(ROUTE_ROOT_PAKCAGE + DOT + SDK_NAME + SEPARATOR + SUFFIX_ROOT)) &#123;</span><br><span class="line">                        <span class="comment">//以com.alibaba.android.arouter.routes.ARouter$$Root开头。</span></span><br><span class="line">                        ((IRouteRoot) (Class.forName(className).getConstructor().newInstance())).loadInto(Warehouse.groupsIndex);</span><br><span class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (className.startsWith(ROUTE_ROOT_PAKCAGE + DOT + SDK_NAME + SEPARATOR + SUFFIX_INTERCEPTORS)) &#123;</span><br><span class="line">                        <span class="comment">//以com.alibaba.android.arouter.routes.ARouter$$Interceptors开头。</span></span><br><span class="line">                        ((IInterceptorGroup) (Class.forName(className).getConstructor().newInstance())).loadInto(Warehouse.interceptorsIndex);</span><br><span class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (className.startsWith(ROUTE_ROOT_PAKCAGE + DOT + SDK_NAME + SEPARATOR + SUFFIX_PROVIDERS)) &#123;</span><br><span class="line">                        <span class="comment">//以com.alibaba.android.arouter.routes.ARouter$$Providers开头。</span></span><br><span class="line">                        ((IProviderGroup) (Class.forName(className).getConstructor().newInstance())).loadInto(Warehouse.providersIndex);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> HandlerException(TAG + <span class="string">&quot;ARouter init logistics center exception! [&quot;</span> + e.getMessage() + <span class="string">&quot;]&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>其中使用的executor为DefaultPoolExecutor.getInstance()。</p>
+<ol>
+<li>扫描com.alibaba.android.arouter.routes包名下的所有className，存放入HashSet中；</li>
+<li>遍历该HashSet, 分三种情况：<br>（1）针对ARouter$$Root开头的className，实例化IRouteRoot并调用loadInfo()加载到Warehouse.groupsIndex（Map&lt;String, Class&lt;? extends IRouteGroup&gt;&gt;类型）；<br>（2）针对ARouer$$Interceptors开头的className，实例化IInterceptorGroup并调用loadInfo()加载到Warehouse.interceptorsIndex（Map&lt;Integer, Class&lt;? extends IInterceptor&gt;&gt;类型）；<br>（3）针对ARouer$$Providers开头的className，实例化IProviderGroup并调用loadInfo()加载到Warehouse.providersIndex（Map&lt;String, RouteMeta&gt;类型）。</li>
+</ol>
+<h4 id="Arouter-getInstance-build-String-path"><a href="#Arouter-getInstance-build-String-path" class="headerlink" title="Arouter.getInstance().build(String path);"></a>Arouter.getInstance().build(String path);</h4><p>通过path和group构建一个Postcard实例；</p>
+<h3 id="Postcard-navigation"><a href="#Postcard-navigation" class="headerlink" title="Postcard$navigation()"></a>Postcard$navigation()</h3><p>-&gt; Postcard$navigation(Context);<br>-&gt; Postcard$navigation(Context context, NavigationCallback callback)<br>-&gt; Arouter$navigation(Context mContext, Postcard postcard, int requestCode, NavigationCallback callback)<br>-&gt; LogisticsCenter$completion(Postcard postcard);<br>下面重点分析一下LogisticsCenter$completion（Postcard）方法。</p>
+<ol>
+<li>根据postcard的path，从Warehouse.routes(Map&lt;String, RouteMeta&gt;)中查找RouteMeta实例routeMeta；</li>
+<li>如果routeMeta为空，则先从Warehouse.groupsIndex中查找postcard所属的group对应的Class&lt;? extends IRouteGroup&gt;实例，然后通过反射构造出IRouteGroup实例，然后调用iGroupInstance.loadInto(Warehouse.routes)，然后再将postcard所属的group从Warehouse.groupsIndex中移除。然后再次调用LogisticsCenter$completion（Postcard）方法。</li>
+<li>设置PostCard的destination、type、priority和extra。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LogisticsCenter</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Completion the postcard by route metas</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> postcard Incomplete postcard, should complete by this method.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">completion</span><span class="params">(Postcard postcard)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">null</span> == postcard) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NoRouteFoundException(TAG + <span class="string">&quot;No postcard!&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        RouteMeta routeMeta = Warehouse.routes.get(postcard.getPath());</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">null</span> == routeMeta) &#123;    <span class="comment">// Maybe its does&#x27;t exist, or didn&#x27;t load.</span></span><br><span class="line">            Class&lt;? extends IRouteGroup&gt; groupMeta = Warehouse.groupsIndex.get(postcard.getGroup());  <span class="comment">// Load route meta.</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">null</span> == groupMeta) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> NoRouteFoundException(TAG + <span class="string">&quot;There is no route match the path [&quot;</span> + postcard.getPath() + <span class="string">&quot;], in group [&quot;</span> + postcard.getGroup() + <span class="string">&quot;]&quot;</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// Load route and cache it into memory, then delete from metas.</span></span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    ...</span><br><span class="line">                    IRouteGroup iGroupInstance = groupMeta.getConstructor().newInstance();</span><br><span class="line">                    iGroupInstance.loadInto(Warehouse.routes);</span><br><span class="line">                    Warehouse.groupsIndex.remove(postcard.getGroup());</span><br><span class="line">                    ...</span><br><span class="line">                &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> HandlerException(TAG + <span class="string">&quot;Fatal exception when loading group meta. [&quot;</span> + e.getMessage() + <span class="string">&quot;]&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                completion(postcard);   <span class="comment">// Reload</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            postcard.setDestination(routeMeta.getDestination());</span><br><span class="line">            postcard.setType(routeMeta.getType());</span><br><span class="line">            postcard.setPriority(routeMeta.getPriority());</span><br><span class="line">            postcard.setExtra(routeMeta.getExtra());</span><br><span class="line"></span><br><span class="line">            Uri rawUri = postcard.getUri();</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">null</span> != rawUri) &#123;   <span class="comment">// Try to set params into bundle.</span></span><br><span class="line">                Map&lt;String, String&gt; resultMap = TextUtils.splitQueryParameters(rawUri);</span><br><span class="line">                Map&lt;String, Integer&gt; paramsType = routeMeta.getParamsType();</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (MapUtils.isNotEmpty(paramsType)) &#123;</span><br><span class="line">                    <span class="comment">// Set value by its type, just for params which annotation by @Param</span></span><br><span class="line">                    <span class="keyword">for</span> (Map.Entry&lt;String, Integer&gt; params : paramsType.entrySet()) &#123;</span><br><span class="line">                        setValue(postcard,</span><br><span class="line">                                params.getValue(),</span><br><span class="line">                                params.getKey(),</span><br><span class="line">                                resultMap.get(params.getKey()));</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="comment">// Save params name which need auto inject.</span></span><br><span class="line">                    postcard.getExtras().putStringArray(ARouter.AUTO_INJECT, paramsType.keySet().toArray(<span class="keyword">new</span> String[]&#123;&#125;));</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="comment">// Save raw uri</span></span><br><span class="line">                postcard.withString(ARouter.RAW_URI, rawUri.toString());</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">switch</span> (routeMeta.getType()) &#123;</span><br><span class="line">                <span class="keyword">case</span> PROVIDER:  <span class="comment">// if the route is provider, should find its instance</span></span><br><span class="line">                    <span class="comment">// Its provider, so it must implement IProvider</span></span><br><span class="line">                    Class&lt;? extends IProvider&gt; providerMeta = (Class&lt;? extends IProvider&gt;) routeMeta.getDestination();</span><br><span class="line">                    IProvider instance = Warehouse.providers.get(providerMeta);</span><br><span class="line">                    <span class="keyword">if</span> (<span class="keyword">null</span> == instance) &#123; <span class="comment">// There&#x27;s no instance of this provider</span></span><br><span class="line">                        IProvider provider;</span><br><span class="line">                        <span class="keyword">try</span> &#123;</span><br><span class="line">                            provider = providerMeta.getConstructor().newInstance();</span><br><span class="line">                            provider.init(mContext);</span><br><span class="line">                            Warehouse.providers.put(providerMeta, provider);</span><br><span class="line">                            instance = provider;</span><br><span class="line">                        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                            <span class="keyword">throw</span> <span class="keyword">new</span> HandlerException(<span class="string">&quot;Init provider failed! &quot;</span> + e.getMessage());</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    postcard.setProvider(instance);</span><br><span class="line">                    postcard.greenChannel();    <span class="comment">// Provider should skip all of interceptors</span></span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> FRAGMENT:</span><br><span class="line">                    postcard.greenChannel();    <span class="comment">// Fragment needn&#x27;t interceptors</span></span><br><span class="line">                <span class="keyword">default</span>:</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>调用_ARouter$_navigation(final Context context, final Postcard postcard, final int requestCode, final NavigationCallback callback)实现跳转功能。如果是Activity的跳转，则会调用_ARouter$startActivity(int requestCode, Context currentContext, Intent intent, Postcard postcard, NavigationCallback callback)。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">_ARouter</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="function"><span class="keyword">private</span> Object <span class="title">_navigation</span><span class="params">(<span class="keyword">final</span> Context context, <span class="keyword">final</span> Postcard postcard, <span class="keyword">final</span> <span class="keyword">int</span> requestCode, <span class="keyword">final</span> NavigationCallback callback)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">final</span> Context currentContext = <span class="keyword">null</span> == context ? mContext : context;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">switch</span> (postcard.getType()) &#123;</span><br><span class="line">            <span class="keyword">case</span> ACTIVITY:</span><br><span class="line">                <span class="comment">// Build intent</span></span><br><span class="line">                <span class="keyword">final</span> Intent intent = <span class="keyword">new</span> Intent(currentContext, postcard.getDestination());</span><br><span class="line">                intent.putExtras(postcard.getExtras());</span><br><span class="line"></span><br><span class="line">                <span class="comment">// Set flags.</span></span><br><span class="line">                <span class="keyword">int</span> flags = postcard.getFlags();</span><br><span class="line">                <span class="keyword">if</span> (-<span class="number">1</span> != flags) &#123;</span><br><span class="line">                    intent.setFlags(flags);</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!(currentContext <span class="keyword">instanceof</span> Activity)) &#123;    <span class="comment">// Non activity, need less one flag.</span></span><br><span class="line">                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="comment">// Set Actions</span></span><br><span class="line">                String action = postcard.getAction();</span><br><span class="line">                <span class="keyword">if</span> (!TextUtils.isEmpty(action)) &#123;</span><br><span class="line">                    intent.setAction(action);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="comment">// Navigation in main looper.</span></span><br><span class="line">                runInMainThread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                        startActivity(requestCode, currentContext, intent, postcard, callback);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> PROVIDER:</span><br><span class="line">                <span class="keyword">return</span> postcard.getProvider();</span><br><span class="line">            <span class="keyword">case</span> BOARDCAST:</span><br><span class="line">            <span class="keyword">case</span> CONTENT_PROVIDER:</span><br><span class="line">            <span class="keyword">case</span> FRAGMENT:</span><br><span class="line">                Class fragmentMeta = postcard.getDestination();</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    Object instance = fragmentMeta.getConstructor().newInstance();</span><br><span class="line">                    <span class="keyword">if</span> (instance <span class="keyword">instanceof</span> Fragment) &#123;</span><br><span class="line">                        ((Fragment) instance).setArguments(postcard.getExtras());</span><br><span class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (instance <span class="keyword">instanceof</span> android.support.v4.app.Fragment) &#123;</span><br><span class="line">                        ((android.support.v4.app.Fragment) instance).setArguments(postcard.getExtras());</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">return</span> instance;</span><br><span class="line">                &#125; <span class="keyword">catch</span> (Exception ex) &#123;</span><br><span class="line">                    logger.error(Consts.TAG, <span class="string">&quot;Fetch fragment instance error, &quot;</span> + TextUtils.formatStackTrace(ex.getStackTrace()));</span><br><span class="line">                &#125;</span><br><span class="line">            <span class="keyword">case</span> METHOD:</span><br><span class="line">            <span class="keyword">case</span> SERVICE:</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Start activity</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@see</span> ActivityCompat</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">startActivity</span><span class="params">(<span class="keyword">int</span> requestCode, Context currentContext, Intent intent, Postcard postcard, NavigationCallback callback)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (requestCode &gt;= <span class="number">0</span>) &#123;  <span class="comment">// Need start for result</span></span><br><span class="line">            <span class="keyword">if</span> (currentContext <span class="keyword">instanceof</span> Activity) &#123;</span><br><span class="line">                ActivityCompat.startActivityForResult((Activity) currentContext, intent, requestCode, postcard.getOptionsBundle());</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                logger.warning(Consts.TAG, <span class="string">&quot;Must use [navigation(activity, ...)] to support [startActivityForResult]&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            ActivityCompat.startActivity(currentContext, intent, postcard.getOptionsBundle());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ((-<span class="number">1</span> != postcard.getEnterAnim() &amp;&amp; -<span class="number">1</span> != postcard.getExitAnim()) &amp;&amp; currentContext <span class="keyword">instanceof</span> Activity) &#123;    <span class="comment">// Old version.</span></span><br><span class="line">            ((Activity) currentContext).overridePendingTransition(postcard.getEnterAnim(), postcard.getExitAnim());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">null</span> != callback) &#123; <span class="comment">// Navigation over.</span></span><br><span class="line">            callback.onArrival(postcard);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="扫描dex文件中包名com-alibaba-android-arouter-routes下的所有class文件"><a href="#扫描dex文件中包名com-alibaba-android-arouter-routes下的所有class文件" class="headerlink" title="扫描dex文件中包名com.alibaba.android.arouter.routes下的所有class文件"></a>扫描dex文件中包名com.alibaba.android.arouter.routes下的所有class文件</h3>ClassUtils.getFileNameByPackageName()方法返回指定包名下的所有class文件名。举例：<br>com.alibaba.android.arouter.routes.ARouter$$Root$$app<br>com.alibaba.android.arouter.routes.ARouter$$Root$$moduleother，<br>com.alibaba.android.arouter.routes.ARouter$$Root$$modulethird,<br>com.alibaba.android.arouter.routes.ARouter$$Root$$moduleservice,<br>com.alibaba.android.arouter.routes.ARouter$$Root$$arouterapi,</li>
+</ol>
+<p>com.alibaba.android.arouter.routes.ARouter$$Group$$arouter,<br>com.alibaba.android.arouter.routes.ARouter$$Group$$main,<br>com.alibaba.android.arouter.routes.ARouter$$Group$$other,<br>com.alibaba.android.arouter.routes.ARouter$$Group$$third,<br>com.alibaba.android.arouter.routes.ARouter$$Group$$service, </p>
+<p>com.alibaba.android.arouter.routes.ARouter$$Providers$$arouterapi,<br>com.alibaba.android.arouter.routes.ARouter$$Providers$$app,<br>com.alibaba.android.arouter.routes.ARouter$$Providers$$moduleother,<br>com.alibaba.android.arouter.routes.ARouter$$Providers$$modulethird,<br>com.alibaba.android.arouter.routes.ARouter$$Providers$$moduleservice,</p>
+<p>com.alibaba.android.arouter.routes.ARouter$$Interceptors$$app</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//ClassUtils.java</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Set&lt;String&gt; <span class="title">getFileNameByPackageName</span><span class="params">(Context context, <span class="keyword">final</span> String packageName)</span></span></span><br><span class="line"><span class="function">            <span class="keyword">throws</span> PackageManager.NameNotFoundException, IOException, InterruptedException </span>&#123;</span><br><span class="line">        <span class="keyword">final</span> Set&lt;String&gt; classNames = <span class="keyword">new</span> HashSet&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        List&lt;String&gt; paths = getSourcePaths(context);</span><br><span class="line">        <span class="keyword">final</span> CountDownLatch parserCtl = <span class="keyword">new</span> CountDownLatch(paths.size());</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">final</span> String path : paths) &#123;</span><br><span class="line">            DefaultPoolExecutor.getInstance().execute(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                    DexFile dexfile = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        <span class="comment">//path: /data/app/com.yxf.arouter.sample-c4N-3bLkk7jsTmTOlMbi-w==/base.apk</span></span><br><span class="line">                        <span class="keyword">if</span> (path.endsWith(EXTRACTED_SUFFIX)) &#123;</span><br><span class="line">                            <span class="comment">//NOT use new DexFile(path), because it will throw &quot;permission error in /data/dalvik-cache&quot;</span></span><br><span class="line">                            dexfile = DexFile.loadDex(path, path + <span class="string">&quot;.tmp&quot;</span>, <span class="number">0</span>);</span><br><span class="line">                        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                            dexfile = <span class="keyword">new</span> DexFile(path);</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        Enumeration&lt;String&gt; dexEntries = dexfile.entries();</span><br><span class="line">                        <span class="keyword">while</span> (dexEntries.hasMoreElements()) &#123;</span><br><span class="line">                            String className = dexEntries.nextElement();</span><br><span class="line">                            <span class="keyword">if</span> (className.startsWith(packageName)) &#123;</span><br><span class="line">                                classNames.add(className);</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (Throwable ignore) &#123;</span><br><span class="line">                        Log.e(<span class="string">&quot;ARouter&quot;</span>, <span class="string">&quot;Scan map file in dex files made error.&quot;</span>, ignore);</span><br><span class="line">                    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                        <span class="keyword">if</span> (<span class="keyword">null</span> != dexfile) &#123;</span><br><span class="line">                            <span class="keyword">try</span> &#123;</span><br><span class="line">                                dexfile.close();</span><br><span class="line">                            &#125; <span class="keyword">catch</span> (Throwable ignore) &#123;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        parserCtl.countDown();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        parserCtl.await();</span><br><span class="line"></span><br><span class="line">        Log.d(Consts.TAG, <span class="string">&quot;Filter &quot;</span> + classNames.size() + <span class="string">&quot; classes by packageName &lt;&quot;</span> + packageName + <span class="string">&quot;&gt;&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> classNames;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="arouter-register"><a href="#arouter-register" class="headerlink" title="arouter-register"></a>arouter-register</h4><p>会扫描所有以下三种的接口实例：</p>
+<ol>
+<li>IRouteRoot</li>
+<li>IInterceptorGroup</li>
+<li>IProviderGroup</li>
+</ol>
+<p>例如：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">private <span class="keyword">static</span> void loadRouterMap() &#123;</span><br><span class="line">    registerByPlugin = true;</span><br><span class="line">    register(<span class="string">&quot;com.alibaba.android.arouter.routes.ARouter<span class="variable">$</span><span class="variable">$Root</span><span class="variable">$</span><span class="variable">$arouterapi</span>&quot;</span>);</span><br><span class="line">    register( <span class="string">&quot;com.alibaba.android.arouter.routes.ARouter<span class="variable">$</span><span class="variable">$Root</span><span class="variable">$</span><span class="variable">$moduleother</span>&quot;</span>);</span><br><span class="line">    register(<span class="string">&quot;com.alibaba.android.arouter.routes.ARouter<span class="variable">$</span><span class="variable">$Root</span><span class="variable">$</span><span class="variable">$modulethird</span>&quot;</span>);</span><br><span class="line">    register(<span class="string">&quot;com.alibaba.android.arouter.routes.ARouter<span class="variable">$</span><span class="variable">$Root</span><span class="variable">$</span><span class="variable">$app</span>&quot;</span>);</span><br><span class="line">    register(<span class="string">&quot;com.alibaba.android.arouter.routes.ARouter<span class="variable">$</span><span class="variable">$Providers</span><span class="variable">$</span><span class="variable">$arouterapi</span>&quot;</span>);</span><br><span class="line">    register( <span class="string">&quot;com.alibaba.android.arouter.routes.ARouter<span class="variable">$</span><span class="variable">$Providers</span><span class="variable">$</span><span class="variable">$moduleother</span>&quot;</span>);</span><br><span class="line">    register(<span class="string">&quot;com.alibaba.android.arouter.routes.ARouter<span class="variable">$</span><span class="variable">$Providers</span><span class="variable">$</span><span class="variable">$modulethird</span>&quot;</span>);</span><br><span class="line">    register(<span class="string">&quot;com.alibaba.android.arouter.routes.ARouter<span class="variable">$</span><span class="variable">$Providers</span><span class="variable">$</span><span class="variable">$app</span>&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+	<div>
+      
+          <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束 <i class="fa fa-paw"></i> 感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%B7%AF%E7%94%B1%E7%BB%84%E4%BB%B6/" rel="tag"># 路由组件</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/12/15/kotlin_reified/" rel="prev" title="Reified关键字">
+                  <i class="fa fa-chevron-left"></i> Reified关键字
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/12/26/http_cache_control/" rel="next" title="Cache-Control的理解">
+                  Cache-Control的理解 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xifengcoder</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

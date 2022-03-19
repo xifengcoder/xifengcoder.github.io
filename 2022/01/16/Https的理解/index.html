@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=-apple-system:300,300italic,400,400italic,700,700italic%7CBlinkMacSystemFont:300,300italic,400,400italic,700,700italic%7C"Apple+Color+Emoji":300,300italic,400,400italic,700,700italic%7C"Segoe+UI+Emoji":300,300italic,400,400italic,700,700italic%7C"Segoe+UI+Symbol":300,300italic,400,400italic,700,700italic%7C"Segoe+UI":300,300italic,400,400italic,700,700italic%7C"PingFang+SC":300,300italic,400,400italic,700,700italic%7C"Hiragino+Sans+GB":300,300italic,400,400italic,700,700italic%7C"Microsoft+YaHei":300,300italic,400,400italic,700,700italic%7C"Helvetica+Neue":300,300italic,400,400italic,700,700italic%7CHelvetica:300,300italic,400,400italic,700,700italic%7CArial:300,300italic,400,400italic,700,700italic%7Csans-serif:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xifengcoder.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":false,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<meta name="description" content="通过WireShark抓包分析Https协议的内容...">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Https的理解">
+<meta property="og:url" content="https://xifengcoder.github.io/2022/01/16/Https%E7%9A%84%E7%90%86%E8%A7%A3/index.html">
+<meta property="og:site_name" content="西风飞扬">
+<meta property="og:description" content="通过WireShark抓包分析Https协议的内容...">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xifengcoder.github.io/images/https_client_hello.jpg">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190223210240623.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hpZmVucw==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190223210317796.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hpZmVucw==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2019022321034489.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hpZmVucw==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190223210417283.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hpZmVucw==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190223210510907.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hpZmVucw==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190223210528625.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190223210536632.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190223210612136.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190223210621830.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190223210644486.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190223210700490.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190223210720641.png">
+<meta property="article:published_time" content="2022-01-16T03:24:08.000Z">
+<meta property="article:modified_time" content="2022-03-11T13:19:57.323Z">
+<meta property="article:author" content="xifengcoder">
+<meta property="article:tag" content="Https">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xifengcoder.github.io/images/https_client_hello.jpg">
+
+
+<link rel="canonical" href="https://xifengcoder.github.io/2022/01/16/Https%E7%9A%84%E7%90%86%E8%A7%A3/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xifengcoder.github.io/2022/01/16/Https%E7%9A%84%E7%90%86%E8%A7%A3/","path":"2022/01/16/Https的理解/","title":"Https的理解"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Https的理解 | 西风飞扬</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">西风飞扬</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="th fa-fw"></i>分类</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E3%80%81HTTPS%E5%8D%8F%E8%AE%AE%E8%AF%A6%E6%83%85"><span class="nav-text">一、HTTPS协议详情</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-Client-Hello-%EF%BC%88Client-gt-Server%EF%BC%89"><span class="nav-text">1. Client Hello （Client -&gt; Server）</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Server-Hello-%EF%BC%88Server-%E2%80%93-gt-Client-%EF%BC%89"><span class="nav-text">2.  Server Hello （Server –&gt; Client ）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Server-Certificate-%EF%BC%88Server-%E2%80%93-gt-Client-%EF%BC%89"><span class="nav-text">3.  Server Certificate （Server –&gt; Client ）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-Client-Certificate-Client-%E2%80%93-gt-Server%EF%BC%8C%E5%8F%AF%E9%80%89"><span class="nav-text">4. Client Certificate (Client –&gt; Server，可选)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-Server-Key-Exchange-Server-%E2%80%93-gt-Client"><span class="nav-text">5. Server Key Exchange (Server –&gt; Client)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-Server-Hello-Done-Server%E2%80%93-gt-Client"><span class="nav-text">6. Server Hello Done (Server–&gt; Client )</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-Client-Key-Exchange-Client-%E2%80%93-gt-Server"><span class="nav-text">7. Client Key Exchange (Client –&gt; Server)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-Client-Change-Cipher-Spec-Client-%E2%86%92-Server"><span class="nav-text">8. Client Change Cipher Spec (Client → Server)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-Client-Encrypted-handshake-message-%EF%BC%88Client-%E2%80%93-gt-Server%EF%BC%89"><span class="nav-text">9. Client Encrypted handshake message （Client –&gt; Server）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-Server-Change-Cipher-Spec-Server-%E2%80%93-gt-Client"><span class="nav-text">10. Server Change Cipher Spec (Server –&gt; Client)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#11-Server-Encrypted-handshake-message-Server-%E2%80%93-gt-Client"><span class="nav-text">11. Server Encrypted handshake message (Server –&gt; Client)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#12-Application-Data-Protocol-Client-gt-Server"><span class="nav-text">12. Application Data Protocol(Client -&gt; Server)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#13-Application-Data-Protocol-Server%E2%80%93-gt-Client"><span class="nav-text">13. Application Data Protocol (Server–&gt; Client)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#14-Entrypted-Alert-Server-%E2%80%93-gt-Client"><span class="nav-text">14. Entrypted Alert(Server –&gt; Client)</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">xifengcoder</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/xifengcoder" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;xifengcoder" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/xifengcoder" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xifengcoder.github.io/2022/01/16/Https%E7%9A%84%E7%90%86%E8%A7%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="xifengcoder">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="西风飞扬">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Https的理解
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-01-16 11:24:08" itemprop="dateCreated datePublished" datetime="2022-01-16T11:24:08+08:00">2022-01-16</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2022-03-11 21:19:57" itemprop="dateModified" datetime="2022-03-11T21:19:57+08:00">2022-03-11</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Network/" itemprop="url" rel="index"><span itemprop="name">Network</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+		
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>通过Wireshark抓包来分析Https协议的内容。</p>
+<h4 id="一、HTTPS协议详情"><a href="#一、HTTPS协议详情" class="headerlink" title="一、HTTPS协议详情"></a>一、HTTPS协议详情</h4><h5 id="1-Client-Hello-（Client-gt-Server）"><a href="#1-Client-Hello-（Client-gt-Server）" class="headerlink" title="1. Client Hello （Client -&gt; Server）"></a>1. Client Hello （Client -&gt; Server）</h5><p>客户端发送所支持的TLS协议版本、支持的密码套件列表、数据压缩方式及一个客户端随机数（client random）等信息发给服务端。</p>
+<p>1）Handleshake Protocol<br>2）TLS协议版本<br>3）户端生成的随机数client.random（32字节）；<br>4）支持的加密算法套件(Cipher Suites)，例如TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (0xc02f)<br>5） 支持的压缩方法<br>6）扩展属性</p>
+<p>其中密码套件算法包含如下几部分：</p>
+<ol>
+<li><p> ECDHE：密钥交换算法（Elliptic Curve Diffie-Hellman Ephemeral，ECDHE）</p>
+</li>
+<li><p>RSA：认证算法（Rivest Shamir Adleman algorithm, RSA）</p>
+</li>
+<li><p>AES-128-GCM：数据加密算法（Advanced Encryption Standard 128 bit Galois/Counter Mode）</p>
+</li>
+<li><p>SHA256：消息摘要（MAC）算法（Secure Hash Algorithm 256 bit）</p>
+</li>
+</ol>
+<p><img src="/images/https_client_hello.jpg" alt="Client Hello"></p>
+<h4 id="2-Server-Hello-（Server-–-gt-Client-）"><a href="#2-Server-Hello-（Server-–-gt-Client-）" class="headerlink" title="2.  Server Hello （Server –&gt; Client ）"></a>2.  Server Hello （Server –&gt; Client ）</h4><p>​    服务端在收到Client Hello消息后，发送服务端TLS协议版本、选择的密码套件（Cipher Suite）及服务器随机数（server random）等信息给客户端。服务器根据客户端传递的密码套件列表，选择一个双方都支持的密码套件进行处理。以TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (0xc02f)为例，表示为了协商出预备主密钥，需要使用ECDHE密钥协商算法，客户端和服务端每次连接的时候，服务端需要传递动态的DH信息（DH参数和DH公钥），传递的DH信息需要使用RSA签名算法签名后发送给客户端，相关细节会在Server Key Exchange子消息中说明。</p>
+<p>包含内容:<br>1）Handleshake Protocol </p>
+<p>2）TLS协议版本</p>
+<ol start="3">
+<li><p> 服务器生成的随机数server.random（32字节）</p>
+</li>
+<li><p> session ID(32字节)</p>
+</li>
+</ol>
+<p>5）选择的Cipher Suit</p>
+<ol start="6">
+<li>扩展部分<br><img src="https://img-blog.csdnimg.cn/20190223210240623.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hpZmVucw==,size_16,color_FFFFFF,t_70" alt="Server Hello"></li>
+</ol>
+<h4 id="3-Server-Certificate-（Server-–-gt-Client-）"><a href="#3-Server-Certificate-（Server-–-gt-Client-）" class="headerlink" title="3.  Server Certificate （Server –&gt; Client ）"></a>3.  Server Certificate （Server –&gt; Client ）</h4><p>服务端发送Certificate给客户端，Certificate包括以下几部分：</p>
+<p>1）版本号(version): v3 (2)；</p>
+<p>2）序列号(serialNumber):  长度16字节，例如：0x03aa20c7c44887f2b628b63d28a39e78；</p>
+<p>3）签名算法(signature): sha256WithRSAEncryption，它包含一个Algorithm Id，例如1.2.840.113549.1.1.11，用来标识该签名算法；</p>
+<p>4）版本者(issuer)；</p>
+<p>5）有效期(validity)，包含起始时间(notBefore)和结束时间(notAfter)；</p>
+<p>6）使用者(subject)</p>
+<p>6.1 使用者公钥信息(subjectPublicKeyInfo)，包含以下内容：<br>   ① 算法类型(algorithm)，例如：rsaEncryption，其Algorithm Id是: 1.2.840.113549.1.1.1 (rsaEncryption)<br>   ② 公钥信息(subjectPublicKey)，包括公钥(modulus，长度256字节），指数(publicExponent，65537) </p>
+<p>6.2 算法标识(algorithmIdentifier)，例如：sha256WithRSAEncryption，具体含义是：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Public</span>-Key Cryptography Standards (PKCS) #<span class="number">1</span> version <span class="number">1</span>.<span class="number">5</span> signature algorithm with Secure Hash Algorithm <span class="number">256</span> (SHA<span class="number">256</span>) and Rivest, Shamir and Adleman (RSA) encryption.</span><br></pre></td></tr></table></figure>
+
+<p>6.3 证书签名(encrypted)，长度256字节，例如：88291e3da5b2d39ed5406cb1185d27fd3abe233d3e4c2050…</p>
+<p><img src="https://img-blog.csdnimg.cn/20190223210317796.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hpZmVucw==,size_16,color_FFFFFF,t_70" alt="Server Certificate"></p>
+<h4 id="4-Client-Certificate-Client-–-gt-Server，可选"><a href="#4-Client-Certificate-Client-–-gt-Server，可选" class="headerlink" title="4. Client Certificate (Client –&gt; Server，可选)"></a>4. Client Certificate (Client –&gt; Server，可选)</h4><p>服务端要求认证客户端的证书，这种情况使用的比较少。</p>
+<h4 id="5-Server-Key-Exchange-Server-–-gt-Client"><a href="#5-Server-Key-Exchange-Server-–-gt-Client" class="headerlink" title="5. Server Key Exchange (Server –&gt; Client)"></a>5. Server Key Exchange (Server –&gt; Client)</h4><p>如果服务端提供的证书不足以使客户端生成premaster key时，那么必须发送Server Key Exchange消息。</p>
+<p>服务器发送动态或静态的DH信息（DH参数和DH公钥），使用服务器的私钥进行签名，这里选择的 SignatureAndHashAlgorithm 是rsa_pkcs1_sha256算法。</p>
+<p>包含的内容如下：</p>
+<ul>
+<li><p>Content Type: Handshake (22) (1bytes)</p>
+</li>
+<li><p>Version: TLS 1.2 (0x0303) (2bytes)</p>
+</li>
+<li><p>Length: 333 (2bytes)</p>
+</li>
+<li><p>Handshake Protocol: Server Key Exchange (333bytes)，包含：</p>
+<pre><code>① Handshake Type: Server Key Exchange (12) (3bytes)
+② Length:329 (3bytes)
+③ EC Diffie-Hellman Server Params(329bytes)，共有：
+    Curve Type: named_curve (0x03) (1bytes)
+    Named Curve: secp256r1 (0x0017) (2bytes)
+    Pubkey Length: 65 (1bytes)
+    Pubkey: 04f3f88d904af655faeeded2ba6453d34b1ba95160aaf427… (65bytes)
+    Signature Algorithm: rsa_pkcs1_sha256 (0x0401) (2bytes)
+    Signature Length: 256 (2bytes)
+    Signature: 4809b694a751868299023f90385b2012ed9a2916c957da16…（256bytes）
+</code></pre>
+</li>
+</ul>
+<p><img src="https://img-blog.csdnimg.cn/2019022321034489.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hpZmVucw==,size_16,color_FFFFFF,t_70" alt="Server Key Exchange"></p>
+<h4 id="6-Server-Hello-Done-Server–-gt-Client"><a href="#6-Server-Hello-Done-Server–-gt-Client" class="headerlink" title="6. Server Hello Done (Server–&gt; Client )"></a>6. Server Hello Done (Server–&gt; Client )</h4><p>服务端确认Server Hello消息的结束。<br><img src="https://img-blog.csdnimg.cn/20190223210417283.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hpZmVucw==,size_16,color_FFFFFF,t_70" alt="Server Hello Done"></p>
+<h4 id="7-Client-Key-Exchange-Client-–-gt-Server"><a href="#7-Client-Key-Exchange-Client-–-gt-Server" class="headerlink" title="7. Client Key Exchange (Client –&gt; Server)"></a>7. Client Key Exchange (Client –&gt; Server)</h4><p>客户端在收到Server Hello Done消息后会发送Client Key Exchange消息，如果服务端要求校验Client Certificate的话，Client Key Exchange消息在发送Client Certificate之后发送。</p>
+<p>如果密码套件中的秘钥协商写法是ECDHE，那么客户端需要发送ECDH的公钥。</p>
+<p>这里的重点是如何计算PreMaster Key。</p>
+<ul>
+<li>若采用RSA， 客户端随机生成46字节+2字节的client_version，作为PreMaster Key，通过步骤（3）得到的证书中的公钥、或者Server Key Exchange消息中的临时RSA公钥，对其进行加密发送给服务器。</li>
+<li>若采用DH算法（dhe_dss/dhe_rsa/dh_dss/dh_rsa/dh_anon等，下图就是DH算法生成PreMaster Key），直接根据已经交换的两个随机数可以算出PreMaster Key。</li>
+</ul>
+<p>￼<img src="https://img-blog.csdnimg.cn/20190223210510907.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hpZmVucw==,size_16,color_FFFFFF,t_70" alt="Client Key Exchange"></p>
+<h4 id="8-Client-Change-Cipher-Spec-Client-→-Server"><a href="#8-Client-Change-Cipher-Spec-Client-→-Server" class="headerlink" title="8. Client Change Cipher Spec (Client → Server)"></a>8. Client Change Cipher Spec (Client → Server)</h4><p>表示客户端准备切换到加密环境，从这个消息后，客户端发送到的数据都将使用对称秘钥加密。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190223210528625.png" alt="Client Change Cipher Spec"></p>
+<h4 id="9-Client-Encrypted-handshake-message-（Client-–-gt-Server）"><a href="#9-Client-Encrypted-handshake-message-（Client-–-gt-Server）" class="headerlink" title="9. Client Encrypted handshake message （Client –&gt; Server）"></a>9. Client Encrypted handshake message （Client –&gt; Server）</h4><p> Encrypted handshake message是使用对称秘钥加密后的第一个报文。 如果这个报文加解密校验成功，那么就说明对称秘钥是正确的。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190223210536632.png" alt="Client encrypted handshake message"></p>
+<h4 id="10-Server-Change-Cipher-Spec-Server-–-gt-Client"><a href="#10-Server-Change-Cipher-Spec-Server-–-gt-Client" class="headerlink" title="10. Server Change Cipher Spec (Server –&gt; Client)"></a>10. Server Change Cipher Spec (Server –&gt; Client)</h4><p>服务端开始切换加密环境。</p>
+<p>服务端收到pre-master key之后，使用自己的Private Key来解密，服务端和客户端使用client random + server random + pre-master计算出master key（长度48bytes）。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">master_secret = PRF(pre_master_secret, <span class="string">&quot;master secret&quot;</span>, ClientHello.random + ServerHello.random) [<span class="number">0.</span><span class="number">.47</span>];</span><br></pre></td></tr></table></figure>
+<p>后面的消息就使用master key作为秘钥进行对称加密后在传输。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190223210612136.png" alt="Server change cipher cipher"></p>
+<h4 id="11-Server-Encrypted-handshake-message-Server-–-gt-Client"><a href="#11-Server-Encrypted-handshake-message-Server-–-gt-Client" class="headerlink" title="11. Server Encrypted handshake message (Server –&gt; Client)"></a>11. Server Encrypted handshake message (Server –&gt; Client)</h4><p>Encrypted HandShake Message是服务端使用对称秘钥加密后发送的第一条报文。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190223210621830.png" alt="Server Encrypted handshake message"></p>
+<h4 id="12-Application-Data-Protocol-Client-gt-Server"><a href="#12-Application-Data-Protocol-Client-gt-Server" class="headerlink" title="12. Application Data Protocol(Client -&gt; Server)"></a>12. Application Data Protocol(Client -&gt; Server)</h4><p>客户端发给服务端的应用层数据，已使用对称秘钥加密。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190223210644486.png" alt="Client Application data protocol"></p>
+<h4 id="13-Application-Data-Protocol-Server–-gt-Client"><a href="#13-Application-Data-Protocol-Server–-gt-Client" class="headerlink" title="13. Application Data Protocol (Server–&gt; Client)"></a>13. Application Data Protocol (Server–&gt; Client)</h4><p>服务端发给客户端的应用程层数据，已使用对称秘钥加密。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190223210700490.png" alt="Server Application data protocol"></p>
+<h4 id="14-Entrypted-Alert-Server-–-gt-Client"><a href="#14-Entrypted-Alert-Server-–-gt-Client" class="headerlink" title="14. Entrypted Alert(Server –&gt; Client)"></a>14. Entrypted Alert(Server –&gt; Client)</h4><p>Alert（21）消息是一种通知消息（Close Notify），表示连接可以关闭了，通常用于数据已发送完成、没有数据要发送时。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190223210720641.png" alt="Encrypted Alert Message"></p>
+
+    </div>
+
+    
+    
+    
+
+	<div>
+      
+          <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束 <i class="fa fa-paw"></i> 感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Https/" rel="tag"># Https</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/01/15/binarytree/" rel="prev" title="算法学习之二叉树">
+                  <i class="fa fa-chevron-left"></i> 算法学习之二叉树
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/01/27/android_mvvm/" rel="next" title="Android应用架构之MVVM模式">
+                  Android应用架构之MVVM模式 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xifengcoder</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
