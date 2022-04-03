@@ -2049,7 +2049,7 @@ pre code {
 .post-body video,
 .post-body embed {
   margin-top: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 6px;
 }
 .post-body .video-container {
   height: 0;
@@ -2140,7 +2140,7 @@ pre code {
   font-family: -apple-system, BlinkMacSystemFont, "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",Helvetica,Arial,sans-serif, 'PingFang SC', 'Microsoft YaHei', sans-serif;
   font-size: 0.75em;
   margin-top: 6px;
-  margin-bottom: 32px;
+  margin-bottom: 40px;
 }
 .posts-expand .post-meta-container .post-description {
   font-size: 0.875em;
