@@ -21,8 +21,8 @@
 <script class="next-config" data-name="main" type="application/json">{"hostname":"xifengcoder.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":false,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 <meta name="description" content="通过WireShark抓包分析Https协议的内容...">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Https的理解">
-<meta property="og:url" content="https://xifengcoder.github.io/2022/01/16/Https%E7%9A%84%E7%90%86%E8%A7%A3/index.html">
+<meta property="og:title" content="通过Wireshark抓包来分析Https协议的内容。">
+<meta property="og:url" content="https://xifengcoder.github.io/2022/01/16/understanding_https/index.html">
 <meta property="og:site_name" content="西风飞扬">
 <meta property="og:description" content="通过WireShark抓包分析Https协议的内容...">
 <meta property="og:locale" content="zh_CN">
@@ -40,21 +40,21 @@
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20190223210700490.png">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20190223210720641.png">
 <meta property="article:published_time" content="2022-01-16T03:24:08.000Z">
-<meta property="article:modified_time" content="2022-03-11T13:19:57.323Z">
+<meta property="article:modified_time" content="2022-04-16T12:25:29.432Z">
 <meta property="article:author" content="xifengcoder">
 <meta property="article:tag" content="Https">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://xifengcoder.github.io/images/https_client_hello.jpg">
 
 
-<link rel="canonical" href="https://xifengcoder.github.io/2022/01/16/Https%E7%9A%84%E7%90%86%E8%A7%A3/">
+<link rel="canonical" href="https://xifengcoder.github.io/2022/01/16/understanding_https/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xifengcoder.github.io/2022/01/16/Https%E7%9A%84%E7%90%86%E8%A7%A3/","path":"2022/01/16/Https的理解/","title":"Https的理解"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xifengcoder.github.io/2022/01/16/understanding_https/","path":"2022/01/16/understanding_https/","title":"通过Wireshark抓包来分析Https协议的内容。"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Https的理解 | 西风飞扬</title>
+<title>通过Wireshark抓包来分析Https协议的内容。 | 西风飞扬</title>
   
 
 
@@ -159,7 +159,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E3%80%81HTTPS%E5%8D%8F%E8%AE%AE%E8%AF%A6%E6%83%85"><span class="nav-text">一、HTTPS协议详情</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-Client-Hello-%EF%BC%88Client-gt-Server%EF%BC%89"><span class="nav-text">1. Client Hello （Client -&gt; Server）</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Server-Hello-%EF%BC%88Server-%E2%80%93-gt-Client-%EF%BC%89"><span class="nav-text">2.  Server Hello （Server –&gt; Client ）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Server-Certificate-%EF%BC%88Server-%E2%80%93-gt-Client-%EF%BC%89"><span class="nav-text">3.  Server Certificate （Server –&gt; Client ）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-Client-Certificate-Client-%E2%80%93-gt-Server%EF%BC%8C%E5%8F%AF%E9%80%89"><span class="nav-text">4. Client Certificate (Client –&gt; Server，可选)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-Server-Key-Exchange-Server-%E2%80%93-gt-Client"><span class="nav-text">5. Server Key Exchange (Server –&gt; Client)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-Server-Hello-Done-Server%E2%80%93-gt-Client"><span class="nav-text">6. Server Hello Done (Server–&gt; Client )</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-Client-Key-Exchange-Client-%E2%80%93-gt-Server"><span class="nav-text">7. Client Key Exchange (Client –&gt; Server)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-Client-Change-Cipher-Spec-Client-%E2%86%92-Server"><span class="nav-text">8. Client Change Cipher Spec (Client → Server)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-Client-Encrypted-handshake-message-%EF%BC%88Client-%E2%80%93-gt-Server%EF%BC%89"><span class="nav-text">9. Client Encrypted handshake message （Client –&gt; Server）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-Server-Change-Cipher-Spec-Server-%E2%80%93-gt-Client"><span class="nav-text">10. Server Change Cipher Spec (Server –&gt; Client)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#11-Server-Encrypted-handshake-message-Server-%E2%80%93-gt-Client"><span class="nav-text">11. Server Encrypted handshake message (Server –&gt; Client)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#12-Application-Data-Protocol-Client-gt-Server"><span class="nav-text">12. Application Data Protocol(Client -&gt; Server)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#13-Application-Data-Protocol-Server%E2%80%93-gt-Client"><span class="nav-text">13. Application Data Protocol (Server–&gt; Client)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#14-Entrypted-Alert-Server-%E2%80%93-gt-Client"><span class="nav-text">14. Entrypted Alert(Server –&gt; Client)</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E3%80%81HTTPS%E5%8D%8F%E8%AE%AE%E8%AF%A6%E6%83%85"><span class="nav-text">一、HTTPS协议详情</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Client-Hello-%EF%BC%88Client-gt-Server%EF%BC%89"><span class="nav-text">1. Client Hello （Client -&gt; Server）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Server-Hello-%EF%BC%88Server-%E2%80%93-gt-Client-%EF%BC%89"><span class="nav-text">2.  Server Hello （Server –&gt; Client ）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Server-Certificate-%EF%BC%88Server-%E2%80%93-gt-Client-%EF%BC%89"><span class="nav-text">3.  Server Certificate （Server –&gt; Client ）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-Client-Certificate-Client-%E2%80%93-gt-Server%EF%BC%8C%E5%8F%AF%E9%80%89"><span class="nav-text">4. Client Certificate (Client –&gt; Server，可选)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-Server-Key-Exchange-Server-%E2%80%93-gt-Client"><span class="nav-text">5. Server Key Exchange (Server –&gt; Client)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-Server-Hello-Done-Server%E2%80%93-gt-Client"><span class="nav-text">6. Server Hello Done (Server–&gt; Client )</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-Client-Key-Exchange-Client-%E2%80%93-gt-Server"><span class="nav-text">7. Client Key Exchange (Client –&gt; Server)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-Client-Change-Cipher-Spec-Client-%E2%86%92-Server"><span class="nav-text">8. Client Change Cipher Spec (Client → Server)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-Client-Encrypted-handshake-message-%EF%BC%88Client-%E2%80%93-gt-Server%EF%BC%89"><span class="nav-text">9. Client Encrypted handshake message （Client –&gt; Server）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-Server-Change-Cipher-Spec-Server-%E2%80%93-gt-Client"><span class="nav-text">10. Server Change Cipher Spec (Server –&gt; Client)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#11-Server-Encrypted-handshake-message-Server-%E2%80%93-gt-Client"><span class="nav-text">11. Server Encrypted handshake message (Server –&gt; Client)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#12-Application-Data-Protocol-Client-gt-Server"><span class="nav-text">12. Application Data Protocol(Client -&gt; Server)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#13-Application-Data-Protocol-Server%E2%80%93-gt-Client"><span class="nav-text">13. Application Data Protocol (Server–&gt; Client)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#14-Entrypted-Alert-Server-%E2%80%93-gt-Client"><span class="nav-text">14. Entrypted Alert(Server –&gt; Client)</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -172,7 +172,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-count">30</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -183,7 +183,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -229,7 +229,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xifengcoder.github.io/2022/01/16/Https%E7%9A%84%E7%90%86%E8%A7%A3/">
+    <link itemprop="mainEntityOfPage" href="https://xifengcoder.github.io/2022/01/16/understanding_https/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -242,7 +242,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Https的理解
+          通过Wireshark抓包来分析Https协议的内容。
         </h1>
 
         <div class="post-meta-container">
@@ -260,7 +260,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2022-03-11 21:19:57" itemprop="dateModified" datetime="2022-03-11T21:19:57+08:00">2022-03-11</time>
+        <time title="修改时间：2022-04-16 20:25:29" itemprop="dateModified" datetime="2022-04-16T20:25:29+08:00">2022-04-16</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -286,14 +286,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>3.9k</span>
+      <span>3.6k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>4 分钟</span>
+      <span>3 分钟</span>
     </span>
 </div>
 		
@@ -305,33 +305,36 @@
     
     <div class="post-body" itemprop="articleBody">
         <p>通过Wireshark抓包来分析Https协议的内容。</p>
-<h4 id="一、HTTPS协议详情"><a href="#一、HTTPS协议详情" class="headerlink" title="一、HTTPS协议详情"></a>一、HTTPS协议详情</h4><h5 id="1-Client-Hello-（Client-gt-Server）"><a href="#1-Client-Hello-（Client-gt-Server）" class="headerlink" title="1. Client Hello （Client -&gt; Server）"></a>1. Client Hello （Client -&gt; Server）</h5><p>客户端发送所支持的TLS协议版本、支持的密码套件列表、数据压缩方式及一个客户端随机数（client random）等信息发给服务端。</p>
-<p>1）Handleshake Protocol<br>2）TLS协议版本<br>3）户端生成的随机数client.random（32字节）；<br>4）支持的加密算法套件(Cipher Suites)，例如TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (0xc02f)<br>5） 支持的压缩方法<br>6）扩展属性</p>
+<h4 id="一、HTTPS协议详情"><a href="#一、HTTPS协议详情" class="headerlink" title="一、HTTPS协议详情"></a>一、HTTPS协议详情</h4><h4 id="1-Client-Hello-（Client-gt-Server）"><a href="#1-Client-Hello-（Client-gt-Server）" class="headerlink" title="1. Client Hello （Client -&gt; Server）"></a>1. Client Hello （Client -&gt; Server）</h4><p>​    客户端发送所支持的TLS协议版本、支持的密码套件列表、数据压缩方式及一个客户端随机数（client random）等信息发给服务端。</p>
+<p>1）Handleshake Protocol </p>
+<p>2）TLS协议版本</p>
+<p>3）户端生成的随机数client.random（32字节）</p>
+<p>4）支持的加密算法套件(Cipher Suites)，例如TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (0xc02f)</p>
+<p>5）支持的压缩方法</p>
+<p>6）扩展属性</p>
 <p>其中密码套件算法包含如下几部分：</p>
 <ol>
-<li><p> ECDHE：密钥交换算法（Elliptic Curve Diffie-Hellman Ephemeral，ECDHE）</p>
-</li>
-<li><p>RSA：认证算法（Rivest Shamir Adleman algorithm, RSA）</p>
-</li>
-<li><p>AES-128-GCM：数据加密算法（Advanced Encryption Standard 128 bit Galois/Counter Mode）</p>
-</li>
-<li><p>SHA256：消息摘要（MAC）算法（Secure Hash Algorithm 256 bit）</p>
-</li>
+<li> ECDHE：密钥交换算法（Elliptic Curve Diffie-Hellman Ephemeral，ECDHE）</li>
+<li> RSA：认证算法（Rivest Shamir Adleman algorithm, RSA）</li>
+<li> AES-128-GCM：数据加密算法（Advanced Encryption Standard 128 bit Galois/Counter Mode）</li>
+<li>SHA256：消息摘要（MAC）算法（Secure Hash Algorithm 256 bit）</li>
 </ol>
-<p><img src="/images/https_client_hello.jpg" alt="Client Hello"></p>
-<h4 id="2-Server-Hello-（Server-–-gt-Client-）"><a href="#2-Server-Hello-（Server-–-gt-Client-）" class="headerlink" title="2.  Server Hello （Server –&gt; Client ）"></a>2.  Server Hello （Server –&gt; Client ）</h4><p>​    服务端在收到Client Hello消息后，发送服务端TLS协议版本、选择的密码套件（Cipher Suite）及服务器随机数（server random）等信息给客户端。服务器根据客户端传递的密码套件列表，选择一个双方都支持的密码套件进行处理。以TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (0xc02f)为例，表示为了协商出预备主密钥，需要使用ECDHE密钥协商算法，客户端和服务端每次连接的时候，服务端需要传递动态的DH信息（DH参数和DH公钥），传递的DH信息需要使用RSA签名算法签名后发送给客户端，相关细节会在Server Key Exchange子消息中说明。</p>
-<p>包含内容:<br>1）Handleshake Protocol </p>
+<p>注意ec_point_formats的扩展，可以看出客户端支持28个椭圆曲线。</p>
+<p>注意SessionTicket扩展，</p>
+<p><img src="https://xifengcoder.github.io/images/https_client_hello.jpg" alt="Client Hello"></p>
+<h4 id="2-Server-Hello-（Server-–-gt-Client-）"><a href="#2-Server-Hello-（Server-–-gt-Client-）" class="headerlink" title="2.  Server Hello （Server –&gt; Client ）"></a>2.  Server Hello （Server –&gt; Client ）</h4><p>​    服务端在收到Client Hello消息后，发送服务端TLS协议版本、选择的密码套件（Cipher Suite）及服务器随机数（server random）等</p>
+<p>信息给客户端。服务器根据客户端传递的密码套件列表，选择一个双方都支持的密码套件进行处理。为了协商出预备主密钥，需要使用</p>
+<p>ECDHE密钥协商算法，客户端和服务端每次连接的时候，服务端需要传递动态的DH信息（DH参数和DH公钥），传递的DH信息需要使用</p>
+<p>RSA签名算法签名后发送给客户端，相关细节会在Server Key Exchange子消息中说明。</p>
+<p>包含内容:</p>
+<p>1）Handleshake Protocol </p>
 <p>2）TLS协议版本</p>
-<ol start="3">
-<li><p> 服务器生成的随机数server.random（32字节）</p>
-</li>
-<li><p> session ID(32字节)</p>
-</li>
-</ol>
+<p>3）服务器生成的随机数server.random（32字节）</p>
+<p>4）Session ID(32字节)</p>
 <p>5）选择的Cipher Suit</p>
-<ol start="6">
-<li>扩展部分<br><img src="https://img-blog.csdnimg.cn/20190223210240623.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hpZmVucw==,size_16,color_FFFFFF,t_70" alt="Server Hello"></li>
-</ol>
+<p>6）扩展部分</p>
+<p>从输出可以看出，ECC椭圆曲线是不压缩的，协商出的密码套件是：TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190223210240623.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hpZmVucw==,size_16,color_FFFFFF,t_70" alt="Server Hello"></p>
 <h4 id="3-Server-Certificate-（Server-–-gt-Client-）"><a href="#3-Server-Certificate-（Server-–-gt-Client-）" class="headerlink" title="3.  Server Certificate （Server –&gt; Client ）"></a>3.  Server Certificate （Server –&gt; Client ）</h4><p>服务端发送Certificate给客户端，Certificate包括以下几部分：</p>
 <p>1）版本号(version): v3 (2)；</p>
 <p>2）序列号(serialNumber):  长度16字节，例如：0x03aa20c7c44887f2b628b63d28a39e78；</p>
@@ -339,39 +342,25 @@
 <p>4）版本者(issuer)；</p>
 <p>5）有效期(validity)，包含起始时间(notBefore)和结束时间(notAfter)；</p>
 <p>6）使用者(subject)</p>
-<p>6.1 使用者公钥信息(subjectPublicKeyInfo)，包含以下内容：<br>   ① 算法类型(algorithm)，例如：rsaEncryption，其Algorithm Id是: 1.2.840.113549.1.1.1 (rsaEncryption)<br>   ② 公钥信息(subjectPublicKey)，包括公钥(modulus，长度256字节），指数(publicExponent，65537) </p>
-<p>6.2 算法标识(algorithmIdentifier)，例如：sha256WithRSAEncryption，具体含义是：</p>
+<ul>
+<li><p>6.1 使用者公钥信息(subjectPublicKeyInfo)，包含以下内容：</p>
+<p> ① 算法类型(algorithm)，例如：rsaEncryption，其Algorithm Id是: 1.2.840.113549.1.1.1 (rsaEncryption)</p>
+<p> ② 公钥信息(subjectPublicKey)，包括公钥(modulus，长度256字节），指数(publicExponent，65537) </p>
+</li>
+<li><p>6.2 算法标识(algorithmIdentifier)，例如：sha256WithRSAEncryption，具体含义是：</p>
+</li>
+</ul>
 <figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Public</span>-Key Cryptography Standards (PKCS) #<span class="number">1</span> version <span class="number">1</span>.<span class="number">5</span> signature algorithm with Secure Hash Algorithm <span class="number">256</span> (SHA<span class="number">256</span>) and Rivest, Shamir and Adleman (RSA) encryption.</span><br></pre></td></tr></table></figure>
 
 <p>6.3 证书签名(encrypted)，长度256字节，例如：88291e3da5b2d39ed5406cb1185d27fd3abe233d3e4c2050…</p>
 <p><img src="https://img-blog.csdnimg.cn/20190223210317796.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hpZmVucw==,size_16,color_FFFFFF,t_70" alt="Server Certificate"></p>
-<h4 id="4-Client-Certificate-Client-–-gt-Server，可选"><a href="#4-Client-Certificate-Client-–-gt-Server，可选" class="headerlink" title="4. Client Certificate (Client –&gt; Server，可选)"></a>4. Client Certificate (Client –&gt; Server，可选)</h4><p>服务端要求认证客户端的证书，这种情况使用的比较少。</p>
-<h4 id="5-Server-Key-Exchange-Server-–-gt-Client"><a href="#5-Server-Key-Exchange-Server-–-gt-Client" class="headerlink" title="5. Server Key Exchange (Server –&gt; Client)"></a>5. Server Key Exchange (Server –&gt; Client)</h4><p>如果服务端提供的证书不足以使客户端生成premaster key时，那么必须发送Server Key Exchange消息。</p>
-<p>服务器发送动态或静态的DH信息（DH参数和DH公钥），使用服务器的私钥进行签名，这里选择的 SignatureAndHashAlgorithm 是rsa_pkcs1_sha256算法。</p>
-<p>包含的内容如下：</p>
-<ul>
-<li><p>Content Type: Handshake (22) (1bytes)</p>
-</li>
-<li><p>Version: TLS 1.2 (0x0303) (2bytes)</p>
-</li>
-<li><p>Length: 333 (2bytes)</p>
-</li>
-<li><p>Handshake Protocol: Server Key Exchange (333bytes)，包含：</p>
-<pre><code>① Handshake Type: Server Key Exchange (12) (3bytes)
-② Length:329 (3bytes)
-③ EC Diffie-Hellman Server Params(329bytes)，共有：
-    Curve Type: named_curve (0x03) (1bytes)
-    Named Curve: secp256r1 (0x0017) (2bytes)
-    Pubkey Length: 65 (1bytes)
-    Pubkey: 04f3f88d904af655faeeded2ba6453d34b1ba95160aaf427… (65bytes)
-    Signature Algorithm: rsa_pkcs1_sha256 (0x0401) (2bytes)
-    Signature Length: 256 (2bytes)
-    Signature: 4809b694a751868299023f90385b2012ed9a2916c957da16…（256bytes）
-</code></pre>
-</li>
-</ul>
+<h4 id="4-Client-Certificate-Client-–-gt-Server，可选"><a href="#4-Client-Certificate-Client-–-gt-Server，可选" class="headerlink" title="4. Client Certificate (Client –&gt; Server，可选)"></a>4. Client Certificate (Client –&gt; Server，可选)</h4><p>​    服务端要求认证客户端的证书，这种情况使用的比较少。</p>
+<h4 id="5-Server-Key-Exchange-Server-–-gt-Client"><a href="#5-Server-Key-Exchange-Server-–-gt-Client" class="headerlink" title="5. Server Key Exchange (Server –&gt; Client)"></a>5. Server Key Exchange (Server –&gt; Client)</h4><p>​    如果服务端提供的证书不足以使客户端生成预备主秘钥（premaster key）时，那么必须发送Server Key Exchange消息。服务器发送动态或静态的DH信息（DH参数和DH公钥），使用服务器的私钥进行签名。</p>
+<p>本例中，ECDHE使用的ECC命名曲线是secp256r1，服务器ECDHE公钥是04f3f88d904af655faeeded2ba6453d34b1ba95160aaf427… </p>
+<p>(65字节)，ECDH信息使用rsa_pkcs1_sha256算法进行签名，签名值是4809b694a751868299023f90385b2012ed9a2916c957da16…</p>
+<p>(256字节)，签名算法（SignatureAndHashAlgorithm）是rsa_pkcs1_sha256(0x0401)。</p>
 <p><img src="https://img-blog.csdnimg.cn/2019022321034489.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hpZmVucw==,size_16,color_FFFFFF,t_70" alt="Server Key Exchange"></p>
-<h4 id="6-Server-Hello-Done-Server–-gt-Client"><a href="#6-Server-Hello-Done-Server–-gt-Client" class="headerlink" title="6. Server Hello Done (Server–&gt; Client )"></a>6. Server Hello Done (Server–&gt; Client )</h4><p>服务端确认Server Hello消息的结束。<br><img src="https://img-blog.csdnimg.cn/20190223210417283.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hpZmVucw==,size_16,color_FFFFFF,t_70" alt="Server Hello Done"></p>
+<h4 id="6-Server-Hello-Done-Server–-gt-Client"><a href="#6-Server-Hello-Done-Server–-gt-Client" class="headerlink" title="6. Server Hello Done (Server–&gt; Client )"></a>6. Server Hello Done (Server–&gt; Client )</h4><p>​    服务端确认Server Hello消息的结束。<br><img src="https://img-blog.csdnimg.cn/20190223210417283.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hpZmVucw==,size_16,color_FFFFFF,t_70" alt="Server Hello Done"></p>
 <h4 id="7-Client-Key-Exchange-Client-–-gt-Server"><a href="#7-Client-Key-Exchange-Client-–-gt-Server" class="headerlink" title="7. Client Key Exchange (Client –&gt; Server)"></a>7. Client Key Exchange (Client –&gt; Server)</h4><p>客户端在收到Server Hello Done消息后会发送Client Key Exchange消息，如果服务端要求校验Client Certificate的话，Client Key Exchange消息在发送Client Certificate之后发送。</p>
 <p>如果密码套件中的秘钥协商写法是ECDHE，那么客户端需要发送ECDH的公钥。</p>
 <p>这里的重点是如何计算PreMaster Key。</p>
@@ -462,13 +451,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">200k</span>
+    <span title="站点总字数">217k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:01</span>
+    <span title="站点阅读时长">3:17</span>
   </span>
 </div>
 <div class="busuanzi-count">
