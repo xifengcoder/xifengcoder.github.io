@@ -1646,17 +1646,6 @@ Java中的无符号数是以补码的形式存储的。</li>
       </tags>
   </entry>
   <entry>
-    <title>Netty的学习与理解</title>
-    <url>/2022/04/12/netty/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>Network</category>
-      </categories>
-      <tags>
-        <tag>TCP</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>设计模式总结</title>
     <url>/2022/04/04/design_patterns/</url>
     <content><![CDATA[<p>常用设计模式的总结。</p>
@@ -1720,7 +1709,7 @@ Java中的无符号数是以补码的形式存储的。</li>
 <p>Decouple an abstraction from its implementation so that the two can vary independently.</p>
 <p>​    当在两个独立维度的层次结构中使用继承扩展类时，将导致代码复杂程度指数增长。桥接模式通过将继承改为组合的方式来解决这个问题。 具体来说， 就是抽取其中一个维度、只持有它的抽象引用，具体的实现部分可以动态替换。</p>
 <div align="center">
-  <img src="../../images/design_patterns/structural_bridge.png" width = 80%>
+  <img src="https://xifengcoder.github.io/images/design_patterns/structural_bridge.png" width = 80%>
   <p><font size=2 color=gray style="border-bottom:1px solid #eee;padding:6px;">图：Bridge模式.png</font></p>
 </div>
 
@@ -1759,7 +1748,7 @@ Java中的无符号数是以补码的形式存储的。</li>
 <h4 id="8-组合（Composite）"><a href="#8-组合（Composite）" class="headerlink" title="8. 组合（Composite）"></a>8. 组合（Composite）</h4><p>将对象组合成树状结构，以表示“部分-整体”的层次结构。组合模式使得用户可以相同的方式对待单个对象和组合对象。</p>
 <p>Compose objects into tree structures to represent part-whole hierarchies. Composite lets clients treat individual objects and compositions of objects uniformly.</p>
 <div align="center">
-  <img src="../../images/design_patterns/structural_composite.png" width = 80%>
+  <img src="https://xifengcoder.github.io/images/design_patterns/structural_composite.png" width = 80%>
   <p><font size=2 color=gray style="border-bottom:1px solid #eee;padding:6px;">图：Composite模式.png</font></p>
 </div>
 
@@ -1794,9 +1783,10 @@ Java中的无符号数是以补码的形式存储的。</li>
 <h4 id="9-装饰（Decorator）"><a href="#9-装饰（Decorator）" class="headerlink" title="9. 装饰（Decorator）"></a>9. 装饰（Decorator）</h4><p>通过将对象（Wrappee Object）放入特殊封装对象（Wrapper Objects）为原对象增加新的行为。</p>
 <p>Attach additional responsibilities to an object dynamically. Decorators provide a flexible alternative to subclassing for extending functionality.</p>
 <div align="center">
-  <img src="../../images/design_patterns/structural_decorator.png" width = 80%>
+  <img src="https://xifengcoder.github.io/images/design_patterns/structural_decorator.png" width = 80%>
   <p><font size=2 color=gray style="border-bottom:1px solid #eee;padding:6px;">图：Decorator模式.png</font></p>
 </div>
+
 
 <h5 id="适用场景-1"><a href="#适用场景-1" class="headerlink" title="适用场景"></a>适用场景</h5><ul>
 <li>如果你希望在无需修改代码的情况下即可使用对象， 且希望在运行时为对象新增额外的行为， 可以使用装饰模式。</li>
