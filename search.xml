@@ -1788,6 +1788,7 @@ Java中的无符号数是以补码的形式存储的。</li>
 </div>
 
 
+
 <h5 id="适用场景-1"><a href="#适用场景-1" class="headerlink" title="适用场景"></a>适用场景</h5><ul>
 <li>如果你希望在无需修改代码的情况下即可使用对象， 且希望在运行时为对象新增额外的行为， 可以使用装饰模式。</li>
 </ul>
@@ -1830,7 +1831,61 @@ Java中的无符号数是以补码的形式存储的。</li>
 </li>
 </ul>
 <h4 id="10-外观（Facade）"><a href="#10-外观（Facade）" class="headerlink" title="10. 外观（Facade）"></a>10. 外观（Facade）</h4><p>Provide a unified interface to a set of interfaces in a subsystem. Facade defines a higher-level interface that makes the subsystem easier to use.<br>为包含许多活动部件的复杂子系统提供一个简单的接口。Facade定义了一个更高层次的接口、使得子系统更加易用。</p>
+<div align="center">
+  <img src="https://xifengcoder.github.io/images/design_patterns/structural_facade.png" width = 80%>
+  <p><font size=2 color=gray style="border-bottom:1px solid #eee;padding:6px;">图：Facade模式.png</font></p>
+</div>
+
+<h5 id="适用场景-2"><a href="#适用场景-2" class="headerlink" title="适用场景"></a>适用场景</h5><ul>
+<li><p>如果你需要一个指向复杂子系统的直接接口， 且该接口的功能有限， 则可以使用外观模式。</p>
+</li>
+<li><p>如果需要将子系统组织为多层结构， 可以使用外观。</p>
+<p>  创建外观来定义子系统中各层次的入口。 你可以要求子系统仅使用外观来进行交互， 以减少子系统之间的耦合。</p>
+</li>
+</ul>
+<h5 id="优缺点-1"><a href="#优缺点-1" class="headerlink" title="优缺点"></a>优缺点</h5><ul>
+<li>你可以让自己的代码独立于复杂子系统。</li>
+<li>外观可能成为与程序中所有类都耦合的上帝对象。</li>
+</ul>
+<h5 id="与其他模式的关系"><a href="#与其他模式的关系" class="headerlink" title="与其他模式的关系"></a>与其他模式的关系</h5><ul>
+<li><p>外观模式为现有对象定义了一个新接口， 适配器模式则会试图运用已有的接口。 适配器通常只封装一个对象， 外观通常会作用于整个对象子系统（subsystem of objects）上。</p>
+</li>
+<li><p>当只需对客户端代码隐藏子系统创建对象的方式时， 你可以使用抽象工厂模式来代替外观。</p>
+</li>
+<li><p>享元模式展示了如何生成大量的小型对象， 外观则展示了如何用一个对象来代表整个子系统。</p>
+</li>
+<li><p>外观和中介者模式的职责类似： 它们都尝试在大量紧密耦合的类中组织起合作。</p>
+<ul>
+<li>外观为子系统中的所有对象定义了一个简单接口， 但是它不提供任何新功能。 子系统本身不会意识到外观的存在。 子系统中的对象可以直接进行交流。</li>
+<li>中介者将系统中组件的沟通行为中心化。 各组件只知道中介者对象， 无法直接相互交流。<br>  外观类通常可以转换为单例模式类， 因为在大部分情况下一个外观对象就足够了。</li>
+</ul>
+</li>
+<li><p>外观与代理模式的相似之处在于它们都缓存了一个复杂实体并自行对其进行初始化。 代理与其服务对象遵循同一接口， 使得自己和服务对象可以互换， 在这一点上它与外观不同。</p>
+</li>
+</ul>
 <h4 id="11-享元（Flyweight）"><a href="#11-享元（Flyweight）" class="headerlink" title="11. 享元（Flyweight）"></a>11. 享元（Flyweight）</h4><p>Use sharing to support large numbers of fine-grained objects efficiently.<br>享元是一种结构型设计模式， 它允许你在消耗少量内存的情况下支持大量对象。模式通过共享多个对象的部分状态来实现上述功能。 换句话来说， 享元会将不同对象的相同数据进行缓存以节省内存。</p>
+<p>对象的常量数据通常被称为<em>内在状态（intrinsic state</em>）， 其位于对象内部， 只能被其它对象读取、而不能被修改。 而对象的其余状态—也即经常会被外部修改的状态，被称为<em>外在状态（</em>extrinsic state*.）*。</p>
+<p>享元模式建议不在对象中存储外在状态， 而是将其传递给另外一个依赖于它的方法。</p>
+<p>程序只在对象中保存内在状态， 以方便在不同情景下重用。 这些对象的区别仅在于其内在状态，因此你所需的对象数量会大大削减。 </p>
+<p>由于享元对象可在不同的情景中使用， 你必须确保其状态不能被修改。 享元类的状态只能由构造函数的参数进行一次性初始化， 它不能对其他对象公开其设置器（setters）或公有成员变量（public fields ）。</p>
+<h5 id="适用场景-3"><a href="#适用场景-3" class="headerlink" title="适用场景"></a>适用场景</h5><ul>
+<li>当我们需要创建大量的相似对象，它们之间只有一少部分参数不同、其余大部分的参数都相同时，可以考虑适用享元模式；</li>
+<li>我们需要控制创建大量对象时的内存消耗时，即希望通过创建较少的、可共享的对象来减少内存消耗。</li>
+</ul>
+<h5 id="优缺点：-2"><a href="#优缺点：-2" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
+<li>如果程序中有很多相似对象， 那么你将可以节省大量内存。</li>
+<li>你可能需要牺牲执行速度来换取内存，因为他人每次调用享元方法时都需要重新计算部分情景数据。</li>
+<li>代码会变得更加复杂。 团队中的新成员总是会问：  “为什么要像这样拆分一个实体的状态？”。</li>
+</ul>
+<h5 id="与其它模式的关系：-2"><a href="#与其它模式的关系：-2" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
+<li>你可以使用享元模式实现组合模式树的共享叶节点以节省内存。</li>
+<li>享元展示了如何生成大量的小型对象， 外观模式则展示了如何用一个对象来代表整个子系统。</li>
+<li>如果你能将对象的所有共享状态简化为一个享元对象， 那么享元就和单例模式类似了。 但这两个模式有两个根本性的不同。<ul>
+<li>单例只会有一个单例实体， 但是享元类可以有多个实体， 各实体的内在状态也可以不同。</li>
+<li>单例对象可以是可变的。 享元对象是不可变的。</li>
+</ul>
+</li>
+</ul>
 <h4 id="12-代理（Proxy）"><a href="#12-代理（Proxy）" class="headerlink" title="12. 代理（Proxy）"></a>12. 代理（Proxy）</h4><p>Provide a surrogate or placeholder for another object to control access to it.<br>为源对象提供一个替代品或占位符，以实现对源对象的控制。<br>代理模式适合应用场景：</p>
 <ol>
 <li>延迟初始化（虚拟代理）<br> 如果你有一个偶尔使用的重量级服务对象，一直保持该对象运行会消耗系统资源时，可使用代理模式。</li>
@@ -1851,7 +1906,7 @@ Java中的无符号数是以补码的形式存储的。</li>
 <li>当必须按特定顺序（particular order）执行多个处理者时， 可以使用该模式。因为你可以以任意顺序链接处理者，所有的请求都会按你设计的顺序精确执行。</li>
 <li>当处理者的集合（the set of handlers）及其顺序需要在运行时进行改变， 可以使用责任链模式。你可以提供setters方法进行动态地添加、删除或者重排序。</li>
 </ul>
-<h5 id="优缺点：-2"><a href="#优缺点：-2" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
+<h5 id="优缺点：-3"><a href="#优缺点：-3" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
 <li>你可以控制请求处理的顺序。</li>
 <li> 单一职责原则。 你可对发起操作和执行操作的类进行解耦。</li>
 <li> 开闭原则。 你可以在不更改现有代码的情况下在程序中新增处理者。</li>
@@ -1896,7 +1951,7 @@ Java中的无符号数是以补码的形式存储的。</li>
 <li>如果你想要将操作放入队列中、 调度操作的执行或者远程执行操作， 可使用命令模式。</li>
 <li>如果你想要实现操作回滚功能， 可使用命令模式。</li>
 </ul>
-<h5 id="优缺点：-3"><a href="#优缺点：-3" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
+<h5 id="优缺点：-4"><a href="#优缺点：-4" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
 <li>单一职责原则。 你可以解耦触发和执行操作的类。</li>
 <li> 开闭原则。 你可以在不修改已有客户端代码的情况下在程序中创建新的命令。</li>
 <li> 你可以实现撤销和恢复功能。</li>
@@ -1935,7 +1990,7 @@ Java中的无符号数是以补码的形式存储的。</li>
 <li>如果某个简单的语言需要解释执行、而且可以将该语言中的语句表示为一个<strong>抽象语法树</strong>时，可以考虑使用解释器模式。</li>
 <li>在某些特定的领域出现<strong>不断重复</strong>的问题时，可以将该领域的问题转化为某种语法规则下的语句，然后构建解释器来解释该语句。</li>
 </ul>
-<h5 id="优缺点：-4"><a href="#优缺点：-4" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
+<h5 id="优缺点：-5"><a href="#优缺点：-5" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
 <li><p>改变和扩展语法比较容易</p>
 <p>  当我们想对文法规则进行扩展延伸时，只需要增加相应的非终结符解释器，并在构建抽象语法树时，使用新增的解释器对象进行具体的解释即可，非常方便。</p>
 </li>
@@ -1943,7 +1998,7 @@ Java中的无符号数是以补码的形式存储的。</li>
 <p>  因为对于每一种文法都可以对应至少一个解释器，其会生成大量的类，导致后期维护困难。同时，对于过于复杂的语法，构建其抽象语法树会显得异常繁琐，甚至有可能会出现需要构建多棵抽象语法树的情况，因此，对于复杂的语法并不推荐使用解释器模式。</p>
 </li>
 </ul>
-<h5 id="与其它模式的关系：-2"><a href="#与其它模式的关系：-2" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><h4 id="16-迭代器（Iterator）"><a href="#16-迭代器（Iterator）" class="headerlink" title="16. 迭代器（Iterator）"></a>16. 迭代器（Iterator）</h4><p>Provide a way to access the elements of an aggregate object sequentially without exposing its underlying representation.<br>提供一种方法，在不暴露一个聚合对象（aggregate object）的底层表示形式（列表、 栈和树等） 的情况下，遍历集合中所有的元素。</p>
+<h5 id="与其它模式的关系：-3"><a href="#与其它模式的关系：-3" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><h4 id="16-迭代器（Iterator）"><a href="#16-迭代器（Iterator）" class="headerlink" title="16. 迭代器（Iterator）"></a>16. 迭代器（Iterator）</h4><p>Provide a way to access the elements of an aggregate object sequentially without exposing its underlying representation.<br>提供一种方法，在不暴露一个聚合对象（aggregate object）的底层表示形式（列表、 栈和树等） 的情况下，遍历集合中所有的元素。</p>
 <p>迭代器模式的主要思想是将集合的遍历行为提取为称为Iterator的独立对象。</p>
 <div align="center">
   <img src="../../images/design_patterns/behavior_iterator.png" width = 80%>
@@ -1962,7 +2017,7 @@ Java中的无符号数是以补码的形式存储的。</li>
 <li>如果你希望代码能够遍历不同的甚至是无法预知的数据结构， 可以使用迭代器模式。</li>
 </ul>
 <p>该模式为集合和迭代器提供了一些通用接口。 如果你在代码中使用了这些接口， 那么将其他实现了这些接口的集合和迭代器传递给它时， 它仍将可以正常运行。</p>
-<h5 id="优缺点：-5"><a href="#优缺点：-5" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
+<h5 id="优缺点：-6"><a href="#优缺点：-6" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
 <li>单一职责原则。 通过将体积庞大的遍历算法代码抽取为独立的类， 你可对客户端代码和集合进行整理。</li>
 <li>开闭原则。 你可实现新型的集合和迭代器并将其传递给现有代码， 无需修改现有代码。</li>
 <li>你可以并行遍历同一集合， 因为每个迭代器对象都包含其自身的遍历状态。</li>
@@ -1970,7 +2025,7 @@ Java中的无符号数是以补码的形式存储的。</li>
 <li>如果你的程序只与简单的集合进行交互， 应用该模式可能会矫枉过正。</li>
 <li>对于某些特殊集合， 使用迭代器可能比直接遍历的效率低。</li>
 </ul>
-<h5 id="与其它模式的关系：-3"><a href="#与其它模式的关系：-3" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
+<h5 id="与其它模式的关系：-4"><a href="#与其它模式的关系：-4" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
 <li><p>你可以使用迭代器模式来遍历组合模式树。</p>
 </li>
 <li><p>你可以同时使用工厂方法模式和迭代器来让子类集合返回不同类型的迭代器， 并使得迭代器与集合相匹配。</p>
@@ -1992,14 +2047,14 @@ Java中的无符号数是以补码的形式存储的。</li>
 <li>当组件因过于依赖其他组件，而无法在不同应用中复用时，可使用中介者模式；</li>
 <li>如果为了能在不同情景下复用一些基本行为， 导致你需要被迫创建大量组件子类时， 可使用中介者模式。</li>
 </ol>
-<h5 id="优缺点：-6"><a href="#优缺点：-6" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
+<h5 id="优缺点：-7"><a href="#优缺点：-7" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
 <li>单一职责原则。 你可以将多个组件间的交流抽取到同一位置， 使其更易于理解和维护。</li>
 <li>开闭原则。 你无需修改实际组件就能增加新的中介者。</li>
 <li>你可以减轻应用中多个组件间的耦合情况。</li>
 <li>你可以更方便地复用各个组件。</li>
 <li>一段时间后， 中介者可能会演化成为上帝对象（God Object.）。</li>
 </ul>
-<h5 id="与其它模式的关系：-4"><a href="#与其它模式的关系：-4" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
+<h5 id="与其它模式的关系：-5"><a href="#与其它模式的关系：-5" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
 <li><p><strong>责任链（Chain of Responsibility</strong>）、<strong>命令行（Command）</strong>、<strong>中介者（Mediator）</strong>和<strong>观察者（Observer）</strong>都用于处理请求的发送者和接收者之间的不同连接方式：</p>
 <ul>
 <li>责任链按照顺序将请求动态传递给一系列的潜在接收者， 直到其中一名接收者对请求进行处理。</li>
@@ -2031,12 +2086,12 @@ Java中的无符号数是以补码的形式存储的。</li>
 <p>订阅列表是动态的， 因此订阅者可随时加入或离开该列表。</p>
 </li>
 </ul>
-<h5 id="优缺点：-7"><a href="#优缺点：-7" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
+<h5 id="优缺点：-8"><a href="#优缺点：-8" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
 <li>开闭原则。 你无需修改发布者代码就能引入新的订阅者类 （如果是发布者接口则可轻松引入发布者类）。</li>
 <li>你可以在运行时建立对象之间的联系。</li>
 <li>订阅者的通知顺序是随机的。</li>
 </ul>
-<h5 id="与其它模式的关系：-5"><a href="#与其它模式的关系：-5" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
+<h5 id="与其它模式的关系：-6"><a href="#与其它模式的关系：-6" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
 <li>责任链模式、 命令模式、 中介者模式和观察者模式用于处理请求发送者和接收者之间的不同连接方式：</li>
 </ul>
 <p>责任链按照顺序将请求动态传递给一系列的潜在接收者， 直至其中一名接收者对请求进行处理。</p>
@@ -2070,13 +2125,13 @@ Java中的无符号数是以补码的形式存储的。</li>
 </ul>
 </li>
 </ul>
-<h5 id="优缺点：-8"><a href="#优缺点：-8" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
+<h5 id="优缺点：-9"><a href="#优缺点：-9" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
 <li>单一职责原则。 将与特定状态相关的代码放在单独的类中。</li>
 <li>开闭原则。 无需修改已有状态类和上下文就能引入新状态。</li>
 <li>通过消除臃肿的状态机条件语句简化上下文的代码。 </li>
 <li> 如果状态机只有很少的几个状态， 或者很少发生改变， 那么应用该模式可能会显得小题大作。</li>
 </ul>
-<h5 id="与其它模式的关系：-6"><a href="#与其它模式的关系：-6" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
+<h5 id="与其它模式的关系：-7"><a href="#与其它模式的关系：-7" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
 <li>桥接模式、 状态模式和策略模式 （在某种程度上包括适配器模式） 模式的接口非常相似。 实际上， 它们都基于组合模式——即将工作委派给其他对象， 不过也各自解决了不同的问题。 模式并不只是以特定方式组织代码的配方， 你还可以使用它们来和其他开发者讨论模式所解决的问题。</li>
 <li>状态可被视为策略的扩展。 两者都基于组合机制： 它们都通过将部分工作委派给 “帮手” 对象来改变其在不同情景下的行为。 策略使得这些对象相互之间完全独立， 它们不知道其他对象的存在。 然而，状态模式没有限制具体状态之间的依赖， 且允许它们在需要时改变上下文（context）的状态。</li>
 </ul>
@@ -2103,7 +2158,7 @@ Java中的无符号数是以补码的形式存储的。</li>
 </li>
 <li>当类中使用了复杂条件运算符以在同一算法的不同变体中切换时， 可使用该模式。</li>
 </ul>
-<h5 id="优缺点：-9"><a href="#优缺点：-9" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
+<h5 id="优缺点：-10"><a href="#优缺点：-10" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
 <li>你可以在运行时切换对象内的算法。</li>
 <li>你可以将算法的实现和使用算法的代码隔离开来。</li>
 <li>你可以使用组合来代替继承。</li>
@@ -2112,7 +2167,7 @@ Java中的无符号数是以补码的形式存储的。</li>
 <li>客户端必须知晓策略间的不同——它需要选择合适的策略。</li>
 <li>许多现代编程语言支持函数类型功能， 允许你在一组匿名函数中实现不同版本的算法。 这样， 你使用这些函数的方式就和使用策略对象时完全相同， 无需借助额外的类和接口来保持代码简洁。</li>
 </ul>
-<h5 id="与其它模式的关系：-7"><a href="#与其它模式的关系：-7" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
+<h5 id="与其它模式的关系：-8"><a href="#与其它模式的关系：-8" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
 <li>桥接模式、 状态模式和策略模式 （在某种程度上包括适配器模式） 模式的接口非常相似。 实际上， 它们都基于组合模式——即将工作委派给其他对象， 不过也各自解决了不同的问题。 模式并不只是以特定方式组织代码的配方， 你还可以使用它们来和其他开发者讨论模式所解决的问题。</li>
 <li>命令模式和策略模式看上去很像， 因为两者都能通过某些行为来参数化对象。 但是， 它们的意图有非常大的不同。<ul>
 <li>你可以使用命令来将任何操作转换为对象。 操作的参数将成为对象的成员变量。 你可以通过转换来延迟操作的执行、 将操作放入队列、 保存历史命令或者向远程服务发送命令等。而策略通常可用于描述完成某件事的不同方式， 让你能够在同一个上下文类中切换算法。</li>
@@ -2136,14 +2191,14 @@ Java中的无符号数是以补码的形式存储的。</li>
 </ul>
 </li>
 </ul>
-<h5 id="优缺点：-10"><a href="#优缺点：-10" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
+<h5 id="优缺点：-11"><a href="#优缺点：-11" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
 <li>你可仅允许客户端重写一个大型算法中的特定部分， 使得算法其他部分修改对其所造成的影响减小。</li>
 <li> 你可将重复代码提取到一个超类中。</li>
 <li> 部分客户端可能会受到算法框架的限制。</li>
 <li> 通过子类抑制默认步骤实现可能会导致<strong>违反里氏替换原则</strong>。</li>
 <li> 模板方法中的步骤越多， 其维护工作就可能会越困难。</li>
 </ul>
-<h5 id="与其它模式的关系：-8"><a href="#与其它模式的关系：-8" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
+<h5 id="与其它模式的关系：-9"><a href="#与其它模式的关系：-9" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
 <li><p>工厂方法模式是模板方法模式的一种特殊形式。 同时， 工厂方法可以作为一个大型模板方法中的一个步骤。</p>
 </li>
 <li><p>模板方法基于继承机制： 它允许你通过扩展子类中的部分内容来改变部分算法。 策略模式基于组合机制： 你可以通过对相应行为提供不同的策略来改变对象的部分行为。 模板方法在类层次上运作， 因此它是静态的。 策略在对象层次上运作， 因此允许在运行时切换行为。</p>
@@ -2166,12 +2221,85 @@ Java中的无符号数是以补码的形式存储的。</li>
   <entry>
     <title>Android OpenGLES 入门</title>
     <url>/2022/04/26/opengles_android/</url>
-    <content><![CDATA[]]></content>
+    <content><![CDATA[<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 指定了渲染时索引值为index的顶点属性数组的数据格式和位置。</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> index 指定要修改的顶点属性的索引值。</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> size 指定顶点属性的大小。顶点属性是一个vec3，它由3个值组成，所以大小是3。</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> type 指定数据的类型，这里是GL_FLOAT。</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> normalized 是否希望数据被标准化(Normalize)。</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> stride 步长，它告诉我们在连续的顶点属性组之间的间隔。</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> ptr 位置数据缓冲区。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">glVertexAttribPointer</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">int</span> index,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">int</span> size,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">int</span> type,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">boolean</span> normalized,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">int</span> stride,</span></span></span><br><span class="line"><span class="params"><span class="function">    java.nio.Buffer ptr</span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>return the location of an attribute variable</p>
+<h4 id="OpenGL-坐标系"><a href="#OpenGL-坐标系" class="headerlink" title="OpenGL 坐标系"></a>OpenGL 坐标系</h4><p>按照约定，OpenGL是一个右手坐标系。最基本的就是说正x轴在你的右手边，正y轴往上而正z轴是往后的。想象你的屏幕处于三个轴的中心且正z轴穿过你的屏幕朝向你。坐标系画起来如下：</p>
+<p><img src="http://learnopengl.com/img/getting-started/coordinate_systems_right_handed.png" alt="coordinate_systems_right_handed"></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 实际加载纹理</span></span><br><span class="line">GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, <span class="comment">// 纹理类型，在OpenGLES中必须为GL10.GL_TEXTURE_2D</span></span><br><span class="line">                   <span class="number">0</span>, <span class="comment">// 纹理的层次，0表示基本图像层，可以理解为直接贴图</span></span><br><span class="line">                   bmp, <span class="comment">// 纹理图像</span></span><br><span class="line">                   <span class="number">0</span> <span class="comment">// 纹理边框尺寸</span></span><br><span class="line">                  );</span><br></pre></td></tr></table></figure>
+
+
+
+<p>加载图片纹理：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 加载图片纹理</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> bmp</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getTextureIdByBitmap</span><span class="params">(Bitmap bmp)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span>[] textures = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">1</span>];</span><br><span class="line">    GLES20.glGenTextures(<span class="number">1</span>, textures, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">int</span> textureId = textures[<span class="number">0</span>];</span><br><span class="line">    GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureId);</span><br><span class="line">    GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);</span><br><span class="line">    GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);</span><br><span class="line">    GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);</span><br><span class="line">    GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);</span><br><span class="line">    GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, <span class="number">0</span>, bmp, <span class="number">0</span>);</span><br><span class="line">    bmp.recycle();</span><br><span class="line">    <span class="keyword">return</span> textureId;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 设置相机位置/设置的是 View矩阵.决定摄影机的空间位置.</span></span><br><span class="line"><span class="comment">// 我们把相机放在世界坐标系的(0, 0, -3)这个点，</span></span><br><span class="line"><span class="comment">// 然后观察的目标位置在点(0.0, 0.0, 0.0)，即世界坐标系的原点。</span></span><br><span class="line"><span class="comment">// 同时我们还需要指定一个「头朝上」的方向，这在代码里设置的是向量(0.0, -1.0, 0.0)指向「上」的方向。</span></span><br><span class="line">Matrix.setLookAtM(mViewMatrix, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, -<span class="number">3</span>,</span><br><span class="line">                <span class="number">0f</span>, <span class="number">0f</span>, <span class="number">0f</span>,</span><br><span class="line">                <span class="number">0f</span>, -<span class="number">1.0f</span>, <span class="number">0.0f</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setLookAtM</span><span class="params">(<span class="keyword">float</span>[] rm, <span class="keyword">int</span> rmOffset,</span></span></span><br><span class="line"><span class="params"><span class="function">            <span class="keyword">float</span> eyeX, <span class="keyword">float</span> eyeY, <span class="keyword">float</span> eyeZ,</span></span></span><br><span class="line"><span class="params"><span class="function">            <span class="keyword">float</span> centerX, <span class="keyword">float</span> centerY, <span class="keyword">float</span> centerZ, <span class="keyword">float</span> upX, <span class="keyword">float</span> upY,</span></span></span><br><span class="line"><span class="params"><span class="function">            <span class="keyword">float</span> upZ)</span></span>&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>设置透视投影</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 设置透视投影</span></span><br><span class="line"><span class="comment"> * Defines a projection matrix in terms of six clip planes.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> m 要填充矩阵元素的float[]类型数组</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> 要填充其实偏移量</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> near面的left</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> near面的right</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> near面的bottom</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> near面的top</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> near面与透视点的距离</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> far面与透视点的距离</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">frustumM</span><span class="params">(<span class="keyword">float</span>[] m, <span class="keyword">int</span> offset,</span></span></span><br><span class="line"><span class="params"><span class="function">        <span class="keyword">float</span> left, <span class="keyword">float</span> right, <span class="keyword">float</span> bottom, <span class="keyword">float</span> top,</span></span></span><br><span class="line"><span class="params"><span class="function">        <span class="keyword">float</span> near, <span class="keyword">float</span> far)</span> </span>&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * define an array of generic vertex attribute data</span></span><br><span class="line"><span class="comment"> * index: mPositionHandle, Specifies the index of the generic vertex attribute to be modified.</span></span><br><span class="line"><span class="comment"> * size: 数据的维数(COORDS_PER_VERTEX)</span></span><br><span class="line"><span class="comment"> * type: 数据的类型, 即GLES20.GL_FLOAT</span></span><br><span class="line"><span class="comment"> * normalized: 是否需要归一化(false)</span></span><br><span class="line"><span class="comment"> * stride: 步长，即连续顶点偏移量(COORDS_PER_VERTEX * 4)</span></span><br><span class="line"><span class="comment"> * pointer: 起始位置在缓冲区的偏移量(mVertexBuffer)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">glVertexAttribPointer</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">int</span> indx,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">int</span> size,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">int</span> type,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">boolean</span> normalized,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">int</span> stride,</span></span></span><br><span class="line"><span class="params"><span class="function">    java.nio.Buffer ptr</span></span></span><br><span class="line"><span class="params"><span class="function">)</span> </span>&#123;</span><br></pre></td></tr></table></figure>
+]]></content>
       <categories>
         <category>Android</category>
       </categories>
       <tags>
         <tag>OpenGL ES</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>git命令操作总结</title>
+    <url>/2022/05/20/git%E5%91%BD%E4%BB%A4%E6%93%8D%E4%BD%9C%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>git</category>
+      </categories>
+      <tags>
+        <tag>git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>算法学习之位运算</title>
+    <url>/2022/05/15/bit_operation/</url>
+    <content><![CDATA[<h4 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h4><h5 id="x-amp-x"><a href="#x-amp-x" class="headerlink" title="x &amp; (-x)"></a>x &amp; (-x)</h5><p>仅保留x中最右边的1，其它位全置0。举例：x为二进制数0000 0100 1100，则x &amp; (-x)的结果为：0000 0000 0100。</p>
+<h4 id="260-只出现一次的数字-III"><a href="#260-只出现一次的数字-III" class="headerlink" title="260. 只出现一次的数字 III"></a><a href="https://leetcode.cn/problems/single-number-iii/">260. 只出现一次的数字 III</a></h4><p>给定一个整数数组 nums，其中恰好有两个元素只出现一次，其余所有元素均出现两次。 找出只出现一次的那两个元素。你可以按 任意顺序 返回答案。</p>
+<p>进阶：你的算法应该具有线性时间复杂度。你能否仅使用常数空间复杂度来实现？</p>
+<p>示例 1：</p>
+<figure class="highlight inform7"><table><tr><td class="code"><pre><span class="line">输入：nums = <span class="comment">[1,2,1,3,2,5]</span></span><br><span class="line">输出：<span class="comment">[3,5]</span></span><br><span class="line">解释：<span class="comment">[5, 3]</span> 也是有效的答案。</span><br></pre></td></tr></table></figure>
+
+
+<p>示例 2：</p>
+<figure class="highlight inform7"><table><tr><td class="code"><pre><span class="line">输入：nums = <span class="comment">[-1,0]</span></span><br><span class="line">输出：<span class="comment">[-1,0]</span></span><br></pre></td></tr></table></figure>
+
+<p>示例 3：</p>
+<figure class="highlight inform7"><table><tr><td class="code"><pre><span class="line">输入：nums = <span class="comment">[0,1]</span></span><br><span class="line">输出：<span class="comment">[1,0]</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>提示：</p>
+<ul>
+<li>2 &lt;= nums.length &lt;= 3 * 104</li>
+<li>-231 &lt;= nums[i] &lt;= 231 - 1</li>
+<li>除两个只出现一次的整数外，nums 中的其他数字都出现两次</li>
+</ul>
+<p>解题思路：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span>[] singleNumber(<span class="keyword">int</span>[] nums) &#123;</span><br><span class="line">        <span class="keyword">int</span> result = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> num : nums) &#123;</span><br><span class="line">            result ^= num;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> diffPos = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">32</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span>((result &amp; (<span class="number">1</span> &lt;&lt; i)) != <span class="number">0</span>) &#123;</span><br><span class="line">                diffPos = i;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> a = <span class="number">0</span> , b = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> num : nums) &#123;</span><br><span class="line">            <span class="keyword">if</span>((num &amp; (<span class="number">1</span> &lt;&lt; diffPos)) != <span class="number">0</span>) &#123;</span><br><span class="line">                a ^= num;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                b ^= num;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;a, b&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>来源：力扣（LeetCode）<br>链接：<a href="https://leetcode.cn/problems/single-number-iii">https://leetcode.cn/problems/single-number-iii</a><br>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</p>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>位运算</tag>
       </tags>
   </entry>
 </search>
