@@ -1688,21 +1688,32 @@ Java中的无符号数是以补码的形式存储的。</li>
 <h4 id="5-单例（Singleton）"><a href="#5-单例（Singleton）" class="headerlink" title="5. 单例（Singleton）"></a>5. 单例（Singleton）</h4><ul>
 <li>意图（Intent）：<br>  Ensure a class only has one instance, and provide a global point of access to it.<br>  保证一个类仅有一个实例，并提供一个访问它的全局访问点。</li>
 </ul>
-<h3 id="二、结构型模式（Structural-Patterns）"><a href="#二、结构型模式（Structural-Patterns）" class="headerlink" title="二、结构型模式（Structural Patterns）"></a>二、结构型模式（Structural Patterns）</h3><h4 id="6-适配器（Adapter）"><a href="#6-适配器（Adapter）" class="headerlink" title="6. 适配器（Adapter）"></a>6. 适配器（Adapter）</h4><p>将一个类的接口转化成客户端希望的另一个接口，从而使使接口不匹配的类可以一起工作。<br>Convert the interface of a class into another interface clients expect. Adapter lets classes work together that couldn’t otherwise because of incompatible interfaces.</p>
+<h3 id="二、结构型模式（Structural-Patterns）"><a href="#二、结构型模式（Structural-Patterns）" class="headerlink" title="二、结构型模式（Structural Patterns）"></a>二、结构型模式（Structural Patterns）</h3><p>结构型模式（Structural Patterns）关注如何将类和对象组织在一起形成更加强大的结构。</p>
+<p><strong>Structural class patterns</strong>: use inheritance to compose interfaces or implementations. </p>
+<p><strong>structural object patterns</strong>: describe ways to compose objects to realize new functionality.</p>
+<p>Composite: describes how to build a class hierarchy made up of classes for two kinds of objects: primitive and composite;</p>
+<p>Proxy:  a proxy acts as a convenient surrogate or placeholder for another object</p>
+<p>Flyweight: defines a structure for sharing objects.</p>
+<p>Facade: shows how to make a single object represent an entire subsystem;</p>
+<p>Bridge: separates an object’s abstraction from its implementation so that you can vary them independently;</p>
+<p>Decorator: describes how to add responsibilities to objectsdynamically;</p>
+<h4 id="6-适配器（Adapter）"><a href="#6-适配器（Adapter）" class="headerlink" title="6. 适配器（Adapter）"></a>6. 适配器（Adapter）</h4><p>将一个类的接口转化成客户端希望的另一个接口，从而使接口不兼容的类能够相互合作。<br>Convert the interface of a class into another interface clients expect. Adapter lets classes work together that couldn’t otherwise because of incompatible interfaces.</p>
+<div align="center">
+  <img src="https://xifengcoder.github.io/images/design_patterns/structural_adapter.png" width = 80%>
+  <p><font size=2 color=gray style="border-bottom:1px solid #eee;padding:6px;">图：Addapter模式.png</font></p>
+</div>
+
+<p><strong>适用场景：</strong></p>
 <ul>
-<li><p>适用场景：</p>
-</li>
-<li><p>当你希望使用某个类， 但是其接口与其他代码不兼容时， 可以使用适配器类。<br>适配器模式允许你创建一个中间层类， 其可作为代码与遗留类、 第三方类或提供怪异接口的类之间的转换器。</p>
-</li>
-<li><p> 如果您需要复用这样一些类， 他们处于同一个继承体系， 并且他们又有了额外的一些共同的方法， 但是这些共同的方法不是所有在这一继承体系中的子类所具有的共性。</p>
-</li>
+<li>当你希望使用某个类， 但是其接口与其他代码不兼容时， 可以使用适配器类。<br>适配器模式允许你创建一个中间层类， 其可作为代码与遗留类、 第三方类或提供怪异接口的类之间的转换器。</li>
+<li>如果您需要复用这样一些类， 他们处于同一个继承体系， 并且他们又有了额外的一些共同的方法， 但是这些共同的方法不是所有在这一继承体系中的子类所具有的共性。</li>
 </ul>
-<h5 id="优缺点："><a href="#优缺点：" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
-<li>单一职责原则_你可以将接口或数据转换代码从程序主要业务逻辑中分离。</li>
-<li>开闭原则。只要客户端代码通过客户端接口与适配器进行交互， 你就能在不修改现有客户端代码的情况下在程序中添加新类型的适配器。</li>
-<li>代码整体复杂度增加， 因为你需要新增一系列接口和类。 有时直接更改服务类使其与其他代码兼容会更简单。</li>
-</ul>
-<h5 id="与其它模式的关系："><a href="#与其它模式的关系：" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
+<p><strong>适配器模式概述</strong></p>
+<p>​    在适配器模式中引入了一个被称为适配器（Adapter）的包装类，而它所包装的对象称为适配者（Adaptee），即被适配的类。</p>
+<p><strong>优缺点：</strong></p>
+<p>+ 单一职责原则：你可以将接口或数据转换代码从程序主要业务逻辑中分离。<br>- 开闭原则：只要客户端代码通过客户端接口与适配器进行交互， 你就能在不修改现有客户端代码的情况下在程序中添加新类型的适配器。<br>- 代码整体复杂度增加： 因为你需要新增一系列接口和类。 有时直接更改服务类使其与其他代码兼容会更简单。</p>
+<p><strong>与其它模式的关系：</strong></p>
+<ul>
 <li><strong>桥接模式</strong>通常会于开发前期进行设计， 使你能够将程序的各个部分独立开来以便开发。 而<strong>适配器模式</strong>通常在已有程序中使用， 让相互不兼容的类能很好地合作。</li>
 <li><strong>适配器</strong>可以对已有对象的接口进行修改， <strong>装饰模式</strong>则能在不改变对象接口的前提下强化对象功能。 此外， 装饰还支持递归组合， 适配器则无法实现。</li>
 <li><strong>适配器</strong>能为被封装对象提供不同的接口， <strong>代理模式</strong>能为对象提供相同的接口， <strong>装饰</strong>则能为对象提供加强的接口。</li>
@@ -1732,14 +1743,14 @@ Java中的无符号数是以补码的形式存储的。</li>
 <li>如果你需要在运行时切换不同实现方法， 可使用桥接模式。</li>
 </ul>
 <p>桥接模式可动态替换抽象对象的实现类， 从这个角度来说，和策略模式的效果一样。</p>
-<h5 id="优缺点：-1"><a href="#优缺点：-1" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
+<h5 id="优缺点："><a href="#优缺点：" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
 <li>你可以创建与平台无关的类和程序。</li>
 <li> 客户端代码仅与高层抽象部分进行互动， 不会接触到平台的详细信息。</li>
 <li> 开闭原则。 你可以新增抽象部分和实现部分， 且它们之间不会相互影响。</li>
 <li> 单一职责原则。 抽象部分专注于处理高层逻辑， 实现部分处理平台细节。</li>
 <li> 对高内聚的类使用该模式可能会让代码更加复杂。</li>
 </ul>
-<h5 id="与其它模式的关系：-1"><a href="#与其它模式的关系：-1" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
+<h5 id="与其它模式的关系："><a href="#与其它模式的关系：" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
 <li><p>桥接模式通常会于开发前期进行设计， 使你能够将程序的各个部分独立开来以便开发。 另一方面， 适配器模式通常在已有程序中使用， 让相互不兼容的类能很好地合作。</p>
 </li>
 <li><p>桥接、 状态模式和策略模式 （在某种程度上包括适配器） 模式的接口非常相似。 实际上， 它们都基于组合模式——即将工作委派给其他对象， 不过也各自解决了不同的问题。 模式并不只是以特定方式组织代码的配方， 你还可以使用它们来和其他开发者讨论模式所解决的问题。</p>
@@ -1876,12 +1887,12 @@ Java中的无符号数是以补码的形式存储的。</li>
 <li>当我们需要创建大量的相似对象，它们之间只有一少部分参数不同、其余大部分的参数都相同时，可以考虑适用享元模式；</li>
 <li>我们需要控制创建大量对象时的内存消耗时，即希望通过创建较少的、可共享的对象来减少内存消耗。</li>
 </ul>
-<h5 id="优缺点：-2"><a href="#优缺点：-2" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
+<h5 id="优缺点：-1"><a href="#优缺点：-1" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
 <li>如果程序中有很多相似对象， 那么你将可以节省大量内存。</li>
 <li>你可能需要牺牲执行速度来换取内存，因为他人每次调用享元方法时都需要重新计算部分情景数据。</li>
 <li>代码会变得更加复杂。 团队中的新成员总是会问：  “为什么要像这样拆分一个实体的状态？”。</li>
 </ul>
-<h5 id="与其它模式的关系：-2"><a href="#与其它模式的关系：-2" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
+<h5 id="与其它模式的关系：-1"><a href="#与其它模式的关系：-1" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
 <li>你可以使用享元模式实现组合模式树的共享叶节点以节省内存。</li>
 <li>享元展示了如何生成大量的小型对象， 外观模式则展示了如何用一个对象来代表整个子系统。</li>
 <li>如果你能将对象的所有共享状态简化为一个享元对象， 那么享元就和单例模式类似了。 但这两个模式有两个根本性的不同。<ul>
@@ -1902,7 +1913,26 @@ Java中的无符号数是以补码的形式存储的。</li>
 <ul>
 <li>与其它模式的关系<br>  Adaper能为封装对象（wrapped object）提供不同的接口；Proxy能为封装对象提供相同的接口；Decorator则能为之提供加强的接口。<br>  Facade与Proxy的相似之处在于它们都缓存了一个复杂实体（ complex entity）并且按照自己的方式进行实例化；不同之处是代理与其服务对象遵循同一接口， 使得自己和服务对象可以互换。<br>  Decorator与Proxy的不同之处在于代理通常自行管理其服务对象的生命周期，然后Decorator中装饰器的组合通常用客户端来控制。</li>
 </ul>
-<h3 id="三、行为模式（BehavioralPatterns）"><a href="#三、行为模式（BehavioralPatterns）" class="headerlink" title="三、行为模式（BehavioralPatterns）"></a>三、行为模式（BehavioralPatterns）</h3><h4 id="13-责任链（Chain-Of-Responsibility）"><a href="#13-责任链（Chain-Of-Responsibility）" class="headerlink" title="13. 责任链（Chain Of Responsibility）"></a>13. 责任链（Chain Of Responsibility）</h4><p><strong>Chain of Responsibility</strong> is a behavioral design pattern that lets you pass requests along a chain of handlers. Upon receiving a request, each handler decides either to process the request or to pass it to the next handler in the chain.</p>
+<h3 id="三、行为模式（Behavioral-Patterns）"><a href="#三、行为模式（Behavioral-Patterns）" class="headerlink" title="三、行为模式（Behavioral Patterns）"></a>三、行为模式（Behavioral Patterns）</h3><p>Behavior模式侧重对象之间的交互和职责划分（Behavioral design patterns are concerned with algorithms and the assignment of responsibilities between objects）；</p>
+<ol>
+<li><p><strong>Behavior class patterns:</strong> 使用继承分发行为</p>
+<p> Template Method: 父类定义算法的框架，子类通过继承父类的抽象方法提供具体实现；</p>
+<p> Interpreter: 将语法表示为一种类层次结构（class hierarchy）；</p>
+</li>
+<li><p><strong>Behavioral object patterns</strong>：使用对象组合分发行为</p>
+<p> Mediator：</p>
+<p> Chain of Responsibility</p>
+<p> Observer：</p>
+</li>
+<li><p><strong>Other patterns</strong>:  关注将行为封装成一个对象、然后将请求委托给它(encapsulating behavior in an object<br> and delegating requests to it)。</p>
+</li>
+</ol>
+<p>​        Strategy: 将一个算法封装进对象；</p>
+<p>​        Command：将一个请求封装进对象；</p>
+<p>​        State: 封装一个对象的所有状态，使得当对象的状态发生改变时，对象可以改变他的行为。</p>
+<p>​        Visitor: encapsulates behavior that would otherwise be distributed across classes;</p>
+<p>​        Iterator:  abstractsthe way you accessand traverse objects in an aggregate;</p>
+<h4 id="13-责任链（Chain-Of-Responsibility）"><a href="#13-责任链（Chain-Of-Responsibility）" class="headerlink" title="13. 责任链（Chain Of Responsibility）"></a>13. 责任链（Chain Of Responsibility）</h4><p><strong>Chain of Responsibility</strong> is a behavioral design pattern that lets you pass requests along a chain of handlers. Upon receiving a request, each handler decides either to process the request or to pass it to the next handler in the chain.</p>
 <p>职责链允许你将请求沿着处理者链进行发送。 收到请求后， 每个处理者均可对请求进行处理， 或将其传递给链上的下个处理者。<br>责任链会将特定行为（particular behaviors）转化为称为处理者（handles）的独立对象。模式建议你将这些处理者连成一条链。 链上的每个处理者都持有下一处理者的引用（reference）。 </p>
 <p>除了处理请求外， 处理者还负责沿着链传递请求。 请求会在链上移动， 直至所有处理者都有机会对其进行处理。处理者也可以决定不再沿着链传递请求， 这可高效地取消所有后续处理步骤。</p>
 <h5 id="应用场景："><a href="#应用场景：" class="headerlink" title="应用场景："></a>应用场景：</h5><ul>
@@ -1910,7 +1940,7 @@ Java中的无符号数是以补码的形式存储的。</li>
 <li>当必须按特定顺序（particular order）执行多个处理者时， 可以使用该模式。因为你可以以任意顺序链接处理者，所有的请求都会按你设计的顺序精确执行。</li>
 <li>当处理者的集合（the set of handlers）及其顺序需要在运行时进行改变， 可以使用责任链模式。你可以提供setters方法进行动态地添加、删除或者重排序。</li>
 </ul>
-<h5 id="优缺点：-3"><a href="#优缺点：-3" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
+<h5 id="优缺点：-2"><a href="#优缺点：-2" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
 <li>你可以控制请求处理的顺序。</li>
 <li> 单一职责原则。 你可对发起操作和执行操作的类进行解耦。</li>
 <li> 开闭原则。 你可以在不更改现有代码的情况下在程序中新增处理者。</li>
@@ -1955,7 +1985,7 @@ Java中的无符号数是以补码的形式存储的。</li>
 <li>如果你想要将操作放入队列中、 调度操作的执行或者远程执行操作， 可使用命令模式。</li>
 <li>如果你想要实现操作回滚功能， 可使用命令模式。</li>
 </ul>
-<h5 id="优缺点：-4"><a href="#优缺点：-4" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
+<h5 id="优缺点：-3"><a href="#优缺点：-3" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
 <li>单一职责原则。 你可以解耦触发和执行操作的类。</li>
 <li> 开闭原则。 你可以在不修改已有客户端代码的情况下在程序中创建新的命令。</li>
 <li> 你可以实现撤销和恢复功能。</li>
@@ -1994,7 +2024,7 @@ Java中的无符号数是以补码的形式存储的。</li>
 <li>如果某个简单的语言需要解释执行、而且可以将该语言中的语句表示为一个<strong>抽象语法树</strong>时，可以考虑使用解释器模式。</li>
 <li>在某些特定的领域出现<strong>不断重复</strong>的问题时，可以将该领域的问题转化为某种语法规则下的语句，然后构建解释器来解释该语句。</li>
 </ul>
-<h5 id="优缺点：-5"><a href="#优缺点：-5" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
+<h5 id="优缺点：-4"><a href="#优缺点：-4" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
 <li><p>改变和扩展语法比较容易</p>
 <p>  当我们想对文法规则进行扩展延伸时，只需要增加相应的非终结符解释器，并在构建抽象语法树时，使用新增的解释器对象进行具体的解释即可，非常方便。</p>
 </li>
@@ -2002,7 +2032,7 @@ Java中的无符号数是以补码的形式存储的。</li>
 <p>  因为对于每一种文法都可以对应至少一个解释器，其会生成大量的类，导致后期维护困难。同时，对于过于复杂的语法，构建其抽象语法树会显得异常繁琐，甚至有可能会出现需要构建多棵抽象语法树的情况，因此，对于复杂的语法并不推荐使用解释器模式。</p>
 </li>
 </ul>
-<h5 id="与其它模式的关系：-3"><a href="#与其它模式的关系：-3" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><h4 id="16-迭代器（Iterator）"><a href="#16-迭代器（Iterator）" class="headerlink" title="16. 迭代器（Iterator）"></a>16. 迭代器（Iterator）</h4><p>Provide a way to access the elements of an aggregate object sequentially without exposing its underlying representation.<br>提供一种方法，在不暴露一个聚合对象（aggregate object）的底层表示形式（列表、 栈和树等） 的情况下，遍历集合中所有的元素。</p>
+<h5 id="与其它模式的关系：-2"><a href="#与其它模式的关系：-2" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><h4 id="16-迭代器（Iterator）"><a href="#16-迭代器（Iterator）" class="headerlink" title="16. 迭代器（Iterator）"></a>16. 迭代器（Iterator）</h4><p>Provide a way to access the elements of an aggregate object sequentially without exposing its underlying representation.<br>提供一种方法，在不暴露一个聚合对象（aggregate object）的底层表示形式（列表、 栈和树等） 的情况下，遍历集合中所有的元素。</p>
 <p>迭代器模式的主要思想是将集合的遍历行为提取为称为Iterator的独立对象。</p>
 <div align="center">
   <img src="../../images/design_patterns/behavior_iterator.png" width = 80%>
@@ -2021,7 +2051,7 @@ Java中的无符号数是以补码的形式存储的。</li>
 <li>如果你希望代码能够遍历不同的甚至是无法预知的数据结构， 可以使用迭代器模式。</li>
 </ul>
 <p>该模式为集合和迭代器提供了一些通用接口。 如果你在代码中使用了这些接口， 那么将其他实现了这些接口的集合和迭代器传递给它时， 它仍将可以正常运行。</p>
-<h5 id="优缺点：-6"><a href="#优缺点：-6" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
+<h5 id="优缺点：-5"><a href="#优缺点：-5" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
 <li>单一职责原则。 通过将体积庞大的遍历算法代码抽取为独立的类， 你可对客户端代码和集合进行整理。</li>
 <li>开闭原则。 你可实现新型的集合和迭代器并将其传递给现有代码， 无需修改现有代码。</li>
 <li>你可以并行遍历同一集合， 因为每个迭代器对象都包含其自身的遍历状态。</li>
@@ -2029,7 +2059,7 @@ Java中的无符号数是以补码的形式存储的。</li>
 <li>如果你的程序只与简单的集合进行交互， 应用该模式可能会矫枉过正。</li>
 <li>对于某些特殊集合， 使用迭代器可能比直接遍历的效率低。</li>
 </ul>
-<h5 id="与其它模式的关系：-4"><a href="#与其它模式的关系：-4" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
+<h5 id="与其它模式的关系：-3"><a href="#与其它模式的关系：-3" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
 <li><p>你可以使用迭代器模式来遍历组合模式树。</p>
 </li>
 <li><p>你可以同时使用工厂方法模式和迭代器来让子类集合返回不同类型的迭代器， 并使得迭代器与集合相匹配。</p>
@@ -2051,14 +2081,14 @@ Java中的无符号数是以补码的形式存储的。</li>
 <li>当组件因过于依赖其他组件，而无法在不同应用中复用时，可使用中介者模式；</li>
 <li>如果为了能在不同情景下复用一些基本行为， 导致你需要被迫创建大量组件子类时， 可使用中介者模式。</li>
 </ol>
-<h5 id="优缺点：-7"><a href="#优缺点：-7" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
+<h5 id="优缺点：-6"><a href="#优缺点：-6" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
 <li>单一职责原则。 你可以将多个组件间的交流抽取到同一位置， 使其更易于理解和维护。</li>
 <li>开闭原则。 你无需修改实际组件就能增加新的中介者。</li>
 <li>你可以减轻应用中多个组件间的耦合情况。</li>
 <li>你可以更方便地复用各个组件。</li>
 <li>一段时间后， 中介者可能会演化成为上帝对象（God Object.）。</li>
 </ul>
-<h5 id="与其它模式的关系：-5"><a href="#与其它模式的关系：-5" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
+<h5 id="与其它模式的关系：-4"><a href="#与其它模式的关系：-4" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
 <li><p><strong>责任链（Chain of Responsibility</strong>）、<strong>命令行（Command）</strong>、<strong>中介者（Mediator）</strong>和<strong>观察者（Observer）</strong>都用于处理请求的发送者和接收者之间的不同连接方式：</p>
 <ul>
 <li>责任链按照顺序将请求动态传递给一系列的潜在接收者， 直到其中一名接收者对请求进行处理。</li>
@@ -2090,12 +2120,12 @@ Java中的无符号数是以补码的形式存储的。</li>
 <p>订阅列表是动态的， 因此订阅者可随时加入或离开该列表。</p>
 </li>
 </ul>
-<h5 id="优缺点：-8"><a href="#优缺点：-8" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
+<h5 id="优缺点：-7"><a href="#优缺点：-7" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
 <li>开闭原则。 你无需修改发布者代码就能引入新的订阅者类 （如果是发布者接口则可轻松引入发布者类）。</li>
 <li>你可以在运行时建立对象之间的联系。</li>
 <li>订阅者的通知顺序是随机的。</li>
 </ul>
-<h5 id="与其它模式的关系：-6"><a href="#与其它模式的关系：-6" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
+<h5 id="与其它模式的关系：-5"><a href="#与其它模式的关系：-5" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
 <li>责任链模式、 命令模式、 中介者模式和观察者模式用于处理请求发送者和接收者之间的不同连接方式：</li>
 </ul>
 <p>责任链按照顺序将请求动态传递给一系列的潜在接收者， 直至其中一名接收者对请求进行处理。</p>
@@ -2129,13 +2159,13 @@ Java中的无符号数是以补码的形式存储的。</li>
 </ul>
 </li>
 </ul>
-<h5 id="优缺点：-9"><a href="#优缺点：-9" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
+<h5 id="优缺点：-8"><a href="#优缺点：-8" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
 <li>单一职责原则。 将与特定状态相关的代码放在单独的类中。</li>
 <li>开闭原则。 无需修改已有状态类和上下文就能引入新状态。</li>
 <li>通过消除臃肿的状态机条件语句简化上下文的代码。 </li>
 <li> 如果状态机只有很少的几个状态， 或者很少发生改变， 那么应用该模式可能会显得小题大作。</li>
 </ul>
-<h5 id="与其它模式的关系：-7"><a href="#与其它模式的关系：-7" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
+<h5 id="与其它模式的关系：-6"><a href="#与其它模式的关系：-6" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
 <li>桥接模式、 状态模式和策略模式 （在某种程度上包括适配器模式） 模式的接口非常相似。 实际上， 它们都基于组合模式——即将工作委派给其他对象， 不过也各自解决了不同的问题。 模式并不只是以特定方式组织代码的配方， 你还可以使用它们来和其他开发者讨论模式所解决的问题。</li>
 <li>状态可被视为策略的扩展。 两者都基于组合机制： 它们都通过将部分工作委派给 “帮手” 对象来改变其在不同情景下的行为。 策略使得这些对象相互之间完全独立， 它们不知道其他对象的存在。 然而，状态模式没有限制具体状态之间的依赖， 且允许它们在需要时改变上下文（context）的状态。</li>
 </ul>
@@ -2162,7 +2192,7 @@ Java中的无符号数是以补码的形式存储的。</li>
 </li>
 <li>当类中使用了复杂条件运算符以在同一算法的不同变体中切换时， 可使用该模式。</li>
 </ul>
-<h5 id="优缺点：-10"><a href="#优缺点：-10" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
+<h5 id="优缺点：-9"><a href="#优缺点：-9" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
 <li>你可以在运行时切换对象内的算法。</li>
 <li>你可以将算法的实现和使用算法的代码隔离开来。</li>
 <li>你可以使用组合来代替继承。</li>
@@ -2171,7 +2201,7 @@ Java中的无符号数是以补码的形式存储的。</li>
 <li>客户端必须知晓策略间的不同——它需要选择合适的策略。</li>
 <li>许多现代编程语言支持函数类型功能， 允许你在一组匿名函数中实现不同版本的算法。 这样， 你使用这些函数的方式就和使用策略对象时完全相同， 无需借助额外的类和接口来保持代码简洁。</li>
 </ul>
-<h5 id="与其它模式的关系：-8"><a href="#与其它模式的关系：-8" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
+<h5 id="与其它模式的关系：-7"><a href="#与其它模式的关系：-7" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
 <li>桥接模式、 状态模式和策略模式 （在某种程度上包括适配器模式） 模式的接口非常相似。 实际上， 它们都基于组合模式——即将工作委派给其他对象， 不过也各自解决了不同的问题。 模式并不只是以特定方式组织代码的配方， 你还可以使用它们来和其他开发者讨论模式所解决的问题。</li>
 <li>命令模式和策略模式看上去很像， 因为两者都能通过某些行为来参数化对象。 但是， 它们的意图有非常大的不同。<ul>
 <li>你可以使用命令来将任何操作转换为对象。 操作的参数将成为对象的成员变量。 你可以通过转换来延迟操作的执行、 将操作放入队列、 保存历史命令或者向远程服务发送命令等。而策略通常可用于描述完成某件事的不同方式， 让你能够在同一个上下文类中切换算法。</li>
@@ -2195,14 +2225,14 @@ Java中的无符号数是以补码的形式存储的。</li>
 </ul>
 </li>
 </ul>
-<h5 id="优缺点：-11"><a href="#优缺点：-11" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
+<h5 id="优缺点：-10"><a href="#优缺点：-10" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
 <li>你可仅允许客户端重写一个大型算法中的特定部分， 使得算法其他部分修改对其所造成的影响减小。</li>
 <li> 你可将重复代码提取到一个超类中。</li>
 <li> 部分客户端可能会受到算法框架的限制。</li>
 <li> 通过子类抑制默认步骤实现可能会导致<strong>违反里氏替换原则</strong>。</li>
 <li> 模板方法中的步骤越多， 其维护工作就可能会越困难。</li>
 </ul>
-<h5 id="与其它模式的关系：-9"><a href="#与其它模式的关系：-9" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
+<h5 id="与其它模式的关系：-8"><a href="#与其它模式的关系：-8" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
 <li><p>工厂方法模式是模板方法模式的一种特殊形式。 同时， 工厂方法可以作为一个大型模板方法中的一个步骤。</p>
 </li>
 <li><p>模板方法基于继承机制： 它允许你通过扩展子类中的部分内容来改变部分算法。 策略模式基于组合机制： 你可以通过对相应行为提供不同的策略来改变对象的部分行为。 模板方法在类层次上运作， 因此它是静态的。 策略在对象层次上运作， 因此允许在运行时切换行为。</p>
@@ -2272,7 +2302,7 @@ Java中的无符号数是以补码的形式存储的。</li>
       </tags>
   </entry>
   <entry>
-    <title>Android OpenGLES 入门</title>
+    <title>Android OpenGLES基础</title>
     <url>/2022/04/26/opengles_android/</url>
     <content><![CDATA[<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 指定了渲染时索引值为index的顶点属性数组的数据格式和位置。</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> index 指定要修改的顶点属性的索引值。</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> size 指定顶点属性的大小。顶点属性是一个vec3，它由3个值组成，所以大小是3。</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> type 指定数据的类型，这里是GL_FLOAT。</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> normalized 是否希望数据被标准化(Normalize)。</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> stride 步长，它告诉我们在连续的顶点属性组之间的间隔。</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> ptr 位置数据缓冲区。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">glVertexAttribPointer</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">int</span> index,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">int</span> size,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">int</span> type,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">boolean</span> normalized,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">int</span> stride,</span></span></span><br><span class="line"><span class="params"><span class="function">    java.nio.Buffer ptr</span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span>;</span><br></pre></td></tr></table></figure>
 
@@ -2294,14 +2324,7 @@ Java中的无符号数是以补码的形式存储的。</li>
 
 
 
-
-
-<p>设置透视投影</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 设置透视投影</span></span><br><span class="line"><span class="comment"> * Defines a projection matrix in terms of six clip planes.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> m 要填充矩阵元素的float[]类型数组</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> 要填充其实偏移量</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> near面的left</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> near面的right</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> near面的bottom</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> near面的top</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> near面与透视点的距离</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> far面与透视点的距离</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">frustumM</span><span class="params">(<span class="keyword">float</span>[] m, <span class="keyword">int</span> offset,</span></span></span><br><span class="line"><span class="params"><span class="function">        <span class="keyword">float</span> left, <span class="keyword">float</span> right, <span class="keyword">float</span> bottom, <span class="keyword">float</span> top,</span></span></span><br><span class="line"><span class="params"><span class="function">        <span class="keyword">float</span> near, <span class="keyword">float</span> far)</span> </span>&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * define an array of generic vertex attribute data</span></span><br><span class="line"><span class="comment"> * index: mPositionHandle, Specifies the index of the generic vertex attribute to be modified.</span></span><br><span class="line"><span class="comment"> * size: 数据的维数(COORDS_PER_VERTEX)</span></span><br><span class="line"><span class="comment"> * type: 数据的类型, 即GLES20.GL_FLOAT</span></span><br><span class="line"><span class="comment"> * normalized: 是否需要归一化(false)</span></span><br><span class="line"><span class="comment"> * stride: 步长，即连续顶点偏移量(COORDS_PER_VERTEX * 4)</span></span><br><span class="line"><span class="comment"> * pointer: 起始位置在缓冲区的偏移量(mVertexBuffer)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">glVertexAttribPointer</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">int</span> indx,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">int</span> size,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">int</span> type,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">boolean</span> normalized,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">int</span> stride,</span></span></span><br><span class="line"><span class="params"><span class="function">    java.nio.Buffer ptr</span></span></span><br><span class="line"><span class="params"><span class="function">)</span> </span>&#123;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">```java</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * define an array of generic vertex attribute data</span></span><br><span class="line"><span class="comment"> * index: mPositionHandle, Specifies the index of the generic vertex attribute to be modified.</span></span><br><span class="line"><span class="comment"> * size: 数据的维数(COORDS_PER_VERTEX)</span></span><br><span class="line"><span class="comment"> * type: 数据的类型, 即GLES20.GL_FLOAT</span></span><br><span class="line"><span class="comment"> * normalized: 是否需要归一化(false)</span></span><br><span class="line"><span class="comment"> * stride: 步长，即连续顶点偏移量(COORDS_PER_VERTEX * 4)</span></span><br><span class="line"><span class="comment"> * pointer: 起始位置在缓冲区的偏移量(mVertexBuffer)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">glVertexAttribPointer</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">int</span> indx,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">int</span> size,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">int</span> type,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">boolean</span> normalized,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">int</span> stride,</span></span></span><br><span class="line"><span class="params"><span class="function">    java.nio.Buffer ptr</span></span></span><br><span class="line"><span class="params"><span class="function">)</span> </span>&#123;</span><br></pre></td></tr></table></figure>
 
 
 
@@ -2334,10 +2357,10 @@ Java中的无符号数是以补码的形式存储的。</li>
 <p><img src="https://learnopengl-cn.readthedocs.io/zh/latest/img/01/06/filter_linear.png" alt="img"></p>
 ]]></content>
       <categories>
-        <category>Android</category>
+        <category>OpenGLES</category>
       </categories>
       <tags>
-        <tag>OpenGL ES</tag>
+        <tag>OpenGLES</tag>
       </tags>
   </entry>
   <entry>
@@ -2351,16 +2374,26 @@ Java中的无符号数是以补码的形式存储的。</li>
 
 ]]></content>
       <categories>
-        <category>openGLES</category>
+        <category>OpenGLES</category>
       </categories>
       <tags>
-        <tag>openGLES</tag>
+        <tag>OpenGLES</tag>
       </tags>
   </entry>
   <entry>
     <title>OpenGL学习-光照</title>
     <url>/2023/01/25/opengl_lighting/</url>
-    <content><![CDATA[<h4 id="漫反射光照"><a href="#漫反射光照" class="headerlink" title="漫反射光照"></a>漫反射光照</h4><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">uniform mat4 uMVPMatrix; 						<span class="comment">//总变换矩阵</span></span><br><span class="line">uniform mat4 uMMatrix; 							<span class="comment">//变换矩阵(包括平移、旋转、缩放)</span></span><br><span class="line">uniform vec3 uLightLocation;						<span class="comment">//定位光源位置</span></span><br><span class="line">attribute vec3 aPosition;  						<span class="comment">//顶点位置</span></span><br><span class="line">attribute vec3 aNormal;    						<span class="comment">//顶点法向量</span></span><br><span class="line">varying vec3 vPosition;							<span class="comment">//用于传递给片元着色器的顶点位置</span></span><br><span class="line">varying vec4 vDiffuse;							<span class="comment">//用于传递给片元着色器的散射光分量</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">   vec3 normal = normalize(aNormal); <span class="comment">//法向量</span></span><br><span class="line">   vec4 lightDiffuse = vec4(<span class="number">0.8</span>,<span class="number">0.8</span>,<span class="number">0.8</span>,<span class="number">1.0</span>); <span class="comment">//散射光强度</span></span><br><span class="line">   <span class="comment">//计算顶点在世界空间中的位置</span></span><br><span class="line">   vec3 fragPos = vec3(uMMatrix * vec4(aPosition, <span class="number">1</span>));</span><br><span class="line">   <span class="comment">//计算光源和片元位置之间的方向向量</span></span><br><span class="line">   vec3 lightDirection = normalize(uLightLocation - fragPos);</span><br><span class="line">   vDiffuse = lightDiffuse * max(<span class="number">0.0</span>, dot(normal, lightDirection)); <span class="comment">//计算散射光的最终强度</span></span><br><span class="line">   vPosition = aPosition; <span class="comment">//将顶点的位置传给片元着色器</span></span><br><span class="line">   gl_Position = uMVPMatrix * vec4(aPosition,<span class="number">1</span>); <span class="comment">//根据总变换矩阵计算此次绘制此顶点的位置</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    <content><![CDATA[<p><img src="https://img-blog.csdnimg.cn/d1cef96742da4121860d648ba2575f8e.png" alt="img"></p>
+<h4 id="环境光（Ambient）"><a href="#环境光（Ambient）" class="headerlink" title="环境光（Ambient）"></a>环境光（Ambient）</h4><p>环境光照：物体永远不会是完全黑暗，使用一个环境光照常量，永远给物体一些颜色。</p>
+<p>​                            环境光照射结果 = 材质的反射系数 X 环境光照强度</p>
+<p>Vertex Shader</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">uniform mat4 uMVPMatrix; <span class="comment">//总变换矩阵</span></span><br><span class="line">attribute vec3 aPosition;  <span class="comment">//顶点位置</span></span><br><span class="line">varying vec3 vPosition;<span class="comment">//用于传递给片元着色器的顶点位置</span></span><br><span class="line">varying vec4 vAmbient;<span class="comment">//用于传递给片元着色器的环境光分量</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   <span class="comment">//根据总变换矩阵计算此次绘制此顶点位置</span></span><br><span class="line">   gl_Position = uMVPMatrix * vec4(aPosition,<span class="number">1</span>);</span><br><span class="line">   <span class="comment">//将顶点的位置传给片元着色器</span></span><br><span class="line">   vPosition = aPosition;</span><br><span class="line">   <span class="comment">//将的环境光分量传给片元着色器</span></span><br><span class="line">   vAmbient = vec4(<span class="number">0.15</span>,<span class="number">0.15</span>,<span class="number">0.15</span>,<span class="number">1.0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Fragment Shader</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">precision mediump <span class="keyword">float</span>;</span><br><span class="line">uniform <span class="keyword">float</span> uR;</span><br><span class="line">varying vec3 vPosition;<span class="comment">//接收从顶点着色器过来的顶点位置</span></span><br><span class="line">varying vec4 vAmbient;<span class="comment">//接收从顶点着色器过来的环境光分量</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span>                         </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   vec3 color;</span><br><span class="line">   <span class="keyword">float</span> n = <span class="number">8.0</span>;<span class="comment">//一个坐标分量分的总份数</span></span><br><span class="line">   <span class="keyword">float</span> span = <span class="number">2.0</span> * uR / n;<span class="comment">//每一份的长度</span></span><br><span class="line">   <span class="comment">//每一维在立方体内的行列数</span></span><br><span class="line">   <span class="keyword">int</span> i = <span class="keyword">int</span>((vPosition.x + uR)/span);</span><br><span class="line">   <span class="keyword">int</span> j = <span class="keyword">int</span>((vPosition.y + uR)/span);</span><br><span class="line">   <span class="keyword">int</span> k = <span class="keyword">int</span>((vPosition.z + uR)/span);</span><br><span class="line">   <span class="comment">//计算当点应位于白色块还是黑色块中</span></span><br><span class="line">   <span class="keyword">int</span> whichColor = <span class="keyword">int</span>(mod(<span class="keyword">float</span>(i + j + k), <span class="number">2.0</span>));</span><br><span class="line">   <span class="keyword">if</span>(whichColor == <span class="number">1</span>) &#123;<span class="comment">//奇数时为红色</span></span><br><span class="line">   		color = vec3(<span class="number">0.678</span>, <span class="number">0.231</span>, <span class="number">0.129</span>);<span class="comment">//红色</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">else</span> &#123;<span class="comment">//偶数时为白色</span></span><br><span class="line">   		color = vec3(<span class="number">1.0</span>,<span class="number">1.0</span>,<span class="number">1.0</span>);<span class="comment">//白色</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="comment">//最终颜色</span></span><br><span class="line">   vec4 finalColor=vec4(color,<span class="number">0</span>);</span><br><span class="line">   <span class="comment">//给此片元颜色值</span></span><br><span class="line">   gl_FragColor= finalColor * vAmbient;</span><br><span class="line">&#125;     </span><br></pre></td></tr></table></figure>
+
+<h4 id="散射光（Diffuse）"><a href="#散射光（Diffuse）" class="headerlink" title="散射光（Diffuse）"></a>散射光（Diffuse）</h4><p>漫反射光照：模拟光源对物体方向性影响。物体某一部分越是对着光源越亮。</p>
+<h4 id="镜面光（Specular）"><a href="#镜面光（Specular）" class="headerlink" title="镜面光（Specular）"></a>镜面光（Specular）</h4><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">uniform mat4 uMVPMatrix; 						<span class="comment">//总变换矩阵</span></span><br><span class="line">uniform mat4 uMMatrix; 							<span class="comment">//变换矩阵(包括平移、旋转、缩放)</span></span><br><span class="line">uniform vec3 uLightLocation;						<span class="comment">//定位光源位置</span></span><br><span class="line">attribute vec3 aPosition;  						<span class="comment">//顶点位置</span></span><br><span class="line">attribute vec3 aNormal;    						<span class="comment">//顶点法向量</span></span><br><span class="line">varying vec3 vPosition;							<span class="comment">//用于传递给片元着色器的顶点位置</span></span><br><span class="line">varying vec4 vDiffuse;							<span class="comment">//用于传递给片元着色器的散射光分量</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">   vec3 normal = normalize(aNormal); <span class="comment">//法向量</span></span><br><span class="line">   vec4 lightDiffuse = vec4(<span class="number">0.8</span>,<span class="number">0.8</span>,<span class="number">0.8</span>,<span class="number">1.0</span>); <span class="comment">//散射光强度</span></span><br><span class="line">   <span class="comment">//计算顶点在世界空间中的位置</span></span><br><span class="line">   vec3 fragPos = vec3(uMMatrix * vec4(aPosition, <span class="number">1</span>));</span><br><span class="line">   <span class="comment">//计算光源和片元位置之间的方向向量</span></span><br><span class="line">   vec3 lightDirection = normalize(uLightLocation - fragPos);</span><br><span class="line">   vDiffuse = lightDiffuse * max(<span class="number">0.0</span>, dot(normal, lightDirection)); <span class="comment">//计算散射光的最终强度</span></span><br><span class="line">   vPosition = aPosition; <span class="comment">//将顶点的位置传给片元着色器</span></span><br><span class="line">   gl_Position = uMVPMatrix * vec4(aPosition,<span class="number">1</span>); <span class="comment">//根据总变换矩阵计算此次绘制此顶点的位置</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>注意：</p>
 <p>从表面顶点到光源位置的向量的计算：</p>
@@ -2495,6 +2528,42 @@ Java中的无符号数是以补码的形式存储的。</li>
       </categories>
       <tags>
         <tag>重构</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>OpenGL Transorformation的理解</title>
+    <url>/2023/08/11/Transorformation%E7%9A%84%E7%90%86%E8%A7%A3/</url>
+    <content><![CDATA[<h4 id="OpenGL-Transformation"><a href="#OpenGL-Transformation" class="headerlink" title="OpenGL Transformation"></a>OpenGL Transformation</h4><h4 id="Object-Coordinates"><a href="#Object-Coordinates" class="headerlink" title="Object Coordinates"></a>Object Coordinates</h4><h4 id="Eye-Coordinates"><a href="#Eye-Coordinates" class="headerlink" title="Eye Coordinates"></a>Eye Coordinates</h4><ol>
+<li>Model transform用来从object space转换为world space;</li>
+<li>View transform用来从world space转换为eye space。</li>
+</ol>
+<p><img src="/images/eye_coordinates.png" alt="eye_coordinates"></p>
+<h4 id="Clip-Coordinates"><a href="#Clip-Coordinates" class="headerlink" title="Clip Coordinates"></a>Clip Coordinates</h4><p><img src="/images/clip_coordinates.png" alt="clip_coordinates"></p>
+<h4 id="Normalized-Device-Coordinates-NDC"><a href="#Normalized-Device-Coordinates-NDC" class="headerlink" title="Normalized Device Coordinates (NDC)"></a>Normalized Device Coordinates (NDC)</h4><p><img src="/images/ndc_coordinates.png" alt="ndc_coordinates"></p>
+<h4 id=""><a href="#" class="headerlink" title=""></a></h4><p><img src="/images/opengl_transformation.jpg" alt="OpenGL Transformation"></p>
+<p>Matrix的perspectiveM方法可以生成一个透视投影</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Defines a projection matrix in terms of a field of view angle, an</span></span><br><span class="line"><span class="comment"> * aspect ratio, and z clip planes.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> m the float array that holds the perspective matrix</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> offset the offset into float array m where the perspective</span></span><br><span class="line"><span class="comment"> *        matrix data is written</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> fovy field of view in y direction, in degrees</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> aspect width to height aspect ratio of the viewport</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> zNear</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> zFar</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">perspectiveM(<span class="keyword">float</span>[] m, <span class="keyword">int</span> offset, <span class="keyword">float</span> fovy, <span class="keyword">float</span> aspect, <span class="keyword">float</span> near, <span class="keyword">float</span> far);</span><br></pre></td></tr></table></figure>
+
+<p>焦距：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">a = <span class="number">1.0f</span> / Math.tan((fovy * Math.PI / <span class="number">180.0f</span>) / <span class="number">2.0f</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 生成透视投影</span></span><br><span class="line"><span class="comment"> * Defines a projection matrix in terms of six clip planes.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> m 要填充矩阵元素的float[]类型数组</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> 要填充其实偏移量</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> near面的left</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> near面的right</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> near面的bottom</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> near面的top</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> near面与透视点的距离</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> far面与透视点的距离</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">frustumM</span><span class="params">(<span class="keyword">float</span>[] m, <span class="keyword">int</span> offset, <span class="keyword">float</span> left, <span class="keyword">float</span> right, <span class="keyword">float</span> bottom, <span class="keyword">float</span> top,</span></span></span><br><span class="line"><span class="params"><span class="function">        <span class="keyword">float</span> near, <span class="keyword">float</span> far)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>如果仅仅使用projection matrix时</p>
+<p>Vertex<del>clip</del> = ProjectionMatrix * Vertex<del>eye</del></p>
+<p>添加了model matrix之后，</p>
+<p>Vertexeye = ModelMatrix * Vertex<del>model</del><br>vertex<br>Clip = ProjectionMatrix * Vertex<del>eye</del></p>
+<h3 id="Perspective-Projection"><a href="#Perspective-Projection" class="headerlink" title="Perspective Projection"></a>Perspective Projection</h3><p><img src="/images/perspective_projection.png" alt="perspective_projection"></p>
+<p>Perspective Frustum and Normalized Device Coordinates (NDC)</p>
+]]></content>
+      <categories>
+        <category>OpenGLES</category>
+      </categories>
+      <tags>
+        <tag>OpenGLES</tag>
       </tags>
   </entry>
 </search>
