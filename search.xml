@@ -273,7 +273,8 @@
 <figure class="highlight nix"><table><tr><td class="code"><pre><span class="line">输入：<span class="attr">root</span> = [<span class="number">3</span>,<span class="number">5</span>,<span class="number">1</span>,<span class="number">6</span>,<span class="number">2</span>,<span class="number">0</span>,<span class="number">8</span>,<span class="literal">null</span>,<span class="literal">null</span>,<span class="number">7</span>,<span class="number">4</span>], <span class="attr">p</span> = <span class="number">5</span>, <span class="attr">q</span> = <span class="number">4</span></span><br><span class="line">输出：<span class="number">5</span></span><br><span class="line">解释：节点 <span class="number">5</span> 和节点 <span class="number">4</span> 的最近公共祖先是节点 <span class="number">5</span> 。因为根据定义最近公共祖先节点可以为节点本身。</span><br></pre></td></tr></table></figure>
 <p><strong>示例 3：</strong></p>
 <figure class="highlight nix"><table><tr><td class="code"><pre><span class="line">输入：<span class="attr">root</span> = [<span class="number">1</span>,<span class="number">2</span>], <span class="attr">p</span> = <span class="number">1</span>, <span class="attr">q</span> = <span class="number">2</span></span><br><span class="line">输出：<span class="number">1</span></span><br></pre></td></tr></table></figure>
-<p>来源：力扣（LeetCode）<br>链接：<a href="https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree">https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree</a><br>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</p>
+
+
 <h4 id="二叉搜索树的最近公共祖先"><a href="#二叉搜索树的最近公共祖先" class="headerlink" title=" 二叉搜索树的最近公共祖先"></a><a href="https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-search-tree/"> 二叉搜索树的最近公共祖先</a></h4><p>给定一个二叉搜索树, 找到该树中两个指定节点的最近公共祖先。</p>
 <p><a href="https://baike.baidu.com/item/%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/8918834?fr=aladdin">百度百科</a>中最近公共祖先的定义为：“对于有根树 T 的两个结点 p、q，最近公共祖先表示为一个结点 x，满足 x 是 p、q 的祖先且 x 的深度尽可能大（<strong>一个节点也可以是它自己的祖先</strong>）。”</p>
 <p>例如，给定如下二叉搜索树: root = [6,2,8,0,4,7,9,null,null,3,5]</p>
@@ -535,7 +536,7 @@
     <title>算法学习之链表问题</title>
     <url>/2022/02/19/linked_list/</url>
     <content><![CDATA[<p>本文主要分析链表相关的算法问题。</p>
-<h4 id="206-反转链表"><a href="#206-反转链表" class="headerlink" title="206. 反转链表"></a><a href="https://leetcode-cn.com/problems/reverse-linked-list/">206. 反转链表</a></h4><p>给你单链表的头节点 <code>head</code> ，请你反转链表，并返回反转后的链表。</p>
+<h4 id="反转链表"><a href="#反转链表" class="headerlink" title="反转链表"></a><a href="https://leetcode-cn.com/problems/reverse-linked-list/">反转链表</a></h4><p>给你单链表的头节点 <code>head</code> ，请你反转链表，并返回反转后的链表。</p>
 <p><strong>示例 1：</strong></p>
 <p><img src="rev1ex1.jpg" alt="img"></p>
 <figure class="highlight accesslog"><table><tr><td class="code"><pre><span class="line">输入：head = <span class="string">[1,2,3,4,5]</span></span><br><span class="line">输出：<span class="string">[5,4,3,2,1]</span></span><br></pre></td></tr></table></figure>
@@ -543,7 +544,26 @@
 <h5 id="解法一：双指针迭代"><a href="#解法一：双指针迭代" class="headerlink" title="解法一：双指针迭代"></a>解法一：双指针迭代</h5><p>声明两个指针cur和prev，cur指向head，prev指向null。然后从前到后依次遍历cur，每次都将cur指向prev，然后prev和cur都往后移动，直到cur为空，此时prev指向最后一个节点，直接返回prev就是。</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">reverseList</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> head;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        ListNode cur = head;</span><br><span class="line">        ListNode prev = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">while</span> (cur != <span class="keyword">null</span>) &#123;</span><br><span class="line">            ListNode temp = cur.next;</span><br><span class="line">            cur.next = prev;</span><br><span class="line">            prev = cur;</span><br><span class="line">            cur = temp;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> prev;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h5 id="解法二：头插法"><a href="#解法二：头插法" class="headerlink" title="解法二：头插法"></a>解法二：头插法</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">reverseList</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> head;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ListNode dummyHead = <span class="keyword">new</span> ListNode(-<span class="number">1</span>);</span><br><span class="line">        dummyHead.next = head;</span><br><span class="line">        ListNode cur = head.next;</span><br><span class="line">        <span class="keyword">while</span> (cur != <span class="keyword">null</span>) &#123;</span><br><span class="line">            head.next = cur.next;</span><br><span class="line">            cur.next = dummyHead.next;</span><br><span class="line">            dummyHead.next = cur;</span><br><span class="line">            cur = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dummyHead.next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="解法一：头插法"><a href="#解法一：头插法" class="headerlink" title="解法一：头插法"></a>解法一：头插法</h5><p>思路:</p>
+<p>创建一个虚拟的头节点dummyHead，初始指向head。从head.next开始进行翻转操作，</p>
+<p>ListNode cur = head.next;</p>
+<p>然后依次进行遍历：</p>
+<p>while(cur != null) {</p>
+<pre><code>1. 先保存cur的下一个节点，供下一次遍历使用；(temp = cur.next)
+1. 把cur插入dummyHead.next的位置（cur.next = dummyHead.next; dummyHead.next =cur）
+1. 将temp赋值给cur，进行下一个节点的遍历(cur = temp)
+</code></pre>
+<p>}</p>
+<p>注意：</p>
+<p>要注意链表是否可能出现环！！</p>
+<p>要注意链表是否可能出现环！！</p>
+<p>要注意链表是否可能出现环！！</p>
+<p>因为我们是从head.next开始遍历、不断地将遍历到的节点插入dummyhead头部，那最开始的head.next仍然指向原始的下一个节点。这样就产生了环。因此需要将head.next置为null，再开始遍历。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">reverseList</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">				<span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> head;</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        ListNode dummyHead = <span class="keyword">new</span> ListNode(-<span class="number">1</span>);</span><br><span class="line">        dummyHead.next = head;</span><br><span class="line"> </span><br><span class="line">        ListNode cur = head.next;</span><br><span class="line">        head.next = <span class="keyword">null</span>;</span><br><span class="line">        ListNode temp;</span><br><span class="line"> </span><br><span class="line">        <span class="keyword">while</span>(cur != <span class="keyword">null</span>) &#123;</span><br><span class="line">            temp = cur.next;</span><br><span class="line">            cur.next = dummyHead.next;</span><br><span class="line">            dummyHead.next = cur;</span><br><span class="line">            cur = temp;</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        <span class="keyword">return</span> dummyHead.next;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">reverseList</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> head;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ListNode dummyHead = <span class="keyword">new</span> ListNode(-<span class="number">1</span>);</span><br><span class="line">        dummyHead.next = head;</span><br><span class="line">        ListNode cur = head.next;</span><br><span class="line">        <span class="keyword">while</span> (cur != <span class="keyword">null</span>) &#123;</span><br><span class="line">            head.next = cur.next;</span><br><span class="line">            cur.next = dummyHead.next;</span><br><span class="line">            dummyHead.next = cur;</span><br><span class="line">            cur = head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dummyHead.next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h5 id="解法三：递归法"><a href="#解法三：递归法" class="headerlink" title="解法三：递归法"></a>解法三：递归法</h5><div align="center">
   <img src="../../images/algrithoms/reverselist_recursive.png" width = 80%>
@@ -585,6 +605,13 @@
 
 <h4 id="排序链表"><a href="#排序链表" class="headerlink" title="排序链表"></a>排序链表</h4><p><a href="https://leetcode-cn.com/problems/sort-list/">148. 排序链表</a></p>
 <p>给你链表的头结点 <code>head</code> ，请将其按 <strong>升序</strong> 排列并返回 <strong>排序后的链表</strong> 。</p>
+<p>解法一：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * dummyHead 1 3 2 4 5</span></span><br><span class="line"><span class="comment">     *           </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> head ListNode类 the head node</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> ListNode类</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">sortInList</span> <span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> head;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ListNode dummyHead = <span class="keyword">new</span> ListNode(-<span class="number">1</span>);</span><br><span class="line">        dummyHead.next = head;</span><br><span class="line"></span><br><span class="line">        ListNode tail = head;</span><br><span class="line">        ListNode cur = head.next;</span><br><span class="line">        tail.next = <span class="keyword">null</span>;</span><br><span class="line">        ListNode next;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">while</span>(cur != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">//将cur插入到[dummyHead.next, tail]中合适的位置</span></span><br><span class="line">            next = cur.next;</span><br><span class="line"></span><br><span class="line">            ListNode pre = dummyHead;</span><br><span class="line">            ListNode temp = pre.next;</span><br><span class="line">            <span class="keyword">while</span>(temp != <span class="keyword">null</span> &amp;&amp; temp.val &lt; cur.val) &#123;</span><br><span class="line">                pre = temp;</span><br><span class="line">                temp = temp.next;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            pre.next = cur;</span><br><span class="line">            cur.next = temp;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span>(temp == <span class="keyword">null</span>) &#123;</span><br><span class="line">                tail = cur;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            cur = next;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> dummyHead.next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>解法二：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * dummyHead 1 3 2 4 5</span></span><br><span class="line"><span class="comment">     *           </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> head ListNode类 the head node</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> ListNode类</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">sortInList</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> head;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">       </span><br><span class="line">        List&lt;ListNode&gt; list  = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">while</span>(head !=<span class="keyword">null</span>)&#123;</span><br><span class="line">            list.add(head);</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        list.sort(<span class="keyword">new</span> Comparator&lt;ListNode&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(ListNode o1, ListNode o2)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> o1.val - o2.val;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; list.size() - <span class="number">1</span>;i++)&#123;</span><br><span class="line">            list.get(i).next = list.get(i + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        list.get(list.size() - <span class="number">1</span>).next = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">return</span> list.get(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>解法三：</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 时间复杂度：o(nlogn)</span></span><br><span class="line"><span class="comment"> * 空间复杂度：o(logn)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">sortList</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> head;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ListNode mid = findMiddle(head);</span><br><span class="line">        ListNode midNext = mid.next;</span><br><span class="line">        mid.next = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        ListNode left = sortList(head);</span><br><span class="line">        ListNode right = sortList(midNext);</span><br><span class="line">        <span class="keyword">return</span> mergeSort(left, right);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//查找链表的中间结点</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> ListNode <span class="title">findMiddle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        ListNode fast = head;</span><br><span class="line">        ListNode slow = head;</span><br><span class="line">        <span class="keyword">while</span>(fast != <span class="keyword">null</span> &amp;&amp; fast.next != <span class="keyword">null</span> &amp;&amp; fast.next.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">            fast = fast.next.next;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> slow;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> ListNode <span class="title">mergeSort</span><span class="params">(ListNode l1, ListNode l2)</span> </span>&#123;</span><br><span class="line">        ListNode dummyHead = <span class="keyword">new</span> ListNode(-<span class="number">1</span>);</span><br><span class="line">        ListNode prev = dummyHead;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span>(l1 != <span class="keyword">null</span> &amp;&amp; l2 != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span>(l1.val &lt; l2.val) &#123;</span><br><span class="line">                prev.next = l1;</span><br><span class="line">                prev = l1;</span><br><span class="line">                l1 = l1.next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                prev.next = l2;</span><br><span class="line">                prev = l2;</span><br><span class="line">                l2 = l2.next;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        prev.next = l1 != <span class="keyword">null</span> ? l1 : l2;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> dummyHead.next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h4 id="分隔链表"><a href="#分隔链表" class="headerlink" title="分隔链表"></a><a href="https://leetcode-cn.com/problems/split-linked-list-in-parts/">分隔链表</a></h4><p>给你一个头结点为 head 的单链表和一个整数 k ，请你设计一个算法将链表分隔为 k 个连续的部分。</p>
@@ -604,17 +631,99 @@
 <p>来源：力扣（LeetCode）<br>链接：<a href="https://leetcode-cn.com/problems/split-linked-list-in-parts">https://leetcode-cn.com/problems/split-linked-list-in-parts</a><br>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> ListNode[] splitListToParts(ListNode head, <span class="keyword">int</span> k) &#123;</span><br><span class="line">        ListNode[] result = <span class="keyword">new</span> ListNode[k];</span><br><span class="line">        <span class="keyword">int</span> len = <span class="number">0</span>;</span><br><span class="line">        ListNode cur = head;</span><br><span class="line">        ListNode prev = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//计算链表的总长度</span></span><br><span class="line">        <span class="keyword">while</span>(cur != <span class="keyword">null</span>) &#123;</span><br><span class="line">            len++;</span><br><span class="line">            cur = cur.next;</span><br><span class="line">        &#125;</span><br><span class="line">      </span><br><span class="line">        <span class="keyword">int</span> left = len % k;</span><br><span class="line">        cur = head;</span><br><span class="line">        prev = cur;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> itemSize = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; k; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span>(left-- &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                itemSize = len / k + <span class="number">1</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                itemSize = len / k;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span>(itemSize == <span class="number">0</span>) &#123;</span><br><span class="line">                result[i] = <span class="keyword">null</span>;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            result[i] = cur;</span><br><span class="line">            <span class="keyword">while</span>(itemSize &gt; <span class="number">0</span>) &#123;</span><br><span class="line">               prev = cur;</span><br><span class="line">               cur = cur.next;</span><br><span class="line">               itemSize--;</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           prev.next = <span class="keyword">null</span>;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="143-重排链表"><a href="#143-重排链表" class="headerlink" title="143. 重排链表"></a><a href="https://leetcode-cn.com/problems/reorder-list/">143. 重排链表</a></h4><p>给定一个单链表 L 的头节点 head ，单链表 L 表示为：</p>
+<h4 id="重排链表"><a href="#重排链表" class="headerlink" title="重排链表"></a><a href="https://leetcode-cn.com/problems/reorder-list/">重排链表</a></h4><p>给定一个单链表 L 的头节点 head ，单链表 L 表示为：</p>
 <p><code>L0 → L1 → … → Ln - 1 → Ln</code></p>
 <p>请将其重新排列后变为：</p>
 <p><code>L0 → Ln → L1 → Ln - 1 → L2 → Ln - 2 → …</code></p>
 <p>不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换。</p>
-<p>来源：力扣（LeetCode）<br>链接：<a href="https://leetcode-cn.com/problems/reorder-list">https://leetcode-cn.com/problems/reorder-list</a><br>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</p>
-<h5 id="解法一："><a href="#解法一：" class="headerlink" title="解法一："></a>解法一：</h5><p>先将每一个节点用List缓存起来，然后适用双指针前后遍历，将节点串起来。</p>
+<p>解法一：</p>
+<p>先将每一个节点用List缓存起来，然后适用双指针前后遍历，将节点串起来。</p>
 <p>需要注意的点是，最后一个节点的next一定要置为空，不然会出现环。</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">reorderList</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        List&lt;ListNode&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">while</span>(head != <span class="keyword">null</span>) &#123;</span><br><span class="line">            list.add(head);</span><br><span class="line">            head = head.next;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> i = <span class="number">0</span>, j = list.size() - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(i &lt; j) &#123;</span><br><span class="line">            list.get(i).next = list.get(j);</span><br><span class="line">            i++;</span><br><span class="line">            <span class="keyword">if</span>(i == j) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            list.get(j).next = list.get(i);</span><br><span class="line">            j--;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//最后i和j会相等，这里如果不将list.get(i).next置为空就会出现环。</span></span><br><span class="line">        list.get(i).next = <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h5 id="解法二："><a href="#解法二：" class="headerlink" title="解法二："></a>解法二：</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">reorderList</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ListNode fast = head;</span><br><span class="line">        ListNode slow = head;</span><br><span class="line">        ListNode prev = slow;</span><br><span class="line">        <span class="keyword">while</span> (fast != <span class="keyword">null</span> &amp;&amp; fast.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">            fast = fast.next.next;</span><br><span class="line">            prev = slow;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        prev.next = <span class="keyword">null</span>;</span><br><span class="line">        ListNode dummyHead = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">        dummyHead.next = slow;</span><br><span class="line"></span><br><span class="line">        ListNode cur = slow.next;</span><br><span class="line">        slow.next = <span class="keyword">null</span>;</span><br><span class="line">        ListNode nex;</span><br><span class="line">        <span class="keyword">while</span> (cur != <span class="keyword">null</span>) &#123;</span><br><span class="line">            nex = cur.next;</span><br><span class="line">            cur.next = dummyHead.next;</span><br><span class="line">            dummyHead.next = cur;</span><br><span class="line">            cur = nex;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ListNode n1 = head;</span><br><span class="line">        ListNode n2 = dummyHead.next;</span><br><span class="line"></span><br><span class="line">        ListNode nex1 = n1, nex2 = n2;</span><br><span class="line">        <span class="keyword">while</span> (n1.next != <span class="keyword">null</span> &amp;&amp; n2.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">            nex1 = n1.next;</span><br><span class="line">            nex2 = n2.next;</span><br><span class="line">            n1.next = n2;</span><br><span class="line">            n2.next = nex1;</span><br><span class="line">            n1 = nex1;</span><br><span class="line">            n2 = nex2;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(n1.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            n1.next = n2;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>解法二：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">reorderList</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ListNode fast = head;</span><br><span class="line">        ListNode slow = head;</span><br><span class="line">        ListNode prev = slow;</span><br><span class="line">        <span class="keyword">while</span> (fast != <span class="keyword">null</span> &amp;&amp; fast.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">            fast = fast.next.next;</span><br><span class="line">            prev = slow;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        prev.next = <span class="keyword">null</span>;</span><br><span class="line">        ListNode dummyHead = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">        dummyHead.next = slow;</span><br><span class="line"></span><br><span class="line">        ListNode cur = slow.next;</span><br><span class="line">        slow.next = <span class="keyword">null</span>;</span><br><span class="line">        ListNode nex;</span><br><span class="line">        <span class="keyword">while</span> (cur != <span class="keyword">null</span>) &#123;</span><br><span class="line">            nex = cur.next;</span><br><span class="line">            cur.next = dummyHead.next;</span><br><span class="line">            dummyHead.next = cur;</span><br><span class="line">            cur = nex;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ListNode n1 = head;</span><br><span class="line">        ListNode n2 = dummyHead.next;</span><br><span class="line"></span><br><span class="line">        ListNode nex1 = n1, nex2 = n2;</span><br><span class="line">        <span class="keyword">while</span> (n1.next != <span class="keyword">null</span> &amp;&amp; n2.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">            nex1 = n1.next;</span><br><span class="line">            nex2 = n2.next;</span><br><span class="line">            n1.next = n2;</span><br><span class="line">            n2.next = nex1;</span><br><span class="line">            n1 = nex1;</span><br><span class="line">            n2 = nex2;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(n1.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            n1.next = n2;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="链表内指定区间反转"><a href="#链表内指定区间反转" class="headerlink" title="链表内指定区间反转"></a><strong>链表内指定区间反转</strong></h4><p>描述</p>
+<p>将一个节点数为 size 链表 m 位置到 n 位置之间的区间反转，要求时间复杂度 <em>O</em>(<em>n</em>)，空间复杂度 <em>O</em>(1)。<br>例如：<br>给出的链表为 1→2→3→4→5→NULL, m=2, n=4,<br>返回 1→4→3→2→5→NULL</p>
+<p>数据范围： 链表长度 0≤10000&lt;size≤1000，0&lt;<em>m</em>≤<em>n</em>≤size，链表中每个节点的值满足|val| ≤ 1000</p>
+<p>要求：时间复杂度 <em>O</em>(<em>n</em>) ，空间复杂度 <em>O</em>(<em>n</em>)</p>
+<p>进阶：时间复杂度 <em>O</em>(<em>n</em>)，空间复杂度 <em>O</em>(1)</p>
+<p>示例1</p>
+<p>输入：</p>
+<figure class="highlight dns"><table><tr><td class="code"><pre><span class="line">&#123;<span class="number">1,2,3,4</span>,<span class="number">5</span>&#125;,<span class="number">2</span>,<span class="number">4</span></span><br></pre></td></tr></table></figure>
+
+<p>返回值：</p>
+<figure class="highlight clojure"><table><tr><td class="code"><pre><span class="line">&#123;<span class="number">1</span>,<span class="number">4</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">5</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>示例2</p>
+<p>输入：</p>
+<figure class="highlight dust"><table><tr><td class="code"><pre><span class="line"><span class="template-variable">&#123;5&#125;</span><span class="xml">,1,1</span></span><br></pre></td></tr></table></figure>
+
+<p>返回值：</p>
+<figure class="highlight clojure"><table><tr><td class="code"><pre><span class="line">&#123;<span class="number">5</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>解题思路：</p>
+<p>需要记录4个节点：</p>
+<ol>
+<li>m的前一个节点，记为pre;</li>
+<li>第m个节点，记为left；</li>
+<li>第n个节点，记为right；</li>
+<li>n的下一个节点，记为next；</li>
+</ol>
+<p>将链表[m, n]进行翻转，然后将翻转后的局部链表拼接上去。将pre.next指向right，left.next指向next。</p>
+<p>注意：</p>
+<p>​    将right的下一个位置记录好以后，需要将right.next置为null，这样翻转局部链表时，遍历到null即表示局部链表结束。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> head ListNode类 </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> m int整型 </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> n int整型 </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> ListNode类</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">     * &#123;1,2,3,4,5&#125;, m = 2, n = 4</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">reverseBetween</span><span class="params">(ListNode head, <span class="keyword">int</span> m, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(m == n) &#123;</span><br><span class="line">            <span class="keyword">return</span> head;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ListNode dummyHead = <span class="keyword">new</span> ListNode(-<span class="number">1</span>);</span><br><span class="line">        dummyHead.next = head;</span><br><span class="line"></span><br><span class="line">        ListNode pre = dummyHead, next, left, right;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i =<span class="number">0</span>; i &lt; m - <span class="number">1</span>; i++) &#123;</span><br><span class="line">            pre = pre.next;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        left = pre.next;</span><br><span class="line">        right = left;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n - m; i++) &#123;</span><br><span class="line">            right= right.next;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        next = right.next;</span><br><span class="line">        right.next = <span class="keyword">null</span>;</span><br><span class="line">        reverse(left);</span><br><span class="line">        pre.next = right;</span><br><span class="line">        left.next = next;</span><br><span class="line">        <span class="keyword">return</span> dummyHead.next;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> ListNode <span class="title">reverse</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> head;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ListNode dummyHead = <span class="keyword">new</span> ListNode(-<span class="number">1</span>);</span><br><span class="line">        dummyHead.next = head;</span><br><span class="line"></span><br><span class="line">        ListNode cur = head.next;</span><br><span class="line">        head.next = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        ListNode temp;</span><br><span class="line">        <span class="keyword">while</span>(cur != <span class="keyword">null</span>) &#123;</span><br><span class="line">            temp = cur.next;</span><br><span class="line">            cur.next = dummyHead.next;</span><br><span class="line">            dummyHead.next = cur;</span><br><span class="line">            cur = temp;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> dummyHead.next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="合并两个有序链表"><a href="#合并两个有序链表" class="headerlink" title=" 合并两个有序链表"></a><a href="https://leetcode.cn/problems/merge-two-sorted-lists/"> 合并两个有序链表</a></h4><p>将两个升序链表合并为一个新的 <strong>升序</strong> 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。 </p>
+<p><strong>示例 1：</strong></p>
+<p><img src="https://assets.leetcode.com/uploads/2020/10/03/merge_ex1.jpg" alt="img"></p>
+<figure class="highlight inform7"><table><tr><td class="code"><pre><span class="line">输入：l1 = <span class="comment">[1,2,4]</span>, l2 = <span class="comment">[1,3,4]</span></span><br><span class="line">输出：<span class="comment">[1,1,2,3,4,4]</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 2：</strong></p>
+<figure class="highlight inform7"><table><tr><td class="code"><pre><span class="line">输入：l1 = <span class="comment">[]</span>, l2 = <span class="comment">[]</span></span><br><span class="line">输出：<span class="comment">[]</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 3：</strong></p>
+<figure class="highlight inform7"><table><tr><td class="code"><pre><span class="line">输入：l1 = <span class="comment">[]</span>, l2 = <span class="comment">[0]</span></span><br><span class="line">输出：<span class="comment">[0]</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong></p>
+<ul>
+<li>两个链表的节点数目范围是 <code>[0, 50]</code></li>
+<li><code>-100 &lt;= Node.val &lt;= 100</code></li>
+<li><code>l1</code> 和 <code>l2</code> 均按 <strong>非递减顺序</strong> 排列</li>
+</ul>
+<h4 id="判断一个链表是否为回文结构"><a href="#判断一个链表是否为回文结构" class="headerlink" title="判断一个链表是否为回文结构"></a>判断一个链表是否为回文结构</h4><p>描述</p>
+<p>给定一个链表，请判断该链表是否为回文结构。</p>
+<p>回文是指该字符串正序逆序完全一致。</p>
+<p>数据范围： 链表节点数 0≤<em>n</em>≤10^5^，链表中每个节点的值满足|val|&lt;= 10^7^</p>
+<p>思路：</p>
+<p>​    顺序遍历链表，将链表中的节点的值放入ArrayList中，然后判断ArrayList是否为回文。</p>
+<p>​    注意：</p>
+<p>​    两个Integer对象比较大小应该用compareTo(Integer anotherInteger)方法。</p>
+<pre><code><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer a = -<span class="number">221</span>;</span><br><span class="line">Integer b = -<span class="number">222</span>;</span><br><span class="line"><span class="comment">//compareTo(Integer)的返回值：</span></span><br><span class="line"><span class="comment">//a &lt; b: -1</span></span><br><span class="line"><span class="comment">//a == b: 0</span></span><br><span class="line"><span class="comment">//a &gt; b: 1</span></span><br><span class="line">System.out.println(a.compareTo(b));</span><br></pre></td></tr></table></figure>
+</code></pre>
+<h4 id="删除有序链表中重复的元素-II"><a href="#删除有序链表中重复的元素-II" class="headerlink" title="删除有序链表中重复的元素-II"></a><strong>删除有序链表中重复的元素-II</strong></h4><p>给出一个升序排序的链表，删除链表中的所有重复出现的元素，只保留原链表中只出现一次的元素。<br>例如：<br>给出的链表为1→2→3→3→4→4→51→2→3→3→4→4→5, 返回1→2→51→2→5.<br>给出的链表为1→1→1→2→31→1→1→2→3, 返回2→32→3.</p>
+<p>数据范围：链表长度 0≤<em>n</em>≤10000，链表中的值满足|va|≤1000</p>
+<p>要求：空间复杂度O*(<em>n</em>)，时间复杂度 <em>O</em>(<em>n</em>)</p>
+<p>进阶：空间复杂度 O*(1)，时间复杂度<em>O</em>(<em>n</em>)</p>
+<p>示例1</p>
+<p>输入：</p>
+<figure class="highlight clojure"><table><tr><td class="code"><pre><span class="line">&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">2</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>返回值：</p>
+<figure class="highlight clojure"><table><tr><td class="code"><pre><span class="line">&#123;<span class="number">1</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>示例2</p>
+<p>输入：</p>
+<figure class="highlight clojure"><table><tr><td class="code"><pre><span class="line">&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>返回值：</p>
+<figure class="highlight clojure"><table><tr><td class="code"><pre><span class="line">&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>思路:</p>
+<p>代码：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * 1 -&gt; 2 -&gt; 3 -&gt; 3 -&gt; 4 -&gt; 4 -&gt; 5.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> head ListNode类 </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> ListNode类</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">deleteDuplicates</span> <span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> head;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ListNode dummyHead = <span class="keyword">new</span> ListNode(Integer.MIN_VALUE);</span><br><span class="line">        dummyHead.next = head;</span><br><span class="line">        </span><br><span class="line">        ListNode cur = head;</span><br><span class="line">        <span class="comment">//维护cur的前一个节点，因为在遍历cur时存在删除cur的场景。</span></span><br><span class="line">        ListNode pre = dummyHead;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//遍历cur时，向后再多看一步</span></span><br><span class="line">        <span class="keyword">while</span>(cur != <span class="keyword">null</span> &amp;&amp; cur.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span>(cur.val == cur.next.val) &#123;</span><br><span class="line">                <span class="comment">//cur后面有与cur相等的节点, 穷举完所有与cur相同的节点，连同cur一起删除。</span></span><br><span class="line">                <span class="keyword">int</span> target = cur.val;</span><br><span class="line">                ListNode temp = cur.next;</span><br><span class="line">                <span class="keyword">while</span>(temp != <span class="keyword">null</span> &amp;&amp; temp.val == target) &#123;</span><br><span class="line">                    temp = temp.next;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="comment">//temp最终指向null或与target不相等的节点</span></span><br><span class="line">                pre.next = temp;</span><br><span class="line">                cur = temp;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">//cur的下一个节点与cur不相等</span></span><br><span class="line">                pre = cur;</span><br><span class="line">                cur = cur.next;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dummyHead.next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 ]]></content>
       <categories>
@@ -703,7 +812,7 @@
 
 <h4 id="Class文件常量池"><a href="#Class文件常量池" class="headerlink" title="Class文件常量池"></a>Class文件常量池</h4><p>上述javap输出的Constant Pool是class文件的常量池。包含：</p>
 <ul>
-<li><p>Methodref：以冒号隔开的一对值，例如com/yxf/sample/Order.”<init>“:()V，第一部分是方法名，第二部分是方法类型；</init></p>
+<li><p>Methodref：以冒号隔开的一对值，例如com/yxf/sample/Order.”<init>“:()V，第一部分是方法名，第二部分是方法类型；</p>
 </li>
 <li><p>Fieldref：以冒号隔开的一对值，例如com/yxf/sample/ConstantPool.f:Ljava/lang/String;，第一部分是字段名，第二部分是字段类型</p>
 </li>
@@ -794,13 +903,13 @@ Java中的无符号数是以补码的形式存储的。</li>
 <figure class="highlight diff"><table><tr><td class="code"><pre><span class="line"><span class="deletion">-XX:-UseCompressedOops </span></span><br></pre></td></tr></table></figure>
 
 <p><img src="/images/object_header_32.png" alt="object_header_32.png"></p>
-<center><font size="1" color="gray">图1：Hotspot 32-bit对象布局</font></center>
+<center><font size=1  color=gray>图1：Hotspot 32-bit对象布局</font></center>
 
 <p><img src="/images/object_header_64.png" alt="object_header_64"></p>
-<center><font size="1" color="gray">图2：Hotspot 64-bit对象布局</font></center>
+<center><font size=1  color=gray>图2：Hotspot 64-bit对象布局</font></center>
 
 <p><img src="/images/object_header_64_coops.png" alt="object_header_64_coops"></p>
-<center><font size="1" color="gray">图3：Hotspot 64-bit带压缩的对象布局</font></center>
+<center><font size=1  color=gray>图3：Hotspot 64-bit带压缩的对象布局</font></center>
 
 <p>参考资料：<a href="https://gist.github.com/arturmkrtchyan/43d6135e8a15798cc46c">https://gist.github.com/arturmkrtchyan/43d6135e8a15798cc46c</a></p>
 <p>另外参见注释 <a href="http://hg.openjdk.java.net/jdk8u/jdk8u/hotspot/file/tip/src/share/vm/oops/markOop.hpp#l3">MarkOop</a></p>
@@ -1743,21 +1852,22 @@ Java中的无符号数是以补码的形式存储的。</li>
 <li>如果你需要在运行时切换不同实现方法， 可使用桥接模式。</li>
 </ul>
 <p>桥接模式可动态替换抽象对象的实现类， 从这个角度来说，和策略模式的效果一样。</p>
-<h5 id="优缺点："><a href="#优缺点：" class="headerlink" title="优缺点："></a>优缺点：</h5><ul>
-<li>你可以创建与平台无关的类和程序。</li>
-<li> 客户端代码仅与高层抽象部分进行互动， 不会接触到平台的详细信息。</li>
-<li> 开闭原则。 你可以新增抽象部分和实现部分， 且它们之间不会相互影响。</li>
-<li> 单一职责原则。 抽象部分专注于处理高层逻辑， 实现部分处理平台细节。</li>
-<li> 对高内聚的类使用该模式可能会让代码更加复杂。</li>
-</ul>
+<h5 id="优缺点："><a href="#优缺点：" class="headerlink" title="优缺点："></a>优缺点：</h5><p>+ Decoupling interface and implementation. </p>
+<p>实现部分并不会永久的和一个接口绑定，一个abstraction的实现部分（implementation）可以在运行期配置，甚至可以在运行期动态改变；</p>
+<p>+ Improved extensibility. </p>
+<p>你可以相互独立的扩展Abstraction和Implementor的层次结构；</p>
+<p>+ Hiding implementation details from clients. </p>
+<p>你可以对Clientsn隐藏实现的细节，例如implementor对象的共享信息和相应的引用计数机制。</p>
+<p>-  You might make the code more complicated by applying the pattern to a highly cohesive class.</p>
+<p>对高内聚的类使用该模式可能会让代码更加复杂。</p>
 <h5 id="与其它模式的关系："><a href="#与其它模式的关系：" class="headerlink" title="与其它模式的关系："></a>与其它模式的关系：</h5><ul>
-<li><p>桥接模式通常会于开发前期进行设计， 使你能够将程序的各个部分独立开来以便开发。 另一方面， 适配器模式通常在已有程序中使用， 让相互不兼容的类能很好地合作。</p>
+<li><p><strong>桥接模式</strong>通常会于开发前期进行设计， 使你能够将程序的各个部分独立开来以便开发。 然而<strong>适配器模式</strong>通常在已有程序中使用， 让相互不兼容的类能很好地合作。</p>
 </li>
-<li><p>桥接、 状态模式和策略模式 （在某种程度上包括适配器） 模式的接口非常相似。 实际上， 它们都基于组合模式——即将工作委派给其他对象， 不过也各自解决了不同的问题。 模式并不只是以特定方式组织代码的配方， 你还可以使用它们来和其他开发者讨论模式所解决的问题。</p>
+<li><p><strong>桥接、 状态模式和策略模式</strong> （在某种程度上包括<strong>适配器</strong>） 模式的接口非常相似。 实际上， 它们都基于组合模式——即将工作委派给其他对象， 不过也各自解决了不同的问题。 模式并不只是以特定方式组织代码的配方， 你还可以使用它们来和其他开发者讨论模式所解决的问题。</p>
 </li>
-<li><p>你可以将抽象工厂模式和桥接搭配使用。 如果由桥接定义的抽象只能与特定实现合作， 这一模式搭配就非常有用。 在这种情况下， 抽象工厂可以对这些关系进行封装， 并且对客户端代码隐藏其复杂性。</p>
+<li><p>你可以将<strong>抽象工厂模式</strong>和<strong>桥接</strong>搭配使用。 如果由桥接定义的抽象只能与特定实现合作， 这一模式搭配就非常有用。 在这种情况下， 抽象工厂可以对这些关系进行封装， 并且对客户端代码隐藏其复杂性。</p>
 </li>
-<li><p>你可以结合使用生成器模式和桥接模式： 主管类负责抽象工作， 各种不同的生成器负责实现工作。</p>
+<li><p>你可以结合使用<strong>生成器模式</strong>和<strong>桥接模式</strong>： 主管类负责抽象工作， 各种不同的生成器负责实现工作。</p>
 </li>
 </ul>
 <h4 id="8-组合（Composite）"><a href="#8-组合（Composite）" class="headerlink" title="8. 组合（Composite）"></a>8. 组合（Composite）</h4><p>将对象组合成树状结构，以表示“部分-整体”的层次结构。组合模式使得用户可以相同的方式对待单个对象和组合对象。</p>
@@ -2564,6 +2674,257 @@ Java中的无符号数是以补码的形式存储的。</li>
       </categories>
       <tags>
         <tag>OpenGLES</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>单调栈的理解</title>
+    <url>/2024/01/01/monotonous_stack/</url>
+    <content><![CDATA[<p><a href="https://leetcode.cn/problems/largest-rectangle-in-histogram/">84. 柱状图中最大的矩形</a></p>
+<p>给定 <em>n</em> 个非负整数，用来表示柱状图中各个柱子的高度。每个柱子彼此相邻，且宽度为 1 。</p>
+<p>求在该柱状图中，能够勾勒出来的矩形的最大面积。</p>
+<p><strong>示例 1:</strong></p>
+<p><img src="https://assets.leetcode.com/uploads/2021/01/04/histogram.jpg" alt="img"></p>
+<figure class="highlight accesslog"><table><tr><td class="code"><pre><span class="line">输入：heights = <span class="string">[2,1,5,6,2,3]</span></span><br><span class="line">输出：<span class="number">10</span></span><br><span class="line">解释：最大的矩形为图中红色区域，面积为 <span class="number">10</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 2：</strong></p>
+<p><img src="https://assets.leetcode.com/uploads/2021/01/04/histogram-1.jpg" alt="img"></p>
+<figure class="highlight fix"><table><tr><td class="code"><pre><span class="line"><span class="attr">输入： heights </span>=<span class="string"> [2,4]</span></span><br><span class="line"><span class="string">输出： 4</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>1 &lt;= heights.length &lt;=105</code></li>
+<li><code>0 &lt;= heights[i] &lt;= 104</code></li>
+</ul>
+<p>将一个柱形的数据存入栈的时候，表示我们还不能确定当前位置能勾勒出来的矩形的最大面积。</p>
+<p>出栈的时候，就表示现在可以确定栈顶这个位置的柱形能够勾勒出来的矩形最大面积。</p>
+<p>什么时候元素出栈呢?</p>
+<p>看到的元素的高度严格小于当前栈顶元素的高度时，栈顶元素出栈，进而计算出栈顶元素能勾勒出的矩形的最大面积。</p>
+<p>Corner Case：</p>
+<ol>
+<li><p>遍历完成以后，栈顶元素一定可以扩散到数组的末尾。</p>
+<p> 因为栈顶元素一定是栈内最大的，</p>
+<ol start="2">
+<li>出栈以后，站内元素为空，当前元素一定可以扩散到数组的最左边。因为左边元素一定比当前元素严格大。</li>
+<li>栈内存在连续的高度相等的元素。</li>
+<li></li>
+</ol>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>单调栈</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Kafka入门</title>
+    <url>/2023/12/23/Kafka_quickstart/</url>
+    <content><![CDATA[<h3 id="Kafka入门"><a href="#Kafka入门" class="headerlink" title="Kafka入门"></a>Kafka入门</h3><p>启动ZooKeeper</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Start the ZooKeeper service</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> bin/zookeeper-server-start.sh config/zookeeper.properties</span></span><br></pre></td></tr></table></figure>
+
+<p>打开另一个控制台，启动Kafka</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Start the Kafka broker service</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> bin/kafka-server-start.sh config/server.properties</span></span><br></pre></td></tr></table></figure>
+
+<p>创建Topic</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic topic-create --partitions 4 --replication-factor 1</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> output</span></span><br><span class="line">Created topic topic-create.</span><br></pre></td></tr></table></figure>
+
+<p>查看Topic信息：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">bin/kafka-topics.sh --describe --topic topic-create --bootstrap-server localhost:9092</span></span><br><span class="line">Topic: topic-create	TopicId: pLImIYImQ92Ii4KPg4-YxQ	PartitionCount: 4	ReplicationFactor: 1	Configs: </span><br><span class="line">	Topic: topic-create	Partition: 0	Leader: 0	Replicas: 0	Isr: 0</span><br><span class="line">	Topic: topic-create	Partition: 1	Leader: 0	Replicas: 0	Isr: 0</span><br><span class="line">	Topic: topic-create	Partition: 2	Leader: 0	Replicas: 0	Isr: 0</span><br><span class="line">	Topic: topic-create	Partition: 3	Leader: 0	Replicas: 0	Isr: 0</span><br></pre></td></tr></table></figure>
+
+<p>往Kafka指定的Topic写数据：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> bin/kafka-console-producer.sh --topic topic-create --bootstrap-server localhost:9092</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">hello, This is message 1</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">This is message2</span></span><br><span class="line"><span class="meta">&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>从Kafka中读取消息：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> bin/kafka-console-consumer.sh --topic topic-create --from-beginning --bootstrap-server localhost:9092</span></span><br><span class="line">hello, This is message 1</span><br><span class="line">This is message2</span><br></pre></td></tr></table></figure>
+
+]]></content>
+  </entry>
+  <entry>
+    <title>JVM GC的理解</title>
+    <url>/2024/01/13/jvm_gc/</url>
+    <content><![CDATA[<h4 id="JVM垃圾回收算法："><a href="#JVM垃圾回收算法：" class="headerlink" title="JVM垃圾回收算法："></a>JVM垃圾回收算法：</h4><p>1、“标记–清除”算法；首先标记出所有需要被回收的对象，然后在标记完成后统一回收掉所有被标记的对象。</p>
+<p>2、复制算法；将内存划分为等大的两块，每次只使用其中的一块。</p>
+<p>3、“标记–清除-整理”算法；</p>
+<p>4、分代收集算法。</p>
+<h4 id="三色标记法"><a href="#三色标记法" class="headerlink" title="三色标记法"></a>三色标记法</h4><p>遍历过程：</p>
+<ol>
+<li>初始时，所有对象都标记为白色；</li>
+<li>将GC Roots直接引用的对象标记为灰色；</li>
+<li>依次遍历灰色对象：</li>
+<li>1 将该对象引用的所有对象全部标记为灰色；</li>
+<li>2 将该对象标记为黑色。</li>
+<li>重复步骤3，直到所有的灰色节点都被标记为黑色。</li>
+<li>此时，标记为白色的对象即为GC Roots不可达，可以进行垃圾回收。</li>
+</ol>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>算法学习之字符串</title>
+    <url>/2024/01/20/strings/</url>
+    <content><![CDATA[<h4 id="无重复字符的最长子串"><a href="#无重复字符的最长子串" class="headerlink" title="无重复字符的最长子串"></a><a href="https://leetcode.cn/problems/longest-substring-without-repeating-characters/">无重复字符的最长子串</a></h4><p>给定一个字符串 <code>s</code> ，请你找出其中不含有重复字符的 <strong>最长子串</strong> 的长度。 </p>
+<p><strong>示例 1:</strong></p>
+<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="section">输入: s = &quot;abcabcbb&quot;</span></span><br><span class="line"><span class="section">输出: 3 </span></span><br><span class="line"><span class="section">解释: 因为无重复字符的最长子串是 &quot;abc&quot;，所以其长度为 3。</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 2:</strong></p>
+<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="section">输入: s = &quot;bbbbb&quot;</span></span><br><span class="line"><span class="section">输出: 1</span></span><br><span class="line"><span class="section">解释: 因为无重复字符的最长子串是 &quot;b&quot;，所以其长度为 1。</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 3:</strong></p>
+<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="section">输入: s = &quot;pwwkew&quot;</span></span><br><span class="line"><span class="section">输出: 3</span></span><br><span class="line"><span class="section">解释: 因为无重复字符的最长子串是 &quot;wke&quot;，所以其长度为 3。</span></span><br><span class="line">     请注意，你的答案必须是 子串 的长度，<span class="string">&quot;pwke&quot;</span> 是一个子序列，不是子串。 </span><br></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>0 &lt;= s.length &lt;= 5 * 104</code></li>
+<li><code>s</code> 由英文字母、数字、符号和空格组成</li>
+</ul>
+<p>解题思路：</p>
+<p>维护一个滑动窗口，滑动窗口中的元素都是不重复的，窗口依次向前滚动。</p>
+<p>遍历字符串数组，计算滑动窗口[left, i]的的最大长度。</p>
+<p>因此，需要维护一个left下标，初始为0。然后，for循环遍历字符串，把遍历过的字符放在HashMap&lt;Character, Integer&gt;中，key为s.charAt(i)，value为s.charAt(i)的字符出现的最新位置。如果s.charAt(i)在HashMap中已经出现过，则left跳过该字符，往前移一位。</p>
+<p>新的left到i之间一定都是不重复的。</p>
+<p>注意，left一直是往前走的，不应该往后倒退，比如String为”abbbac”, 遍历到第2个a时，left已经指向第2个b的位置，因为a之前出现过， hashMap.get(‘a’)为0，left应该取left = Math.max(left, hashMap.get(s.char(i)) + 1 )。</p>
+<h4 id="字符串分割："><a href="#字符串分割：" class="headerlink" title="字符串分割："></a>字符串分割：</h4><p> 分割函数split带limit和不带limit的区别。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String[] split(String regex)</span><br></pre></td></tr></table></figure>
+<p>和</p>
+<figure class="highlight processing"><table><tr><td class="code"><pre><span class="line"><span class="keyword">String</span>[] <span class="built_in">split</span>(<span class="keyword">String</span> regex, <span class="built_in">int</span> limit) </span><br></pre></td></tr></table></figure>
+
+<p>结论：limit = -1时，会对结尾的空格进行分解。</p>
+<p>比如：</p>
+<p>对字符串str“hello口口world口”进行拆分，其中”口”表示空格，</p>
+<p>split(str)输出：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="number">0</span>: <span class="string">&quot;hello&quot;</span>, length = <span class="number">5</span></span><br><span class="line"><span class="number">1</span>: <span class="string">&quot;&quot;</span>, length = <span class="number">0</span></span><br><span class="line"><span class="number">2</span>: <span class="string">&quot;world&quot;</span>,length = <span class="number">5</span></span><br></pre></td></tr></table></figure>
+
+<p>split(“str”, -1)输出：</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">0</span>: <span class="string">&quot;hello&quot;</span>, length = <span class="number">5</span></span><br><span class="line"><span class="attribute">1</span>: <span class="string">&quot;&quot;</span>, length = <span class="number">0</span></span><br><span class="line"><span class="attribute">2</span>: <span class="string">&quot;world&quot;</span>,length = <span class="number">5</span></span><br><span class="line"><span class="attribute">3</span>: <span class="string">&quot;&quot;</span>, length = <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="14-最长公共前缀编写一个函数来查找字符串数组中的最长公共前缀。"><a href="#14-最长公共前缀编写一个函数来查找字符串数组中的最长公共前缀。" class="headerlink" title="14. 最长公共前缀编写一个函数来查找字符串数组中的最长公共前缀。"></a><a href="https://leetcode.cn/problems/longest-common-prefix/">14. 最长公共前缀</a>编写一个函数来查找字符串数组中的最长公共前缀。</h4><p>如果不存在公共前缀，返回空字符串 <code>&quot;&quot;</code>。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line">输入：<span class="keyword">strs</span> = [<span class="string">&quot;flower&quot;</span>,<span class="string">&quot;flow&quot;</span>,<span class="string">&quot;flight&quot;</span>]</span><br><span class="line">输出：<span class="string">&quot;fl&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 2：</strong></p>
+<figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line">输入：<span class="keyword">strs</span> = [<span class="string">&quot;dog&quot;</span>,<span class="string">&quot;racecar&quot;</span>,<span class="string">&quot;car&quot;</span>]</span><br><span class="line">输出：<span class="string">&quot;&quot;</span></span><br><span class="line">解释：输入不存在公共前缀。</span><br></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>1 &lt;= strs.length &lt;= 200</code></li>
+<li><code>0 &lt;= strs[i].length &lt;= 200</code></li>
+<li><code>strs[i]</code> 仅由小写英文字母组成</li>
+</ul>
+<p>思路：</p>
+<ol>
+<li>边界条件，如果strs == null 或者strs.length == 0时，直接return “”;</li>
+<li>要计算字符串数组的公共前缀，可以这么实现：</li>
+</ol>
+<p>初始化公共子串为String res = strs[0]，然后依次求：</p>
+<p>res和strs[1]的最小公共子串，赋值给res;</p>
+<p>res和strs[2]的最小公共子串，赋值给res;</p>
+<p>…</p>
+<p>res和strs[strs.length - 1]的最小公共子串。</p>
+<p>则最终res的值就是题目要求的结果。</p>
+<p>Java中使用String.split()方法的注意点（转义符）</p>
+<p>对这些特殊字符进行split()拆分时，需要添加转义符。举个例子，如果需要以’.’进行拆分，则需要在前面添加”\\“。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">str.split(<span class="string">&quot;\\,&quot;</span>, -<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>需要转义的字符</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>(</td>
+</tr>
+<tr>
+<td>[</td>
+</tr>
+<tr>
+<td>{</td>
+</tr>
+<tr>
+<td>/</td>
+</tr>
+<tr>
+<td>^</td>
+</tr>
+<tr>
+<td>-</td>
+</tr>
+<tr>
+<td>$</td>
+</tr>
+<tr>
+<td>¦</td>
+</tr>
+<tr>
+<td>}</td>
+</tr>
+<tr>
+<td>]</td>
+</tr>
+<tr>
+<td>)</td>
+</tr>
+<tr>
+<td>?</td>
+</tr>
+<tr>
+<td>*</td>
+</tr>
+<tr>
+<td>+</td>
+</tr>
+<tr>
+<td>.</td>
+</tr>
+</tbody></table>
+<h4 id="大数加法："><a href="#大数加法：" class="headerlink" title="大数加法："></a>大数加法：</h4><p> 描述</p>
+<p>以字符串的形式读入两个数字，编写一个函数计算它们的和，以字符串形式返回。</p>
+<p>数据范围：s.length, t.length &lt;= 100000, 字符串仅由’0’~‘9’构成</p>
+<p>要求：时间复杂度 <em>O</em>(<em>n</em>)</p>
+<p>示例1</p>
+<p>输入：</p>
+<figure class="highlight 1c"><table><tr><td class="code"><pre><span class="line"><span class="string">&quot;1&quot;</span>,<span class="string">&quot;99&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>返回值：</p>
+<figure class="highlight 1c"><table><tr><td class="code"><pre><span class="line"><span class="string">&quot;100&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>说明：</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">1</span>+<span class="number">99</span>=<span class="number">100</span>       </span><br></pre></td></tr></table></figure>
+
+<p>示例2</p>
+<p>输入：</p>
+<figure class="highlight 1c"><table><tr><td class="code"><pre><span class="line"><span class="string">&quot;114514&quot;</span>,<span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>返回值：</p>
+<figure class="highlight 1c"><table><tr><td class="code"><pre><span class="line"><span class="string">&quot;114514&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>解题思路：</p>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>算法学习之排序</title>
+    <url>/2024/01/25/sort/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
       </tags>
   </entry>
 </search>
