@@ -153,7 +153,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">42</span>
+          <span class="site-state-item-count">45</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -200,6 +200,446 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://xifengcoder.github.io/2024/03/03/android_display/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="xifengcoder">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="西风的技术博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/03/03/android_display/" class="post-title-link" itemprop="url">Android图形系统概述</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-03-03 16:51:18 / 修改时间：21:42:12" itemprop="dateCreated datePublished" datetime="2024-03-03T16:51:18+08:00">2024-03-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+		
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>Android 中从应用程序绘制 View 到最终在屏幕上显示的流程。</p>
+<p>Android App开发者可通过三种方式将图像绘制到屏幕上：</p>
+<ul>
+<li>Canvas</li>
+<li>OpenGL ES</li>
+<li>Vulkan</li>
+</ul>
+<p><strong>1. 应用程序层：</strong></p>
+<ul>
+<li>开发者在应用程序层通过 XML 布局文件或程序代码定义 UI 元素，如 TextView、ImageView 等。这些 UI 元素最终会被封装成 View 对象。</li>
+</ul>
+<p><strong>2. View的绘制：</strong></p>
+<ul>
+<li>通过调用View的onDraw()方法进行View的绘制，</li>
+</ul>
+<p><strong><code>Canvas</code></strong> 是 Android 中的绘图工具，而 <strong><code>Bitmap</code></strong> 可以看作是 <code>Canvas</code> 的绘图目标。在绘制时，<code>Canvas</code> 可以将图形元素绘制到关联的 <code>Bitmap</code> 上。</p>
+<p><strong>3. 绘制缓冲区（Drawing buffer）</strong></p>
+<p>绘制的内容通常存储在一个绘制缓冲区中，这个缓冲区使用**<code>Bitmap</code>**表示。<code>Bitmap</code> 是 Android 中表示位图的类，用于存储图像的像素数据。它可以被视为一个绘图缓冲区，用于保存绘制操作的结果。</p>
+<p>使用 <code>Canvas</code> 对象可以将图形元素绘制到 <code>Bitmap</code> 上。例如，在 <code>onDraw</code> 方法中：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDraw</span><span class="params">(Canvas canvas)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onDraw(canvas);</span><br><span class="line"></span><br><span class="line">    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);</span><br><span class="line">    Canvas bitmapCanvas = <span class="keyword">new</span> Canvas(bitmap);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在 bitmapCanvas 上绘制图形元素</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将结果绘制到 View 的 Canvas 上</span></span><br><span class="line">    canvas.drawBitmap(bitmap, <span class="number">0</span>, <span class="number">0</span>, <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>4. Hardware Acceleration（硬件加速）</strong></p>
+<p>如果启用了硬件加速，绘制的过程可能会在 GPU（图形处理单元）上执行，以提高绘制性能。Android 的硬件加速系统（Hwui）可以处理图形的光栅化和混合等操作。 </p>
+<p><strong>5. DisplayList 和 RenderNode：</strong></p>
+<ul>
+<li>绘制的操作可以被记录到一个 DisplayList 中，它是一系列绘制指令的容器。RenderNode 是 DisplayList 的底层实现。</li>
+</ul>
+<p><strong>6. 图层合成：</strong></p>
+<ul>
+<li><p>View 最终与一个 Surface 相关联，Surface 包含了绘制内容的像素数据。</p>
+</li>
+<li><p>SurfaceFlinger 负责合成所有的 Layers 并送显到 Display </p>
+</li>
+<li><p>SurfaceFlinger 将不同的Layers按照 Z-Order的顺序进行合成，生成最终的屏幕显示内容。每个Layer都可以是一个 View。</p>
+</li>
+<li><p>SurfaceFlinger 根据 WMS 提供的窗口信息合成所有的 Layers（对应不同的Surface ），具体的合成策略由 <code>hwcomposer</code> HAL 模块决定并实施，最后也是由该模块送显到 Display，而 Gralloc 模块则负责分配图形缓冲区。</p>
+</li>
+<li><p><code>hwcomposer</code> （全称为 Hardware Composer）的主要功能是在硬件层面执行图形合成操作。它接受来自 SurfaceFlinger 的图层数据，将它们合成到帧缓冲区（Framebuffer）上，以在屏幕上显示。</p>
+</li>
+</ul>
+<p><code>hwcomposer</code> 利用硬件加速来提高图形合成的性能。它能够利用 GPU等硬件加速设备执行图形操作，从而加速图层的合成和呈现</p>
+<ul>
+<li><strong>Layer</strong></li>
+</ul>
+<p>Layer 是 SurfaceFlinger 中的一个概念，它表示一个图形元素或一个图形层。每个应用程序窗口、系统 UI 元素等都是一个Layer。Layers 按照它们的 Z 轴值堆叠在一起，形成最终的显示。每个 Layer 通常与一个 Surface 对象相关联，这个 Surface 包含了图层的像素数据。</p>
+<ul>
+<li><strong>Surface</strong></li>
+</ul>
+<p>Surface 是Layer的一个抽象，它包含了一个或多个 Buffer，这些 Buffer 存储了图层的像素数据。</p>
+<p>Surface由应用程序的 UI 线程或其他相关组件使用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceView);</span><br><span class="line">SurfaceHolder surfaceHolder = surfaceView.getHolder();</span><br><span class="line">Canvas canvas = surfaceHolder.lockCanvas();</span><br><span class="line"><span class="comment">// 在 canvas 上进行绘制操作</span></span><br><span class="line">surfaceHolder.unlockCanvasAndPost(canvas);</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><strong>Display</strong></li>
+</ul>
+<p>Display 表示一个物理或虚拟的显示屏幕。在 Android 中，一个设备可以有多个显示屏幕，例如，主屏幕、外部显示器等。每个 Display 包含一个或多个 Surface，这些 Surface 可以显示不同的图形内容。</p>
+<p><strong>BufferQueue</strong></p>
+<p>用于显示 Surface 的 BufferQueue 通常配置为三重缓冲（triple-buffering）。缓冲区是按需分配的，因此，如果生产者足够缓慢地生成缓冲区（例如在 60 fps 的显示屏上以 30 fps 的速度缓冲），队列中可能只有两个分配的缓冲区。按需分配缓冲区有助于最大限度地减少内存消耗。您可以在 <code>dumpsys SurfaceFlinger</code> 的输出中看到每个层级关联的缓冲区的摘要。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+	<div>
+      
+    </div>
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://xifengcoder.github.io/2024/02/28/dependency_injection/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="xifengcoder">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="西风的技术博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/02/28/dependency_injection/" class="post-title-link" itemprop="url">Dagger依赖注入框架的理解</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-02-28 22:40:36" itemprop="dateCreated datePublished" datetime="2024-02-28T22:40:36+08:00">2024-02-28</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2024-03-02 23:01:40" itemprop="dateModified" datetime="2024-03-02T23:01:40+08:00">2024-03-02</time>
+      </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>6.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
+</div>
+		
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h5 id="Component-Builder"><a href="#Component-Builder" class="headerlink" title="@Component.Builder"></a>@Component.Builder</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component(modules = [AppModule::class, NetworkModule::class])</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">AppComponent</span> </span>&#123;</span><br><span class="line">    <span class="function">fun <span class="title">inject</span><span class="params">(activity: SplashActivity)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">    fun <span class="title">inject</span><span class="params">(activity: MainActivity)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">    fun <span class="title">inject</span><span class="params">(fragment: BusStopFragment)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">    fun <span class="title">inject</span><span class="params">(fragment: BusArrivalFragment)</span></span></span><br><span class="line"><span class="function">      </span></span><br><span class="line"><span class="function">  	@Component.Builder</span></span><br><span class="line"><span class="function">  	interface Builder </span>&#123;</span><br><span class="line"></span><br><span class="line">    		<span class="meta">@BindsInstance</span></span><br><span class="line">		    <span class="function">fun <span class="title">activity</span><span class="params">(activity: Activity)</span>: Builder</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">    		fun <span class="title">build</span><span class="params">()</span>: AppComponent</span></span><br><span class="line"><span class="function">  &#125;</span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Component.Builder中使用@BindsInstance标记的方法表示将该方法的参数（比如Activity）传递到依赖关系图中（dependency graph），该方法必须返回Builder实例。</p>
+<p>这样，该Component所包含的Module都可以使用该Activity对象。也即provide方法所需的参数。</p>
+<p>同时，Component.Builder中还得有个方法返回AppComponent对象,  名字可以自己起，一般叫build()或者create()。</p>
+<p>MainActivity中就可以这么使用：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> : <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line">		<span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_main)</span><br><span class="line">        DaggerAppComponent</span><br><span class="line">            .builder()</span><br><span class="line">            .activity(<span class="keyword">this</span>)</span><br><span class="line">            .build()</span><br><span class="line">            .inject(<span class="keyword">this</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>还有一种实现方式：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component(modules = [AppModule::class, NetworkModule::class])</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">AppComponent</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">inject</span><span class="params">(activity: <span class="type">SplashActivity</span>)</span></span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">inject</span><span class="params">(activity: <span class="type">MainActivity</span>)</span></span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">inject</span><span class="params">(fragment: <span class="type">BusStopFragment</span>)</span></span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">inject</span><span class="params">(fragment: <span class="type">BusArrivalFragment</span>)</span></span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1</span></span><br><span class="line">    <span class="meta">@Component</span>.Builder</span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">Builder</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">appModule</span><span class="params">(appModule: <span class="type">AppModule</span>)</span></span>: Builder</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">networkModule</span><span class="params">(networkModule: <span class="type">NetworkModule</span>)</span></span>: Builder</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">build</span><span class="params">()</span></span>: AppComponent</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Component.Builder中提供该Component所包含的Module的方法（注该方法返回的是Builder对象），</p>
+<p>这样就退化为不使用Builder的形式，通过将Activity作为构造方法的参数传递给Module。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> : <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line">    <span class="keyword">lateinit</span> <span class="keyword">var</span> comp: AppComponent <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line">  	<span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_main)</span><br><span class="line">      </span><br><span class="line">        comp = DaggerAppComponent</span><br><span class="line">            .builder()</span><br><span class="line">            .appModule(AppModule(<span class="keyword">this</span>))</span><br><span class="line">            .networkModule(NetworkModule(<span class="keyword">this</span>))</span><br><span class="line">            .build().apply &#123;</span><br><span class="line">                inject(<span class="keyword">this</span><span class="symbol">@MainActivity</span>)</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (savedInstanceState == <span class="literal">null</span>) &#123;</span><br><span class="line">            mainPresenter.goToBusStopList()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> Context.comp: AppComponent?</span><br><span class="line">    <span class="keyword">get</span>() = <span class="keyword">if</span> (<span class="keyword">this</span> <span class="keyword">is</span> MainActivity) comp <span class="keyword">else</span> <span class="literal">null</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="Component-Factory"><a href="#Component-Factory" class="headerlink" title="Component.Factory"></a>Component.Factory</h5><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component(modules = [AppModule::class, NetworkModule::class])</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">AppComponent</span> </span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="meta">@Component</span>.Factory <span class="comment">// 1</span></span><br><span class="line">  <span class="class"><span class="keyword">interface</span> <span class="title">Factory</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 2</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">create</span><span class="params">(<span class="meta">@BindsInstance</span> activity: <span class="type">Activity</span>)</span></span>: AppComponent</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h5 id="Singleton"><a href="#Singleton" class="headerlink" title="@Singleton"></a><code>@Singleton</code></h5><p>同一个@Component的实例总是返回同一个给定类型的实例。</p>
+<p>但是不同的@Component实例是可以返回不同类型的实例的。</p>
+<h5 id="Component-Dependencies"><a href="#Component-Dependencies" class="headerlink" title="Component Dependencies"></a>Component Dependencies</h5><p>如果某个Component使用dependencies依赖了其它的Component，就需要在@Component.Factory的create()方法中添加它所依赖的Component参数。</p>
+<h5 id="ApplicationComponent"><a href="#ApplicationComponent" class="headerlink" title="ApplicationComponent"></a>ApplicationComponent</h5><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Component(modules = [ApplicationModule::class])</span></span><br><span class="line"><span class="meta">@Singleton</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">ApplicationComponent</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">locationObservable</span><span class="params">()</span></span>: Observable&lt;LocationEvent&gt; <span class="comment">//开放给依赖ApplicationComponent的Component使用</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">bussoEndpoint</span><span class="params">()</span></span>: BussoEndpoint <span class="comment">//开放给依赖ApplicationComponent的Component使用</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Component</span>.Factory</span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">Builder</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">create</span><span class="params">(<span class="meta">@BindsInstance</span> application: <span class="type">Application</span>)</span></span>: ApplicationComponent <span class="comment">// 3</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h6 id="ActivityComponent"><a href="#ActivityComponent" class="headerlink" title="ActivityComponent"></a>ActivityComponent</h6><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component(</span></span><br><span class="line"><span class="meta">    modules = [ActivityModule::class],</span></span><br><span class="line"><span class="meta">    dependencies = [ApplicationComponent::class] // 1</span></span><br><span class="line"><span class="meta">)</span></span><br><span class="line"><span class="meta">@ActivityScope</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">ActivityComponent</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">fun</span> <span class="title">inject</span><span class="params">(activity: <span class="type">SplashActivity</span>)</span></span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">fun</span> <span class="title">inject</span><span class="params">(activity: <span class="type">MainActivity</span>)</span></span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">fun</span> <span class="title">navigator</span><span class="params">()</span></span>: Navigator <span class="comment">//开放给依赖ActivityComponent的Component使用</span></span><br><span class="line"></span><br><span class="line">  <span class="meta">@Component</span>.Factory</span><br><span class="line">  <span class="class"><span class="keyword">interface</span> <span class="title">Factory</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">create</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">        <span class="meta">@BindsInstance</span> activity: <span class="type">Activity</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">        applicationComponent: <span class="type">ApplicationComponent</span> <span class="comment">// 2</span></span></span></span><br><span class="line"><span class="params"><span class="function">    )</span></span>: ActivityComponent</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在@Component.Factory的create()方法中添加ApplicationComponent参数，注意这里没有@BindsInstance注解。</p>
+<h5 id="FragmentComponent"><a href="#FragmentComponent" class="headerlink" title="FragmentComponent"></a>FragmentComponent</h5><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component(</span></span><br><span class="line"><span class="meta">    modules = [FragmentModule::class],</span></span><br><span class="line"><span class="meta">    dependencies = [ActivityComponent::class, ApplicationComponent::class] // 1</span></span><br><span class="line"><span class="meta">)</span></span><br><span class="line"><span class="meta">@FragmentScope</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">FragmentComponent</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">inject</span><span class="params">(fragment: <span class="type">BusStopFragment</span>)</span></span> <span class="comment">// 3</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">inject</span><span class="params">(fragment: <span class="type">BusArrivalFragment</span>)</span></span> <span class="comment">// 3</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Component</span>.Factory</span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">Factory</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 4</span></span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">create</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">            applicationComponent: <span class="type">ApplicationComponent</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">            activityComponent: <span class="type">ActivityComponent</span></span></span></span><br><span class="line"><span class="params"><span class="function">        )</span></span>: FragmentComponent</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="Subcomponents"><a href="#Subcomponents" class="headerlink" title="@Subcomponents"></a>@Subcomponents</h3><h5 id="ApplicationComponent-1"><a href="#ApplicationComponent-1" class="headerlink" title="ApplicationComponent"></a>ApplicationComponent</h5><p>相较Component Dependencies来说，ApplicationComponent不用发布公开方法出来了。但是需要为它的children定义factory方法；</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component(modules = [ApplicationModule::class])</span></span><br><span class="line"><span class="meta">@Singleton</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">ApplicationComponent</span> </span>&#123;</span><br><span class="line">  </span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">activityComponentFactory</span><span class="params">()</span></span>: ActivityComponent.Factory <span class="comment">//需要为自己的子组件定义获取方法</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Component</span>.Factory</span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">Factory</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">create</span><span class="params">(<span class="meta">@BindsInstance</span> application: <span class="type">Application</span>)</span></span>: ApplicationComponent</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="ActivityComponent-1"><a href="#ActivityComponent-1" class="headerlink" title="ActivityComponent"></a>ActivityComponent</h5><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Subcomponent(</span></span><br><span class="line"><span class="meta">    modules = [ActivityModule::class]</span></span><br><span class="line"><span class="meta">)</span></span><br><span class="line"><span class="meta">@ActivityScope</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">ActivityComponent</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">inject</span><span class="params">(activity: <span class="type">SplashActivity</span>)</span></span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">inject</span><span class="params">(activity: <span class="type">MainActivity</span>)</span></span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">fragmentComponent</span><span class="params">()</span></span>: FragmentComponent <span class="comment">//需要为自己的子组件定义获取方法</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Subcomponent</span>.Factory</span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">Factory</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">create</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">            <span class="meta">@BindsInstance</span> activity: <span class="type">Activity</span></span></span></span><br><span class="line"><span class="params"><span class="function">        )</span></span>: ActivityComponent</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="FragmentComponent-1"><a href="#FragmentComponent-1" class="headerlink" title="FragmentComponent"></a>FragmentComponent</h5><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Subcomponent(</span></span><br><span class="line"><span class="meta">    modules = [FragmentModule::class]</span></span><br><span class="line"><span class="meta">)</span></span><br><span class="line"><span class="meta">@FragmentScope</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">FragmentComponent</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">fun</span> <span class="title">inject</span><span class="params">(fragment: <span class="type">BusStopFragment</span>)</span></span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">fun</span> <span class="title">inject</span><span class="params">(fragment: <span class="type">BusArrivalFragment</span>)</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="ApplicationComponent的创建"><a href="#ApplicationComponent的创建" class="headerlink" title="ApplicationComponent的创建"></a>ApplicationComponent的创建</h5><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Main</span> : <span class="type">Application</span></span>() &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">lateinit</span> <span class="keyword">var</span> appComponent: ApplicationComponent</span><br><span class="line"></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">super</span>.onCreate()</span><br><span class="line">    <span class="comment">// 3</span></span><br><span class="line">    appComponent = DaggerApplicationComponent</span><br><span class="line">        .factory()</span><br><span class="line">        .create(<span class="keyword">this</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> Context.appComp: ApplicationComponent</span><br><span class="line">  <span class="keyword">get</span>() = (applicationContext <span class="keyword">as</span> Main).appComponent</span><br></pre></td></tr></table></figure>
+
+<h5 id="ActivityComponent的创建"><a href="#ActivityComponent的创建" class="headerlink" title="ActivityComponent的创建"></a>ActivityComponent的创建</h5><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> : <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Inject</span></span><br><span class="line">    <span class="keyword">lateinit</span> <span class="keyword">var</span> mainPresenter: MainPresenter</span><br><span class="line"></span><br><span class="line">    <span class="keyword">lateinit</span> <span class="keyword">var</span> comp: ActivityComponent</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_main)</span><br><span class="line">        comp = application.appComp  <span class="comment">//借助该Activity所依附的Application来创建</span></span><br><span class="line">            .activityComponentFactory()</span><br><span class="line">            .create(<span class="keyword">this</span>)</span><br><span class="line">            .apply &#123;</span><br><span class="line">                inject(<span class="keyword">this</span><span class="symbol">@MainActivity</span>)</span><br><span class="line">            &#125;</span><br><span class="line">        <span class="keyword">if</span> (savedInstanceState == <span class="literal">null</span>) &#123;</span><br><span class="line">            mainPresenter.goToBusStopList()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> Context.activityComp: ActivityComponent</span><br><span class="line">    <span class="keyword">get</span>() = (<span class="keyword">this</span> <span class="keyword">as</span> MainActivity).comp</span><br></pre></td></tr></table></figure>
+
+<h5 id="FragmentComponent的创建"><a href="#FragmentComponent的创建" class="headerlink" title="FragmentComponent的创建"></a>FragmentComponent的创建</h5><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BusArrivalFragment</span> : <span class="type">Fragment</span></span>() &#123;</span><br><span class="line">  	<span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onAttach</span><span class="params">(context: <span class="type">Context</span>)</span></span> &#123;</span><br><span class="line">        context.activityComp  <span class="comment">//借助该Fragment所依附的Activity的ActivityComponent来创建</span></span><br><span class="line">            .fragmentComponent()</span><br><span class="line">            .inject(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">super</span>.onAttach(context)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="Subcomponents-VS-Component-Dependencies"><a href="#Subcomponents-VS-Component-Dependencies" class="headerlink" title="@Subcomponents VS Component Dependencies"></a>@Subcomponents VS Component Dependencies</h4><p>使用Component Dependencies时：</p>
+<ol>
+<li><p>当前Component需要分享给其它Component的对象，需要在该Component中提供factory methods进行显式的发布；</p>
+</li>
+<li><p>当前Component所依赖的Components组件，必须在该@Component的dependencies属性中列出；</p>
+</li>
+<li><p>依赖关系不具备可传递性，如果<code>@Component</code> <strong>A</strong> 依赖 <strong>B</strong> ，<strong>B</strong> 依赖 <strong>C</strong>，并不意味着<strong>A</strong>依赖<strong>C</strong>；</p>
+</li>
+<li><p>当有存在的对象时，可以使用<code>@Component.Builder</code> and <code>@Component.Factory</code>；</p>
+</li>
+<li><p>当使用<strong>dependencies</strong>属性进行依赖管理时，不支持<strong>multibinding</strong>。</p>
+</li>
+</ol>
+<p>使用**@Subcomponents**时：</p>
+<ol>
+<li><p>每一个@Subcomponent会从它的父@Component或者父@Subcomponent组件继承所有的对象，因此不需要显式的发布；</p>
+</li>
+<li><p>依赖关系具备可传递性：如果@Subcomponent <strong>A</strong> 继承自 <strong>B</strong> 并且 <strong>B</strong> 继承自 <strong>C</strong>, 那么 <strong>A</strong> 继承自 <strong>C</strong>；</p>
+</li>
+<li><p>@Subcomponent组件的实例通过父@Component或@Subcomponent组件的factory方法来创建；</p>
+</li>
+<li><p>当有存在的对象时，可以使用@Subcomponent.Builder和@Subcomponent.Factory，父组件会为它的children组件定义相应的factory方法；</p>
+</li>
+<li><p><strong>multibinding</strong>可以和@Subcomponent结合使用；</p>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+
+	<div>
+      
+    </div>
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://xifengcoder.github.io/2024/02/26/Android%E4%B8%AD%E5%B8%B8%E7%94%A8%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="xifengcoder">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="西风的技术博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/02/26/Android%E4%B8%AD%E5%B8%B8%E7%94%A8%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">Android中常用的设计模式总结</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-02-26 22:55:32 / 修改时间：23:20:22" itemprop="dateCreated datePublished" datetime="2024-02-26T22:55:32+08:00">2024-02-26</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>286</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+		
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="MVP-Vs-MVVM"><a href="#MVP-Vs-MVVM" class="headerlink" title="MVP Vs MVVM"></a>MVP Vs MVVM</h3><ol>
+<li><strong>解耦：</strong><ul>
+<li>两者都旨在实现解耦，以便更容易测试和维护代码。</li>
+</ul>
+</li>
+<li><strong>分离关注点：</strong><ul>
+<li>都倡导将关注点分离，以确保清晰的代码组织。</li>
+</ul>
+</li>
+<li><strong>单一职责原则：</strong><ul>
+<li>两者都遵循单一职责原则，确保每个组件都有一个清晰的责任。</li>
+</ul>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>MVP</th>
+<th>MVVM</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Presenter和View一般是1v1的关系，耦合度较高，难以实现复用</td>
+<td>多个View可以关联一个ViewModel</td>
+</tr>
+<tr>
+<td>Presenter不会感知View的生命周期，需要Presenter手动管理生命周期，避免内存泄漏</td>
+<td>ViewModel可以自动感知View的生命周期</td>
+</tr>
+<tr>
+<td>Presenter会持有View的引用,</td>
+<td>ViewModel不持有View的引用</td>
+</tr>
+<tr>
+<td></td>
+<td>支持DataBinding</td>
+</tr>
+</tbody></table>
+
+      
+    </div>
+
+    
+    
+    
+
+	<div>
+      
+    </div>
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -943,324 +1383,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://xifengcoder.github.io/2023/05/29/refactoring/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="xifengcoder">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="西风的技术博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/05/29/refactoring/" class="post-title-link" itemprop="url">Refactor实践</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2023-05-29 23:00:29" itemprop="dateCreated datePublished" datetime="2023-05-29T23:00:29+08:00">2023-05-29</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2023-07-09 07:54:22" itemprop="dateModified" datetime="2023-07-09T07:54:22+08:00">2023-07-09</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E9%87%8D%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">重构</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>2.3k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>2 分钟</span>
-    </span>
-</div>
-		
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>重构</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023/05/29/refactoring/">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-	<div>
-      
-    </div>
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://xifengcoder.github.io/2023/01/25/opengl_lighting/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="xifengcoder">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="西风的技术博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/01/25/opengl_lighting/" class="post-title-link" itemprop="url">OpenGL学习-光照</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2023-01-25 23:15:41" itemprop="dateCreated datePublished" datetime="2023-01-25T23:15:41+08:00">2023-01-25</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2023-08-20 11:43:44" itemprop="dateModified" datetime="2023-08-20T11:43:44+08:00">2023-08-20</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/OpenGLES/" itemprop="url" rel="index"><span itemprop="name">OpenGLES</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.9k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>2 分钟</span>
-    </span>
-</div>
-		
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>OpenGLES</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023/01/25/opengl_lighting/">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-	<div>
-      
-    </div>
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://xifengcoder.github.io/2022/10/06/draw_rectangle/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="xifengcoder">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="西风的技术博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/10/06/draw_rectangle/" class="post-title-link" itemprop="url">OpenGLES学习指南：绘制四边形</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2022-10-06 12:38:58" itemprop="dateCreated datePublished" datetime="2022-10-06T12:38:58+08:00">2022-10-06</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2023-08-10 21:30:29" itemprop="dateModified" datetime="2023-08-10T21:30:29+08:00">2023-08-10</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/OpenGLES/" itemprop="url" rel="index"><span itemprop="name">OpenGLES</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>6.8k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>6 分钟</span>
-    </span>
-</div>
-		
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Android平台使用OpenGLES绘制矩形</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/10/06/draw_rectangle/">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-	<div>
-      
-    </div>
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
@@ -1285,13 +1407,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">252k</span>
+    <span title="站点总字数">261k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:49</span>
+    <span title="站点阅读时长">3:58</span>
   </span>
 </div>
 <div class="busuanzi-count">
