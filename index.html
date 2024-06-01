@@ -20,9 +20,9 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"xifengcoder.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":false,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 <meta property="og:type" content="website">
-<meta property="og:title" content="西风的技术博客">
+<meta property="og:title" content="西风飞扬">
 <meta property="og:url" content="https://xifengcoder.github.io/index.html">
-<meta property="og:site_name" content="西风的技术博客">
+<meta property="og:site_name" content="西风飞扬">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="xifengcoder">
 <meta name="twitter:card" content="summary">
@@ -35,7 +35,7 @@
 <script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":true,"isPost":false,"lang":"zh-CN","comments":"","permalink":"","path":"index.html","title":""}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>西风的技术博客</title>
+<title>西风飞扬</title>
   
 
 
@@ -64,7 +64,7 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">西风的技术博客</h1>
+      <h1 class="site-title">西风飞扬</h1>
       <i class="logo-line"></i>
     </a>
   </div>
@@ -153,18 +153,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-count">47</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-count">27</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -209,6 +209,210 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://xifengcoder.github.io/2024/05/01/multi_thread/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="xifengcoder">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="西风飞扬">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/05/01/multi_thread/" class="post-title-link" itemprop="url">Java多线程实战指南</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-05-01 22:44:59 / 修改时间：23:04:03" itemprop="dateCreated datePublished" datetime="2024-05-01T22:44:59+08:00">2024-05-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">多线程</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>275</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+		
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>Java多线程编程指南</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2024/05/01/multi_thread/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+	<div>
+      
+    </div>
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://xifengcoder.github.io/2024/04/04/dependency_injection/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="xifengcoder">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="西风飞扬">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/04/04/dependency_injection/" class="post-title-link" itemprop="url">Hilt的使用实践</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-04-04 18:51:59" itemprop="dateCreated datePublished" datetime="2024-04-04T18:51:59+08:00">2024-04-04</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2024-04-05 21:48:07" itemprop="dateModified" datetime="2024-04-05T21:48:07+08:00">2024-04-05</time>
+      </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+		
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="Enabling-Hilt-in-Application"><a href="#Enabling-Hilt-in-Application" class="headerlink" title="Enabling Hilt in Application"></a>Enabling Hilt in Application</h4><p>自定义一个Application，在其上使用@HiltAndroidApp注解。@HiltAndroidApp用于告诉Dagger这是整个项目依赖关系图（dependency graph）的入口点（entry point）。</p>
+<h5 id="InstallIn"><a href="#InstallIn" class="headerlink" title="@InstallIn"></a>@InstallIn</h5><p>@InstallIn注解用于将指定Module提供的对象实例添加到Component中。</p>
+<p>举例：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Module(</span></span><br><span class="line"><span class="meta">  includes = [</span></span><br><span class="line"><span class="meta">    LocationModule::class,</span></span><br><span class="line"><span class="meta">    NetworkModule::class,</span></span><br><span class="line"><span class="meta">    AndroidSupportInjectionModule::class</span></span><br><span class="line"><span class="meta">  ]</span></span><br><span class="line"><span class="meta">)</span></span><br><span class="line"><span class="meta">@InstallIn(ApplicationComponent::class)</span> <span class="comment">// HERE</span></span><br><span class="line"><span class="keyword">object</span> ApplicationModule &#123;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Provides</span></span><br><span class="line">  <span class="function"><span class="keyword">fun</span> <span class="title">provideNetworkingConfiguration</span><span class="params">()</span></span>: NetworkingConfiguration =</span><br><span class="line">    BussoConfiguration</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用@InstallIn(ApplicationComponent::class)时会告诉Dagger你希望将ApplicationModule中定义的所有bindings添加到ApplicationComponent的dependency graph中。其中ApplicationComponent在Hilt中进行了预定义，具体路径dagger.hilt.android.components.ApplicationComponent。</p>
+<p>备注：Hilt中预置的Components有：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dagger.hilt.android.components.ApplicationComponent</span><br><span class="line">dagger.hilt.android.components.ActivityComponent</span><br><span class="line">dagger.hilt.android.components.FragmentComponent</span><br></pre></td></tr></table></figure>
+
+<p>对应的Scope有，定义在目录dagger.hilt.android.scopes下。</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">ActivityScoped</span></span><br><span class="line"><span class="attribute">FragmentScoped</span></span><br><span class="line"><span class="attribute">ActivityRetainedScoped</span></span><br><span class="line"><span class="attribute">ServiceScoped</span></span><br><span class="line"><span class="attribute">ViewScoped</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="AndroidEntryPoint"><a href="#AndroidEntryPoint" class="headerlink" title="@AndroidEntryPoint"></a>@AndroidEntryPoint</h5><p>@AndroidEntryPoint用来将一个标准的Android组件标记为一个可能的dependency target。<strong>dependency targets</strong>包括：</p>
+
+      
+    </div>
+
+    
+    
+    
+
+	<div>
+      
+    </div>
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://xifengcoder.github.io/2024/03/03/android_display/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -218,7 +422,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="西风的技术博客">
+      <meta itemprop="name" content="西风飞扬">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -370,7 +574,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="西风的技术博客">
+      <meta itemprop="name" content="西风飞扬">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -392,7 +596,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2024-03-02 23:01:40" itemprop="dateModified" datetime="2024-03-02T23:01:40+08:00">2024-03-02</time>
+        <time title="修改时间：2024-05-19 21:03:30" itemprop="dateModified" datetime="2024-05-19T21:03:30+08:00">2024-05-19</time>
       </span>
 
   
@@ -402,14 +606,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>6.6k</span>
+      <span>9.1k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>6 分钟</span>
+      <span>8 分钟</span>
     </span>
 </div>
 		
@@ -420,7 +624,32 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h5 id="Component-Builder"><a href="#Component-Builder" class="headerlink" title="@Component.Builder"></a>@Component.Builder</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component(modules = [AppModule::class, NetworkModule::class])</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">AppComponent</span> </span>&#123;</span><br><span class="line">    <span class="function">fun <span class="title">inject</span><span class="params">(activity: SplashActivity)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">    fun <span class="title">inject</span><span class="params">(activity: MainActivity)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">    fun <span class="title">inject</span><span class="params">(fragment: BusStopFragment)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">    fun <span class="title">inject</span><span class="params">(fragment: BusArrivalFragment)</span></span></span><br><span class="line"><span class="function">      </span></span><br><span class="line"><span class="function">  	@Component.Builder</span></span><br><span class="line"><span class="function">  	interface Builder </span>&#123;</span><br><span class="line"></span><br><span class="line">    		<span class="meta">@BindsInstance</span></span><br><span class="line">		    <span class="function">fun <span class="title">activity</span><span class="params">(activity: Activity)</span>: Builder</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">    		fun <span class="title">build</span><span class="params">()</span>: AppComponent</span></span><br><span class="line"><span class="function">  &#125;</span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
+          <h5 id="Injection的类型"><a href="#Injection的类型" class="headerlink" title="Injection的类型"></a>Injection的类型</h5><ul>
+<li><p><strong>Constructor</strong> injection</p>
+   <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Server</span></span>(<span class="keyword">private</span> <span class="keyword">val</span> repository: Repository) &#123;</span><br><span class="line">  <span class="function"><span class="keyword">fun</span> <span class="title">receive</span><span class="params">(<span class="keyword">data</span>: <span class="type">Date</span>)</span></span> &#123;</span><br><span class="line">    repository.save(date)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>  如果你可以控制依赖关系中组件的创建的话，<strong>Constructor</strong> injection 是最佳的依赖注入类型。</p>
+</li>
+<li><p><strong>Field</strong> injection</p>
+</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Server</span> </span>() &#123;</span><br><span class="line">  <span class="keyword">lateinit</span> <span class="keyword">var</span> repository: Repository <span class="comment">// HERE</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">fun</span> <span class="title">receive</span><span class="params">(<span class="keyword">data</span>: <span class="type">Date</span>)</span></span> &#123;</span><br><span class="line">    repository.save (date)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="comment">// 1</span></span><br><span class="line">  <span class="keyword">val</span> repository = RepositoryImpl()</span><br><span class="line">  <span class="comment">// 2</span></span><br><span class="line">  <span class="keyword">val</span> server = Server()</span><br><span class="line">  <span class="comment">// 3  Field injection</span></span><br><span class="line">  server.repository = repository</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="keyword">val</span> <span class="keyword">data</span> = Data()</span><br><span class="line">  server.receive(<span class="keyword">data</span>)</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>Method</strong> injection</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Server</span></span>() &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">var</span> repository: Repository? = <span class="literal">null</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">fun</span> <span class="title">receive</span><span class="params">(<span class="keyword">data</span>: <span class="type">Date</span>)</span></span> &#123;</span><br><span class="line">    repository?.save(date)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">fun</span> <span class="title">fixRepo</span><span class="params">(repository: <span class="type">Repository</span>)</span></span> &#123;</span><br><span class="line">    <span class="keyword">this</span>.repository = repository</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">val</span> repository = RepositoryImpl()</span><br><span class="line">  <span class="keyword">val</span> server = Server()</span><br><span class="line">  server.fixRepo(repository) <span class="comment">// Method injection</span></span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="keyword">val</span> <span class="keyword">data</span> = Data()</span><br><span class="line">  server.receive(<span class="keyword">data</span>)</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Method injection支持同一个Method中注入多个类对象，这是不同于Field injection的地方。</p>
+<p>举例：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dependent</span></span>() &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">var</span> dep1: Dep1? = <span class="literal">null</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">var</span> dep2: Dep2? = <span class="literal">null</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">var</span> dep3: Dep3? = <span class="literal">null</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">//同时注入3个类型参数</span></span><br><span class="line">  <span class="function"><span class="keyword">fun</span> <span class="title">fixDep</span><span class="params">(dep1: <span class="type">Dep1</span>, dep2: <span class="type">Dep2</span>, dep3: <span class="type">Dep3</span>)</span></span> &#123;</span><br><span class="line">    <span class="keyword">this</span>.dep1 = dep1</span><br><span class="line">    <span class="keyword">this</span>.dep2 = dep2</span><br><span class="line">    <span class="keyword">this</span>.dep3 = dep3</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="Binds"><a href="#Binds" class="headerlink" title="@Binds"></a><code>@Binds</code></h5><p><code>@Binds</code>用于绑定抽象类或接口与其具体实现类之间的关系。</p>
+<h5 id="Component-Builder"><a href="#Component-Builder" class="headerlink" title="@Component.Builder"></a>@Component.Builder</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component(modules = [AppModule::class, NetworkModule::class])</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">AppComponent</span> </span>&#123;</span><br><span class="line">    <span class="function">fun <span class="title">inject</span><span class="params">(activity: SplashActivity)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">    fun <span class="title">inject</span><span class="params">(activity: MainActivity)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">    fun <span class="title">inject</span><span class="params">(fragment: BusStopFragment)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">    fun <span class="title">inject</span><span class="params">(fragment: BusArrivalFragment)</span></span></span><br><span class="line"><span class="function">      </span></span><br><span class="line"><span class="function">  	@Component.Builder</span></span><br><span class="line"><span class="function">  	interface Builder </span>&#123;</span><br><span class="line"></span><br><span class="line">    		<span class="meta">@BindsInstance</span></span><br><span class="line">		    <span class="function">fun <span class="title">activity</span><span class="params">(activity: Activity)</span>: Builder</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">    		fun <span class="title">build</span><span class="params">()</span>: AppComponent</span></span><br><span class="line"><span class="function">  &#125;</span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
 
 <p>Component.Builder中使用@BindsInstance标记的方法表示将该方法的参数（比如Activity）传递到依赖关系图中（dependency graph），该方法必须返回Builder实例。</p>
 <p>这样，该Component所包含的Module都可以使用该Activity对象。也即provide方法所需的参数。</p>
@@ -472,7 +701,7 @@
 
 <h5 id="FragmentComponent的创建"><a href="#FragmentComponent的创建" class="headerlink" title="FragmentComponent的创建"></a>FragmentComponent的创建</h5><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BusArrivalFragment</span> : <span class="type">Fragment</span></span>() &#123;</span><br><span class="line">  	<span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onAttach</span><span class="params">(context: <span class="type">Context</span>)</span></span> &#123;</span><br><span class="line">        context.activityComp  <span class="comment">//借助该Fragment所依附的Activity的ActivityComponent来创建</span></span><br><span class="line">            .fragmentComponent()</span><br><span class="line">            .inject(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">super</span>.onAttach(context)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<h4 id="Subcomponents-VS-Component-Dependencies"><a href="#Subcomponents-VS-Component-Dependencies" class="headerlink" title="@Subcomponents VS Component Dependencies"></a>@Subcomponents VS Component Dependencies</h4><p>使用Component Dependencies时：</p>
+<h4 id="Subcomponents-VS-Component-Dependencies"><a href="#Subcomponents-VS-Component-Dependencies" class="headerlink" title="@Subcomponents VS Component Dependencies"></a>@Subcomponents VS Component Dependencies</h4><p><strong>Component Dependencies:</strong></p>
 <ol>
 <li><p>当前Component需要分享给其它Component的对象，需要在该Component中提供factory methods进行显式的发布；</p>
 </li>
@@ -485,7 +714,7 @@
 <li><p>当使用<strong>dependencies</strong>属性进行依赖管理时，不支持<strong>multibinding</strong>。</p>
 </li>
 </ol>
-<p>使用**@Subcomponents**时：</p>
+<p><strong>@Subcomponents</strong></p>
 <ol>
 <li><p>每一个@Subcomponent会从它的父@Component或者父@Subcomponent组件继承所有的对象，因此不需要显式的发布；</p>
 </li>
@@ -498,7 +727,29 @@
 <li><p><strong>multibinding</strong>可以和@Subcomponent结合使用；</p>
 </li>
 </ol>
+<h4 id="MultiBinding"><a href="#MultiBinding" class="headerlink" title="MultiBinding"></a>MultiBinding</h4><h5 id="ElementsIntoSet-VS-IntoSet"><a href="#ElementsIntoSet-VS-IntoSet" class="headerlink" title="@ElementsIntoSet VS @IntoSet"></a>@ElementsIntoSet VS @IntoSet</h5><p>@IntoSet用于将单个对象添加到Set中</p>
+<p>举例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Module(includes = [WhereAmIModule.Bindings::class])</span></span><br><span class="line">object WhereAmIModule &#123;</span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">  <span class="meta">@Provides</span> <span class="comment">// 1</span></span><br><span class="line">  <span class="meta">@ApplicationScope</span> <span class="comment">// 2</span></span><br><span class="line">  <span class="meta">@Named(WHEREAMI_INFO_NAME)</span> <span class="comment">// 3</span></span><br><span class="line">  <span class="function">fun <span class="title">provideWhereAmISpec</span><span class="params">(endpoint: WhereAmIEndpointImpl)</span>: InformationPluginSpec </span>= object : InformationPluginSpec &#123; <span class="comment">// 4</span></span><br><span class="line">    override val informationEndpoint: <span class="function">InformationEndpoint</span></span><br><span class="line"><span class="function">      <span class="title">get</span><span class="params">()</span> </span>= endpoint</span><br><span class="line">    override val serviceName: <span class="function">String</span></span><br><span class="line"><span class="function">      <span class="title">get</span><span class="params">()</span> </span>= <span class="string">&quot;WhereAmI&quot;</span></span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+
+
+<p>@ElementsIntoSet用于将多个对象添加到Set中；<br>举例:</p>
+<p>provideWeatherSpec()返回了一个Set&lt;InformationPluginSpec&gt;，Dagger会将返回的集合添加到Set中。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Module(includes = [WhereAmIModule::class, WeatherModule::class])</span></span><br><span class="line"><span class="keyword">object</span> InformationSpecsModule &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Provides</span></span><br><span class="line">    <span class="meta">@ElementsIntoSet</span> <span class="comment">// 1</span></span><br><span class="line">    <span class="meta">@ApplicationScope</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">provideWeatherSpec</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">        <span class="meta">@Named(WHEREAMI_INFO_NAME)</span> whereAmISpec: <span class="type">InformationPluginSpec</span>, <span class="comment">// 2</span></span></span></span><br><span class="line"><span class="params"><span class="function">        <span class="meta">@Named(WEATHER_INFO_NAME)</span> weatherSpec: <span class="type">InformationPluginSpec</span> <span class="comment">// 2</span></span></span></span><br><span class="line"><span class="params"><span class="function">    )</span></span>: Set&lt;InformationPluginSpec&gt; &#123; <span class="comment">// 3</span></span><br><span class="line">        <span class="keyword">return</span> mutableSetOf&lt;InformationPluginSpec&gt;().apply &#123;</span><br><span class="line">            add(whereAmISpec)</span><br><span class="line">            add(weatherSpec)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="14-Multibinding-With-Maps"><a href="#14-Multibinding-With-Maps" class="headerlink" title="14. Multibinding With Maps"></a>14. Multibinding With Maps</h4><p>使用Map进行Multibinding，Dagger支持的keys包括：</p>
+<p><code>@StringKey</code></p>
+<p><code>@ClassKey</code></p>
+<p><code>@IntKey</code> </p>
+<p><code>@LongKey</code></p>
+<ol>
+<li><p><code>@IntoMap</code>用于告诉Dagger你使用<code>@Provides</code>提供的对象会作为Map的一部分。</p>
+</li>
+<li><p><code>@StringKey(WEATHER_INFO_NAME)</code>用于告诉Dagger使用<code>@Provides</code>提供的对象的key是String对象。</p>
+</li>
+</ol>
+<p>使用<code>@ClassKey</code></p>
+<h5 id="使用-MapKey"><a href="#使用-MapKey" class="headerlink" title="使用 @MapKey"></a>使用 @MapKey</h5>
       
     </div>
 
@@ -537,7 +788,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="西风的技术博客">
+      <meta itemprop="name" content="西风飞扬">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -658,7 +909,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="西风的技术博客">
+      <meta itemprop="name" content="西风飞扬">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -758,7 +1009,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="西风的技术博客">
+      <meta itemprop="name" content="西风飞扬">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -858,7 +1109,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="西风的技术博客">
+      <meta itemprop="name" content="西风飞扬">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -958,7 +1209,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="西风的技术博客">
+      <meta itemprop="name" content="西风飞扬">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -1087,7 +1338,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="西风的技术博客">
+      <meta itemprop="name" content="西风飞扬">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -1171,218 +1422,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://xifengcoder.github.io/2023/08/11/Transorformation%E7%9A%84%E7%90%86%E8%A7%A3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="xifengcoder">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="西风的技术博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/08/11/Transorformation%E7%9A%84%E7%90%86%E8%A7%A3/" class="post-title-link" itemprop="url">OpenGL Transorformation的理解</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2023-08-11 22:40:32" itemprop="dateCreated datePublished" datetime="2023-08-11T22:40:32+08:00">2023-08-11</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2023-08-12 19:36:07" itemprop="dateModified" datetime="2023-08-12T19:36:07+08:00">2023-08-12</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/OpenGLES/" itemprop="url" rel="index"><span itemprop="name">OpenGLES</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.2k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
-    </span>
-</div>
-		
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>OpenGLES</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023/08/11/Transorformation%E7%9A%84%E7%90%86%E8%A7%A3/">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-	<div>
-      
-    </div>
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://xifengcoder.github.io/2023/06/24/refactoring/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="xifengcoder">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="西风的技术博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/06/24/refactoring/" class="post-title-link" itemprop="url">Refactoring to Patterns总结</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2023-06-24 10:57:28" itemprop="dateCreated datePublished" datetime="2023-06-24T10:57:28+08:00">2023-06-24</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2023-07-01 18:42:23" itemprop="dateModified" datetime="2023-07-01T18:42:23+08:00">2023-07-01</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E9%87%8D%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">重构</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>4.1k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>4 分钟</span>
-    </span>
-</div>
-		
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>重构</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023/06/24/refactoring/">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-	<div>
-      
-    </div>
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
@@ -1407,13 +1446,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">261k</span>
+    <span title="站点总字数">265k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:58</span>
+    <span title="站点阅读时长">4:01</span>
   </span>
 </div>
 <div class="busuanzi-count">
@@ -1458,6 +1497,34 @@
 
 
 
+<script class="next-config" data-name="giscus" type="application/json">{"enable":true,"repo":"xifengcoder/xifengcoder.github.io","repo_id":"MDEwOlJlcG9zaXRvcnk3MDk3Nzg4Ng==","category":"Announcements","category_id":"DIC_kwDOBDsJXs4Cfd9s","mapping":"pathname","strict":0,"reactions_enabled":1,"emit_metadata":0,"theme":"light","lang":"en","crossorigin":"anonymous","input_position":"bottom","loading":"lazy"}</script>
+
+<script>
+document.addEventListener('page:loaded', () => {
+  if (!CONFIG.page.comments) return;
+
+  NexT.utils.loadComments('.giscus-container')
+    .then(() => NexT.utils.getScript('https://giscus.app/client.js', {
+      attributes: {
+        async                   : true,
+        crossOrigin             : 'anonymous',
+        'data-repo'             : CONFIG.giscus.repo,
+        'data-repo-id'          : CONFIG.giscus.repo_id,
+        'data-category'         : CONFIG.giscus.category,
+        'data-category-id'      : CONFIG.giscus.category_id,
+        'data-mapping'          : CONFIG.giscus.mapping,
+        'data-strict'           : CONFIG.giscus.strict,
+        'data-reactions-enabled': CONFIG.giscus.reactions_enabled,
+        'data-emit-metadata'    : CONFIG.giscus.emit_metadata,
+        'data-theme'            : CONFIG.giscus.theme,
+        'data-lang'             : CONFIG.giscus.lang,
+        'data-input-position'   : CONFIG.giscus.input_position,
+        'data-loading'          : CONFIG.giscus.loading
+      },
+      parentNode: document.querySelector('.giscus-container')
+    }));
+});
+</script>
 
 </body>
 </html>

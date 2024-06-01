@@ -19,16 +19,17 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"xifengcoder.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":false,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
-<meta name="description" content="@Component.Builder12345678910111213141516171819@Component(modules &#x3D; [AppModule::class, NetworkModule::class])interface AppComponent &amp;#123;    fun inject(activity: SplashActivity)    fun inject(activit">
+<meta name="description" content="Injection的类型 Constructor injection    12345class Server(private val repository: Repository) &amp;#123;  fun receive(data: Date) &amp;#123;    repository.save(date)  &amp;#125;&amp;#125;    如果你可以控制依赖关系中组件的创建的话，Constru">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Dagger依赖注入框架的理解">
 <meta property="og:url" content="https://xifengcoder.github.io/2024/02/28/dependency_injection/index.html">
-<meta property="og:site_name" content="西风的技术博客">
-<meta property="og:description" content="@Component.Builder12345678910111213141516171819@Component(modules &#x3D; [AppModule::class, NetworkModule::class])interface AppComponent &amp;#123;    fun inject(activity: SplashActivity)    fun inject(activit">
+<meta property="og:site_name" content="西风飞扬">
+<meta property="og:description" content="Injection的类型 Constructor injection    12345class Server(private val repository: Repository) &amp;#123;  fun receive(data: Date) &amp;#123;    repository.save(date)  &amp;#125;&amp;#125;    如果你可以控制依赖关系中组件的创建的话，Constru">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-02-28T14:40:36.000Z">
-<meta property="article:modified_time" content="2024-03-02T15:01:40.671Z">
+<meta property="article:modified_time" content="2024-05-19T13:03:30.152Z">
 <meta property="article:author" content="xifengcoder">
+<meta property="article:tag" content="dependency injection">
 <meta name="twitter:card" content="summary">
 
 
@@ -39,7 +40,7 @@
 <script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xifengcoder.github.io/2024/02/28/dependency_injection/","path":"2024/02/28/dependency_injection/","title":"Dagger依赖注入框架的理解"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Dagger依赖注入框架的理解 | 西风的技术博客</title>
+<title>Dagger依赖注入框架的理解 | 西风飞扬</title>
   
 
 
@@ -68,7 +69,7 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">西风的技术博客</h1>
+      <h1 class="site-title">西风飞扬</h1>
       <i class="logo-line"></i>
     </a>
   </div>
@@ -145,7 +146,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#Component-Builder"><span class="nav-text">@Component.Builder</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Component-Factory"><span class="nav-text">Component.Factory</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Singleton"><span class="nav-text">@Singleton</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Component-Dependencies"><span class="nav-text">Component Dependencies</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ApplicationComponent"><span class="nav-text">ApplicationComponent</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#ActivityComponent"><span class="nav-text">ActivityComponent</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#FragmentComponent"><span class="nav-text">FragmentComponent</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Subcomponents"><span class="nav-text">@Subcomponents</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#ApplicationComponent-1"><span class="nav-text">ApplicationComponent</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ActivityComponent-1"><span class="nav-text">ActivityComponent</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#FragmentComponent-1"><span class="nav-text">FragmentComponent</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ApplicationComponent%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="nav-text">ApplicationComponent的创建</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ActivityComponent%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="nav-text">ActivityComponent的创建</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#FragmentComponent%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="nav-text">FragmentComponent的创建</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Subcomponents-VS-Component-Dependencies"><span class="nav-text">@Subcomponents VS Component Dependencies</span></a></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#Injection%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-text">Injection的类型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Binds"><span class="nav-text">@Binds</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Component-Builder"><span class="nav-text">@Component.Builder</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Component-Factory"><span class="nav-text">Component.Factory</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Singleton"><span class="nav-text">@Singleton</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Component-Dependencies"><span class="nav-text">Component Dependencies</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ApplicationComponent"><span class="nav-text">ApplicationComponent</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#ActivityComponent"><span class="nav-text">ActivityComponent</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#FragmentComponent"><span class="nav-text">FragmentComponent</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Subcomponents"><span class="nav-text">@Subcomponents</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#ApplicationComponent-1"><span class="nav-text">ApplicationComponent</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ActivityComponent-1"><span class="nav-text">ActivityComponent</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#FragmentComponent-1"><span class="nav-text">FragmentComponent</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ApplicationComponent%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="nav-text">ApplicationComponent的创建</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ActivityComponent%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="nav-text">ActivityComponent的创建</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#FragmentComponent%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="nav-text">FragmentComponent的创建</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Subcomponents-VS-Component-Dependencies"><span class="nav-text">@Subcomponents VS Component Dependencies</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MultiBinding"><span class="nav-text">MultiBinding</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#ElementsIntoSet-VS-IntoSet"><span class="nav-text">@ElementsIntoSet VS @IntoSet</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#14-Multibinding-With-Maps"><span class="nav-text">14. Multibinding With Maps</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-MapKey"><span class="nav-text">使用 @MapKey</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -158,18 +159,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-count">47</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-count">27</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -224,7 +225,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="西风的技术博客">
+      <meta itemprop="name" content="西风飞扬">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -246,7 +247,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2024-03-02 23:01:40" itemprop="dateModified" datetime="2024-03-02T23:01:40+08:00">2024-03-02</time>
+        <time title="修改时间：2024-05-19 21:03:30" itemprop="dateModified" datetime="2024-05-19T21:03:30+08:00">2024-05-19</time>
       </span>
 
   
@@ -263,14 +264,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>6.6k</span>
+      <span>9.1k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>6 分钟</span>
+      <span>8 分钟</span>
     </span>
 </div>
 		
@@ -281,7 +282,32 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h5 id="Component-Builder"><a href="#Component-Builder" class="headerlink" title="@Component.Builder"></a>@Component.Builder</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component(modules = [AppModule::class, NetworkModule::class])</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">AppComponent</span> </span>&#123;</span><br><span class="line">    <span class="function">fun <span class="title">inject</span><span class="params">(activity: SplashActivity)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">    fun <span class="title">inject</span><span class="params">(activity: MainActivity)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">    fun <span class="title">inject</span><span class="params">(fragment: BusStopFragment)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">    fun <span class="title">inject</span><span class="params">(fragment: BusArrivalFragment)</span></span></span><br><span class="line"><span class="function">      </span></span><br><span class="line"><span class="function">  	@Component.Builder</span></span><br><span class="line"><span class="function">  	interface Builder </span>&#123;</span><br><span class="line"></span><br><span class="line">    		<span class="meta">@BindsInstance</span></span><br><span class="line">		    <span class="function">fun <span class="title">activity</span><span class="params">(activity: Activity)</span>: Builder</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">    		fun <span class="title">build</span><span class="params">()</span>: AppComponent</span></span><br><span class="line"><span class="function">  &#125;</span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
+        <h5 id="Injection的类型"><a href="#Injection的类型" class="headerlink" title="Injection的类型"></a>Injection的类型</h5><ul>
+<li><p><strong>Constructor</strong> injection</p>
+   <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Server</span></span>(<span class="keyword">private</span> <span class="keyword">val</span> repository: Repository) &#123;</span><br><span class="line">  <span class="function"><span class="keyword">fun</span> <span class="title">receive</span><span class="params">(<span class="keyword">data</span>: <span class="type">Date</span>)</span></span> &#123;</span><br><span class="line">    repository.save(date)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>  如果你可以控制依赖关系中组件的创建的话，<strong>Constructor</strong> injection 是最佳的依赖注入类型。</p>
+</li>
+<li><p><strong>Field</strong> injection</p>
+</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Server</span> </span>() &#123;</span><br><span class="line">  <span class="keyword">lateinit</span> <span class="keyword">var</span> repository: Repository <span class="comment">// HERE</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">fun</span> <span class="title">receive</span><span class="params">(<span class="keyword">data</span>: <span class="type">Date</span>)</span></span> &#123;</span><br><span class="line">    repository.save (date)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="comment">// 1</span></span><br><span class="line">  <span class="keyword">val</span> repository = RepositoryImpl()</span><br><span class="line">  <span class="comment">// 2</span></span><br><span class="line">  <span class="keyword">val</span> server = Server()</span><br><span class="line">  <span class="comment">// 3  Field injection</span></span><br><span class="line">  server.repository = repository</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="keyword">val</span> <span class="keyword">data</span> = Data()</span><br><span class="line">  server.receive(<span class="keyword">data</span>)</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>Method</strong> injection</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Server</span></span>() &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">var</span> repository: Repository? = <span class="literal">null</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">fun</span> <span class="title">receive</span><span class="params">(<span class="keyword">data</span>: <span class="type">Date</span>)</span></span> &#123;</span><br><span class="line">    repository?.save(date)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">fun</span> <span class="title">fixRepo</span><span class="params">(repository: <span class="type">Repository</span>)</span></span> &#123;</span><br><span class="line">    <span class="keyword">this</span>.repository = repository</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">val</span> repository = RepositoryImpl()</span><br><span class="line">  <span class="keyword">val</span> server = Server()</span><br><span class="line">  server.fixRepo(repository) <span class="comment">// Method injection</span></span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="keyword">val</span> <span class="keyword">data</span> = Data()</span><br><span class="line">  server.receive(<span class="keyword">data</span>)</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Method injection支持同一个Method中注入多个类对象，这是不同于Field injection的地方。</p>
+<p>举例：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dependent</span></span>() &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">var</span> dep1: Dep1? = <span class="literal">null</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">var</span> dep2: Dep2? = <span class="literal">null</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">var</span> dep3: Dep3? = <span class="literal">null</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">//同时注入3个类型参数</span></span><br><span class="line">  <span class="function"><span class="keyword">fun</span> <span class="title">fixDep</span><span class="params">(dep1: <span class="type">Dep1</span>, dep2: <span class="type">Dep2</span>, dep3: <span class="type">Dep3</span>)</span></span> &#123;</span><br><span class="line">    <span class="keyword">this</span>.dep1 = dep1</span><br><span class="line">    <span class="keyword">this</span>.dep2 = dep2</span><br><span class="line">    <span class="keyword">this</span>.dep3 = dep3</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="Binds"><a href="#Binds" class="headerlink" title="@Binds"></a><code>@Binds</code></h5><p><code>@Binds</code>用于绑定抽象类或接口与其具体实现类之间的关系。</p>
+<h5 id="Component-Builder"><a href="#Component-Builder" class="headerlink" title="@Component.Builder"></a>@Component.Builder</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component(modules = [AppModule::class, NetworkModule::class])</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">AppComponent</span> </span>&#123;</span><br><span class="line">    <span class="function">fun <span class="title">inject</span><span class="params">(activity: SplashActivity)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">    fun <span class="title">inject</span><span class="params">(activity: MainActivity)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">    fun <span class="title">inject</span><span class="params">(fragment: BusStopFragment)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">    fun <span class="title">inject</span><span class="params">(fragment: BusArrivalFragment)</span></span></span><br><span class="line"><span class="function">      </span></span><br><span class="line"><span class="function">  	@Component.Builder</span></span><br><span class="line"><span class="function">  	interface Builder </span>&#123;</span><br><span class="line"></span><br><span class="line">    		<span class="meta">@BindsInstance</span></span><br><span class="line">		    <span class="function">fun <span class="title">activity</span><span class="params">(activity: Activity)</span>: Builder</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">    		fun <span class="title">build</span><span class="params">()</span>: AppComponent</span></span><br><span class="line"><span class="function">  &#125;</span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
 
 <p>Component.Builder中使用@BindsInstance标记的方法表示将该方法的参数（比如Activity）传递到依赖关系图中（dependency graph），该方法必须返回Builder实例。</p>
 <p>这样，该Component所包含的Module都可以使用该Activity对象。也即provide方法所需的参数。</p>
@@ -333,7 +359,7 @@
 
 <h5 id="FragmentComponent的创建"><a href="#FragmentComponent的创建" class="headerlink" title="FragmentComponent的创建"></a>FragmentComponent的创建</h5><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BusArrivalFragment</span> : <span class="type">Fragment</span></span>() &#123;</span><br><span class="line">  	<span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onAttach</span><span class="params">(context: <span class="type">Context</span>)</span></span> &#123;</span><br><span class="line">        context.activityComp  <span class="comment">//借助该Fragment所依附的Activity的ActivityComponent来创建</span></span><br><span class="line">            .fragmentComponent()</span><br><span class="line">            .inject(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">super</span>.onAttach(context)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<h4 id="Subcomponents-VS-Component-Dependencies"><a href="#Subcomponents-VS-Component-Dependencies" class="headerlink" title="@Subcomponents VS Component Dependencies"></a>@Subcomponents VS Component Dependencies</h4><p>使用Component Dependencies时：</p>
+<h4 id="Subcomponents-VS-Component-Dependencies"><a href="#Subcomponents-VS-Component-Dependencies" class="headerlink" title="@Subcomponents VS Component Dependencies"></a>@Subcomponents VS Component Dependencies</h4><p><strong>Component Dependencies:</strong></p>
 <ol>
 <li><p>当前Component需要分享给其它Component的对象，需要在该Component中提供factory methods进行显式的发布；</p>
 </li>
@@ -346,7 +372,7 @@
 <li><p>当使用<strong>dependencies</strong>属性进行依赖管理时，不支持<strong>multibinding</strong>。</p>
 </li>
 </ol>
-<p>使用**@Subcomponents**时：</p>
+<p><strong>@Subcomponents</strong></p>
 <ol>
 <li><p>每一个@Subcomponent会从它的父@Component或者父@Subcomponent组件继承所有的对象，因此不需要显式的发布；</p>
 </li>
@@ -359,7 +385,29 @@
 <li><p><strong>multibinding</strong>可以和@Subcomponent结合使用；</p>
 </li>
 </ol>
+<h4 id="MultiBinding"><a href="#MultiBinding" class="headerlink" title="MultiBinding"></a>MultiBinding</h4><h5 id="ElementsIntoSet-VS-IntoSet"><a href="#ElementsIntoSet-VS-IntoSet" class="headerlink" title="@ElementsIntoSet VS @IntoSet"></a>@ElementsIntoSet VS @IntoSet</h5><p>@IntoSet用于将单个对象添加到Set中</p>
+<p>举例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Module(includes = [WhereAmIModule.Bindings::class])</span></span><br><span class="line">object WhereAmIModule &#123;</span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">  <span class="meta">@Provides</span> <span class="comment">// 1</span></span><br><span class="line">  <span class="meta">@ApplicationScope</span> <span class="comment">// 2</span></span><br><span class="line">  <span class="meta">@Named(WHEREAMI_INFO_NAME)</span> <span class="comment">// 3</span></span><br><span class="line">  <span class="function">fun <span class="title">provideWhereAmISpec</span><span class="params">(endpoint: WhereAmIEndpointImpl)</span>: InformationPluginSpec </span>= object : InformationPluginSpec &#123; <span class="comment">// 4</span></span><br><span class="line">    override val informationEndpoint: <span class="function">InformationEndpoint</span></span><br><span class="line"><span class="function">      <span class="title">get</span><span class="params">()</span> </span>= endpoint</span><br><span class="line">    override val serviceName: <span class="function">String</span></span><br><span class="line"><span class="function">      <span class="title">get</span><span class="params">()</span> </span>= <span class="string">&quot;WhereAmI&quot;</span></span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+
+
+<p>@ElementsIntoSet用于将多个对象添加到Set中；<br>举例:</p>
+<p>provideWeatherSpec()返回了一个Set&lt;InformationPluginSpec&gt;，Dagger会将返回的集合添加到Set中。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Module(includes = [WhereAmIModule::class, WeatherModule::class])</span></span><br><span class="line"><span class="keyword">object</span> InformationSpecsModule &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Provides</span></span><br><span class="line">    <span class="meta">@ElementsIntoSet</span> <span class="comment">// 1</span></span><br><span class="line">    <span class="meta">@ApplicationScope</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">provideWeatherSpec</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">        <span class="meta">@Named(WHEREAMI_INFO_NAME)</span> whereAmISpec: <span class="type">InformationPluginSpec</span>, <span class="comment">// 2</span></span></span></span><br><span class="line"><span class="params"><span class="function">        <span class="meta">@Named(WEATHER_INFO_NAME)</span> weatherSpec: <span class="type">InformationPluginSpec</span> <span class="comment">// 2</span></span></span></span><br><span class="line"><span class="params"><span class="function">    )</span></span>: Set&lt;InformationPluginSpec&gt; &#123; <span class="comment">// 3</span></span><br><span class="line">        <span class="keyword">return</span> mutableSetOf&lt;InformationPluginSpec&gt;().apply &#123;</span><br><span class="line">            add(whereAmISpec)</span><br><span class="line">            add(weatherSpec)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="14-Multibinding-With-Maps"><a href="#14-Multibinding-With-Maps" class="headerlink" title="14. Multibinding With Maps"></a>14. Multibinding With Maps</h4><p>使用Map进行Multibinding，Dagger支持的keys包括：</p>
+<p><code>@StringKey</code></p>
+<p><code>@ClassKey</code></p>
+<p><code>@IntKey</code> </p>
+<p><code>@LongKey</code></p>
+<ol>
+<li><p><code>@IntoMap</code>用于告诉Dagger你使用<code>@Provides</code>提供的对象会作为Map的一部分。</p>
+</li>
+<li><p><code>@StringKey(WEATHER_INFO_NAME)</code>用于告诉Dagger使用<code>@Provides</code>提供的对象的key是String对象。</p>
+</li>
+</ol>
+<p>使用<code>@ClassKey</code></p>
+<h5 id="使用-MapKey"><a href="#使用-MapKey" class="headerlink" title="使用 @MapKey"></a>使用 @MapKey</h5>
     </div>
 
     
@@ -377,6 +425,9 @@
     </div>
 
     <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/dependency-injection/" rel="tag"># dependency injection</a>
+          </div>
 
         
 
@@ -401,6 +452,12 @@
 
 
 
+    
+  
+  <div class="comments giscus-container">
+  </div>
+  
+  
 </div>
   </main>
 
@@ -421,13 +478,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">261k</span>
+    <span title="站点总字数">265k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:58</span>
+    <span title="站点阅读时长">4:01</span>
   </span>
 </div>
 <div class="busuanzi-count">
@@ -472,6 +529,34 @@
 
 
 
+<script class="next-config" data-name="giscus" type="application/json">{"enable":true,"repo":"xifengcoder/xifengcoder.github.io","repo_id":"MDEwOlJlcG9zaXRvcnk3MDk3Nzg4Ng==","category":"Announcements","category_id":"DIC_kwDOBDsJXs4Cfd9s","mapping":"pathname","strict":0,"reactions_enabled":1,"emit_metadata":0,"theme":"light","lang":"en","crossorigin":"anonymous","input_position":"bottom","loading":"lazy"}</script>
+
+<script>
+document.addEventListener('page:loaded', () => {
+  if (!CONFIG.page.comments) return;
+
+  NexT.utils.loadComments('.giscus-container')
+    .then(() => NexT.utils.getScript('https://giscus.app/client.js', {
+      attributes: {
+        async                   : true,
+        crossOrigin             : 'anonymous',
+        'data-repo'             : CONFIG.giscus.repo,
+        'data-repo-id'          : CONFIG.giscus.repo_id,
+        'data-category'         : CONFIG.giscus.category,
+        'data-category-id'      : CONFIG.giscus.category_id,
+        'data-mapping'          : CONFIG.giscus.mapping,
+        'data-strict'           : CONFIG.giscus.strict,
+        'data-reactions-enabled': CONFIG.giscus.reactions_enabled,
+        'data-emit-metadata'    : CONFIG.giscus.emit_metadata,
+        'data-theme'            : CONFIG.giscus.theme,
+        'data-lang'             : CONFIG.giscus.lang,
+        'data-input-position'   : CONFIG.giscus.input_position,
+        'data-loading'          : CONFIG.giscus.loading
+      },
+      parentNode: document.querySelector('.giscus-container')
+    }));
+});
+</script>
 
 </body>
 </html>

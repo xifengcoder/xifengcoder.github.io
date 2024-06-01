@@ -23,7 +23,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="ARouter使用指南与原理分析">
 <meta property="og:url" content="https://xifengcoder.github.io/2021/12/26/deep_in_arouter/index.html">
-<meta property="og:site_name" content="西风的技术博客">
+<meta property="og:site_name" content="西风飞扬">
 <meta property="og:description" content="ARouter使用总结，以及原理的探讨分析...">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://img2020.cnblogs.com/blog/368055/202110/368055-20211006214111989-1436169959.jpg">
@@ -44,7 +44,7 @@
 <script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xifengcoder.github.io/2021/12/26/deep_in_arouter/","path":"2021/12/26/deep_in_arouter/","title":"ARouter使用指南与原理分析"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>ARouter使用指南与原理分析 | 西风的技术博客</title>
+<title>ARouter使用指南与原理分析 | 西风飞扬</title>
   
 
 
@@ -73,7 +73,7 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">西风的技术博客</h1>
+      <h1 class="site-title">西风飞扬</h1>
       <i class="logo-line"></i>
     </a>
   </div>
@@ -163,18 +163,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-count">47</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-count">27</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -229,7 +229,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="西风的技术博客">
+      <meta itemprop="name" content="西风飞扬">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -396,6 +396,12 @@
 
 
 
+    
+  
+  <div class="comments giscus-container">
+  </div>
+  
+  
 </div>
   </main>
 
@@ -416,13 +422,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">261k</span>
+    <span title="站点总字数">265k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:58</span>
+    <span title="站点阅读时长">4:01</span>
   </span>
 </div>
 <div class="busuanzi-count">
@@ -467,6 +473,34 @@
 
 
 
+<script class="next-config" data-name="giscus" type="application/json">{"enable":true,"repo":"xifengcoder/xifengcoder.github.io","repo_id":"MDEwOlJlcG9zaXRvcnk3MDk3Nzg4Ng==","category":"Announcements","category_id":"DIC_kwDOBDsJXs4Cfd9s","mapping":"pathname","strict":0,"reactions_enabled":1,"emit_metadata":0,"theme":"light","lang":"en","crossorigin":"anonymous","input_position":"bottom","loading":"lazy"}</script>
+
+<script>
+document.addEventListener('page:loaded', () => {
+  if (!CONFIG.page.comments) return;
+
+  NexT.utils.loadComments('.giscus-container')
+    .then(() => NexT.utils.getScript('https://giscus.app/client.js', {
+      attributes: {
+        async                   : true,
+        crossOrigin             : 'anonymous',
+        'data-repo'             : CONFIG.giscus.repo,
+        'data-repo-id'          : CONFIG.giscus.repo_id,
+        'data-category'         : CONFIG.giscus.category,
+        'data-category-id'      : CONFIG.giscus.category_id,
+        'data-mapping'          : CONFIG.giscus.mapping,
+        'data-strict'           : CONFIG.giscus.strict,
+        'data-reactions-enabled': CONFIG.giscus.reactions_enabled,
+        'data-emit-metadata'    : CONFIG.giscus.emit_metadata,
+        'data-theme'            : CONFIG.giscus.theme,
+        'data-lang'             : CONFIG.giscus.lang,
+        'data-input-position'   : CONFIG.giscus.input_position,
+        'data-loading'          : CONFIG.giscus.loading
+      },
+      parentNode: document.querySelector('.giscus-container')
+    }));
+});
+</script>
 
 </body>
 </html>
