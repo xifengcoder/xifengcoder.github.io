@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=-apple-system:300,300italic,400,400italic,700,700italic%7CBlinkMacSystemFont:300,300italic,400,400italic,700,700italic%7C"Apple+Color+Emoji":300,300italic,400,400italic,700,700italic%7C"Segoe+UI+Emoji":300,300italic,400,400italic,700,700italic%7C"Segoe+UI+Symbol":300,300italic,400,400italic,700,700italic%7C"Segoe+UI":300,300italic,400,400italic,700,700italic%7C"PingFang+SC":300,300italic,400,400italic,700,700italic%7C"Hiragino+Sans+GB":300,300italic,400,400italic,700,700italic%7C"Microsoft+YaHei":300,300italic,400,400italic,700,700italic%7C"Helvetica+Neue":300,300italic,400,400italic,700,700italic%7CHelvetica:300,300italic,400,400italic,700,700italic%7CArial:300,300italic,400,400italic,700,700italic%7Csans-serif:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xifengcoder.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":false,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<meta name="description" content="WatchDog用于检测Android系统中的关键服务是否存在死锁的情况。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WatchDog的原理探究">
+<meta property="og:url" content="https://xifengcoder.github.io/2024/10/06/android_watchdog/index.html">
+<meta property="og:site_name" content="Thinking in code">
+<meta property="og:description" content="WatchDog用于检测Android系统中的关键服务是否存在死锁的情况。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://note.youdao.com/yws/res/132/WEBRESOURCE0bcc02365c54b97f5c79f7bdbaaad243">
+<meta property="article:published_time" content="2024-10-06T12:43:07.000Z">
+<meta property="article:modified_time" content="2024-10-20T09:34:34.016Z">
+<meta property="article:author" content="xifengcoder">
+<meta property="article:tag" content="Android">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://note.youdao.com/yws/res/132/WEBRESOURCE0bcc02365c54b97f5c79f7bdbaaad243">
+
+
+<link rel="canonical" href="https://xifengcoder.github.io/2024/10/06/android_watchdog/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xifengcoder.github.io/2024/10/06/android_watchdog/","path":"2024/10/06/android_watchdog/","title":"WatchDog的原理探究"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>WatchDog的原理探究 | Thinking in code</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Thinking in code</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#WatchDog%E7%9A%84%E5%8E%9F%E7%90%86%E6%8E%A2%E7%A9%B6"><span class="nav-text">WatchDog的原理探究</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81WatchDog%E7%9A%84%E5%90%AF%E5%8A%A8"><span class="nav-text">一、WatchDog的启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81WatchDog%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-text">二、WatchDog的初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%EF%BC%9AmExecutingThreadsCount%E5%8C%85%E5%90%ABBinder%E4%B8%BB%E7%BA%BF%E7%A8%8B%E5%90%97%EF%BC%9F"><span class="nav-text">问题：mExecutingThreadsCount包含Binder主线程吗？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E3%80%81WatchDog%E7%9A%84monitor-%E6%96%B9%E6%B3%95%E5%9C%A8%E7%9B%91%E6%8E%A7%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-text">三、WatchDog的monitor()方法在监控什么？</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">xifengcoder</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/xifengcoder" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;xifengcoder" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/xifengcoder" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xifengcoder.github.io/2024/10/06/android_watchdog/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="xifengcoder">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Thinking in code">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          WatchDog的原理探究
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-10-06 20:43:07" itemprop="dateCreated datePublished" datetime="2024-10-06T20:43:07+08:00">2024-10-06</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2024-10-20 17:34:34" itemprop="dateModified" datetime="2024-10-20T17:34:34+08:00">2024-10-20</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>8.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
+</div>
+		
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="WatchDog的原理探究"><a href="#WatchDog的原理探究" class="headerlink" title="WatchDog的原理探究"></a>WatchDog的原理探究</h2><p>WatchDog在SystemServer进程的startBootstrapServices()中创建、并启动运行。</p>
+<h3 id="一、WatchDog的启动"><a href="#一、WatchDog的启动" class="headerlink" title="一、WatchDog的启动"></a>一、WatchDog的启动</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//[frameworks/base/services/java/com/android/server/SystemServer.java]</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">SystemServer</span> <span class="keyword">implements</span> <span class="title">Dumpable</span> </span>&#123;</span><br><span class="line">  </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">startBootstrapServices</span><span class="params">(<span class="meta">@NonNull</span> TimingsTraceAndSlog t)</span> </span>&#123;</span><br><span class="line">        t.traceBegin(<span class="string">&quot;startBootstrapServices&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Start the watchdog as early as possible so we can crash the system server</span></span><br><span class="line">        <span class="comment">// if we deadlock during early boot</span></span><br><span class="line">        t.traceBegin(<span class="string">&quot;StartWatchdog&quot;</span>);</span><br><span class="line">        <span class="keyword">final</span> Watchdog watchdog = Watchdog.getInstance();</span><br><span class="line">        watchdog.start();</span><br><span class="line">        t.traceEnd();</span><br><span class="line">        <span class="comment">//...</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="二、WatchDog的初始化"><a href="#二、WatchDog的初始化" class="headerlink" title="二、WatchDog的初始化"></a>二、WatchDog的初始化</h3><p><img src="https://note.youdao.com/yws/res/132/WEBRESOURCE0bcc02365c54b97f5c79f7bdbaaad243" alt="HandlerCheckers列表"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//[frameworks/base/services/core/java/com/android/server/Watchdog.java]</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Watchdog</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Watchdog sWatchdog;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Watchdog <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (sWatchdog == <span class="keyword">null</span>) &#123;</span><br><span class="line">            sWatchdog = <span class="keyword">new</span> Watchdog();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> sWatchdog;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Watchdog</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        mThread = <span class="keyword">new</span> Thread(<span class="keyword">this</span>::run, <span class="string">&quot;watchdog&quot;</span>);</span><br><span class="line">        <span class="comment">// Initialize handler checkers for each common thread we want to check.  Note</span></span><br><span class="line">        <span class="comment">// that we are not currently checking the background thread, since it can</span></span><br><span class="line">        <span class="comment">// potentially hold longer running operations with no guarantees about the timeliness</span></span><br><span class="line">        <span class="comment">// of operations there.</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// The shared foreground thread is the main checker.  It is where we</span></span><br><span class="line">        <span class="comment">// will also dispatch monitor checks and do other work.</span></span><br><span class="line">        mMonitorChecker = <span class="keyword">new</span> HandlerChecker(FgThread.getHandler(),</span><br><span class="line">                <span class="string">&quot;foreground thread&quot;</span>, DEFAULT_TIMEOUT);</span><br><span class="line">        mHandlerCheckers.add(mMonitorChecker);</span><br><span class="line">        <span class="comment">// Add checker for main thread.  We only do a quick check since there</span></span><br><span class="line">        <span class="comment">// can be UI running on the thread.</span></span><br><span class="line">        mHandlerCheckers.add(<span class="keyword">new</span> HandlerChecker(<span class="keyword">new</span> Handler(Looper.getMainLooper()),</span><br><span class="line">                <span class="string">&quot;main thread&quot;</span>, DEFAULT_TIMEOUT));</span><br><span class="line">        <span class="comment">// Add checker for shared UI thread.</span></span><br><span class="line">        mHandlerCheckers.add(<span class="keyword">new</span> HandlerChecker(UiThread.getHandler(),</span><br><span class="line">                <span class="string">&quot;ui thread&quot;</span>, DEFAULT_TIMEOUT));</span><br><span class="line">        <span class="comment">// And also check IO thread.</span></span><br><span class="line">        mHandlerCheckers.add(<span class="keyword">new</span> HandlerChecker(IoThread.getHandler(),</span><br><span class="line">                <span class="string">&quot;i/o thread&quot;</span>, DEFAULT_TIMEOUT));</span><br><span class="line">        <span class="comment">// And the display thread.</span></span><br><span class="line">        mHandlerCheckers.add(<span class="keyword">new</span> HandlerChecker(DisplayThread.getHandler(),</span><br><span class="line">                <span class="string">&quot;display thread&quot;</span>, DEFAULT_TIMEOUT));</span><br><span class="line">        <span class="comment">// And the animation thread.</span></span><br><span class="line">        mHandlerCheckers.add(<span class="keyword">new</span> HandlerChecker(AnimationThread.getHandler(),</span><br><span class="line">                <span class="string">&quot;animation thread&quot;</span>, DEFAULT_TIMEOUT));</span><br><span class="line">        <span class="comment">// And the surface animation thread.</span></span><br><span class="line">        mHandlerCheckers.add(<span class="keyword">new</span> HandlerChecker(SurfaceAnimationThread.getHandler(),</span><br><span class="line">                <span class="string">&quot;surface animation thread&quot;</span>, DEFAULT_TIMEOUT));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Initialize monitor for Binder threads.</span></span><br><span class="line">        addMonitor(<span class="keyword">new</span> BinderThreadMonitor());</span><br><span class="line"></span><br><span class="line">        mInterestingJavaPids.add(Process.myPid());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// See the notes on DEFAULT_TIMEOUT.</span></span><br><span class="line">        <span class="keyword">assert</span> DB ||</span><br><span class="line">                DEFAULT_TIMEOUT &gt; ZygoteConnectionConstants.WRAPPED_PID_TIMEOUT_MILLIS;</span><br><span class="line"></span><br><span class="line">        mTraceErrorLogger = <span class="keyword">new</span> TraceErrorLogger();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Called by SystemServer to cause the internal thread to begin execution.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        mThread.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//[frameworks/base/core/java/android/os/Binder.java]</span></span><br><span class="line">Binder.blockUntilThreadAvailable()</span><br><span class="line">    <span class="comment">//[frameworks/base/core/jni/android_util_Binder.cpp]</span></span><br><span class="line">    --&gt; android_os_Binder_blockUntilThreadAvailable(JNIEnv* env, jobject clazz) </span><br><span class="line">        <span class="comment">//[frameworks/native/libs/binder/IPCThreadState.cpp]</span></span><br><span class="line">        --&gt; blockUntilThreadAvailable()</span><br></pre></td></tr></table></figure>
+
+<p>WatchDog线程会通过IPCThreadState::self()-&gt;blockUntilThreadAvailable()来检测binder线程池是否已经用完。</p>
+<p>它会令当前线程阻塞，一直等到正在执行Binder命令的线程数小于设置的binder线程最大数为止。其中mMaxThreads默认为DEFAULT_MAX_BINDER_THREADS(15)个，但是SystemServer将自己进程修改为了32个。</p>
+<p>正在执行Binder命令的线程数怎么计算呢？</p>
+<p>在IPCThreadState::getAndExecuteCommand()函数中，每当talkWithDriver()接收到一个Binder命令后，就会将mExecutingThreadsCount加1，处理完该命令后，再将mExecutingThreadsCount减1。</p>
+<h4 id="问题：mExecutingThreadsCount包含Binder主线程吗？"><a href="#问题：mExecutingThreadsCount包含Binder主线程吗？" class="headerlink" title="问题：mExecutingThreadsCount包含Binder主线程吗？"></a>问题：mExecutingThreadsCount包含Binder主线程吗？</h4><p>IPCThreadState::blockUntilThreadAvailable()的实现：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//[frameworks/native/libs/binder/IPCThreadState.cpp]</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">IPCThreadState::blockUntilThreadAvailable</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">pthread_mutex_lock</span>(&amp;mProcess-&gt;mThreadCountLock);</span><br><span class="line">    mProcess-&gt;mWaitingForThreads++;</span><br><span class="line">    <span class="keyword">while</span> (mProcess-&gt;mExecutingThreadsCount &gt;= mProcess-&gt;mMaxThreads) &#123;</span><br><span class="line">        <span class="built_in">ALOGW</span>(<span class="string">&quot;Waiting for thread to be free. mExecutingThreadsCount=%lu mMaxThreads=%lu\n&quot;</span>,</span><br><span class="line">                <span class="keyword">static_cast</span>&lt;<span class="keyword">unsigned</span> <span class="keyword">long</span>&gt;(mProcess-&gt;mExecutingThreadsCount),</span><br><span class="line">                <span class="keyword">static_cast</span>&lt;<span class="keyword">unsigned</span> <span class="keyword">long</span>&gt;(mProcess-&gt;mMaxThreads));</span><br><span class="line">        <span class="built_in">pthread_cond_wait</span>(&amp;mProcess-&gt;mThreadCountDecrement, &amp;mProcess-&gt;mThreadCountLock);</span><br><span class="line">    &#125;</span><br><span class="line">    mProcess-&gt;mWaitingForThreads--;</span><br><span class="line">    <span class="built_in">pthread_mutex_unlock</span>(&amp;mProcess-&gt;mThreadCountLock);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//[frameworks/native/libs/binder/IPCThreadState.cpp]</span></span><br><span class="line">status_t IPCThreadState::getAndExecuteCommand()</span><br><span class="line">&#123;</span><br><span class="line">    status_t result;</span><br><span class="line">    int32_t cmd;</span><br><span class="line"></span><br><span class="line">    result = talkWithDriver();</span><br><span class="line">    <span class="keyword">if</span> (result &gt;= NO_ERROR) &#123;</span><br><span class="line">        size_t IN = mIn.dataAvail();</span><br><span class="line">        <span class="keyword">if</span> (IN &lt; sizeof(int32_t)) <span class="keyword">return</span> result;</span><br><span class="line">        cmd = mIn.readInt32();</span><br><span class="line">        IF_LOG_COMMANDS() &#123;</span><br><span class="line">            alog &lt;&lt; <span class="string">&quot;Processing top-level Command: &quot;</span></span><br><span class="line">                 &lt;&lt; getReturnString(cmd) &lt;&lt; endl;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        pthread_mutex_lock(&amp;mProcess-&gt;mThreadCountLock);</span><br><span class="line">        mProcess-&gt;mExecutingThreadsCount++;</span><br><span class="line">        <span class="keyword">if</span> (mProcess-&gt;mExecutingThreadsCount &gt;= mProcess-&gt;mMaxThreads &amp;&amp;</span><br><span class="line">                mProcess-&gt;mStarvationStartTimeMs == <span class="number">0</span>) &#123;</span><br><span class="line">            mProcess-&gt;mStarvationStartTimeMs = uptimeMillis();</span><br><span class="line">        &#125;</span><br><span class="line">        pthread_mutex_unlock(&amp;mProcess-&gt;mThreadCountLock);</span><br><span class="line"></span><br><span class="line">        result = executeCommand(cmd);</span><br><span class="line"></span><br><span class="line">        pthread_mutex_lock(&amp;mProcess-&gt;mThreadCountLock);</span><br><span class="line">        mProcess-&gt;mExecutingThreadsCount--;</span><br><span class="line">        <span class="keyword">if</span> (mProcess-&gt;mExecutingThreadsCount &lt; mProcess-&gt;mMaxThreads &amp;&amp;</span><br><span class="line">                mProcess-&gt;mStarvationStartTimeMs != <span class="number">0</span>) &#123;</span><br><span class="line">            int64_t starvationTimeMs = uptimeMillis() - mProcess-&gt;mStarvationStartTimeMs;</span><br><span class="line">            <span class="keyword">if</span> (starvationTimeMs &gt; <span class="number">100</span>) &#123;</span><br><span class="line">                ALOGE(<span class="string">&quot;binder thread pool (%zu threads) starved for %&quot;</span> PRId64 <span class="string">&quot; ms&quot;</span>,</span><br><span class="line">                      mProcess-&gt;mMaxThreads, starvationTimeMs);</span><br><span class="line">            &#125;</span><br><span class="line">            mProcess-&gt;mStarvationStartTimeMs = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Cond broadcast can be expensive, so don&#x27;t send it every time a binder</span></span><br><span class="line">        <span class="comment">// call is processed. b/168806193</span></span><br><span class="line">        <span class="keyword">if</span> (mProcess-&gt;mWaitingForThreads &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            pthread_cond_broadcast(&amp;mProcess-&gt;mThreadCountDecrement);</span><br><span class="line">        &#125;</span><br><span class="line">        pthread_mutex_unlock(&amp;mProcess-&gt;mThreadCountLock);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="三、WatchDog的monitor-方法在监控什么？"><a href="#三、WatchDog的monitor-方法在监控什么？" class="headerlink" title="三、WatchDog的monitor()方法在监控什么？"></a>三、WatchDog的monitor()方法在监控什么？</h3><ol>
+<li> 在系统级服务中，monitor()方法中只是尝试获取一下锁，什么都不做，如果能获取到锁，证明当前线程没有卡死。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Watchdog</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Monitor</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">monitor</span><span class="params">()</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ActivityManagerService中的实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ActivityManagerService</span> <span class="keyword">extends</span> <span class="title">IActivityManager</span>.<span class="title">Stub</span></span></span><br><span class="line"><span class="class">        <span class="keyword">implements</span> <span class="title">Watchdog</span>.<span class="title">Monitor</span>, <span class="title">BatteryStatsImpl</span>.<span class="title">BatteryCallback</span>, <span class="title">ActivityManagerGlobalLock</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">/** In this method we try to acquire our lock to make sure that we have not deadlocked */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">monitor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;    </span><br></pre></td></tr></table></figure>
+
+<p>WindowManagerService中的实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WindowManagerService</span> <span class="keyword">extends</span> <span class="title">IWindowManager</span>.<span class="title">Stub</span></span></span><br><span class="line"><span class="class">        <span class="keyword">implements</span> <span class="title">Watchdog</span>.<span class="title">Monitor</span>, <span class="title">WindowManagerPolicy</span>.<span class="title">WindowManagerFuncs</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// Called by the heartbeat to ensure locks are not held indefnitely (for deadlock detection).</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">monitor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (mGlobalLock) &#123; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li> 在FgThread线程中监听正在执行的Binder线程数是否超出上限；</li>
+</ol>
+<p>Binder线程可以分为3种类型：<br>①  Binder主线程<br>在当前进程中通过ProcessState::startThreadPool()创建的线程。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//[frameworks/native/libs/binder/ProcessState.cpp]</span></span><br><span class="line">ProcessState::<span class="built_in">startThreadPool</span>()</span><br><span class="line">    --&gt; ProcessState::<span class="built_in">spawnPooledThread</span>(<span class="literal">true</span>)</span><br><span class="line">        <span class="comment">//[frameworks/native/libs/binder/IPCThreadState.cpp]</span></span><br><span class="line">        --&gt; IPCThreadState::<span class="built_in">self</span>()-&gt;<span class="built_in">joinThreadPool</span>(<span class="literal">true</span>)</span><br></pre></td></tr></table></figure>
+
+<p>②  Binder普通线程<br>当Binder线程池中所有线程都在忙碌中、且已经申请的线程数小于Binder最大线程数时，Binder驱动会向用户态发出申请指令(BR_SPAWN_LOOPER)，要求创建新的Binder线程。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">binder_thread_read</span><span class="params">(struct binder_proc *proc,</span></span></span><br><span class="line"><span class="params"><span class="function">			      struct binder_thread *thread,</span></span></span><br><span class="line"><span class="params"><span class="function">			      <span class="keyword">binder_uintptr_t</span> binder_buffer, <span class="keyword">size_t</span> size,</span></span></span><br><span class="line"><span class="params"><span class="function">			      <span class="keyword">binder_size_t</span> *consumed, <span class="keyword">int</span> non_block)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//...  </span></span><br><span class="line">done:</span><br><span class="line">	*consumed = ptr - buffer;</span><br><span class="line">	binder_inner_proc_lock(proc);</span><br><span class="line">	<span class="keyword">if</span> (proc-&gt;requested_threads == <span class="number">0</span> &amp;&amp;</span><br><span class="line">	    list_empty(&amp;thread-&gt;proc-&gt;waiting_threads) &amp;&amp;</span><br><span class="line">	    proc-&gt;requested_threads_started &lt; proc-&gt;max_threads &amp;&amp;</span><br><span class="line">	    (thread-&gt;looper &amp; (BINDER_LOOPER_STATE_REGISTERED |</span><br><span class="line">	     BINDER_LOOPER_STATE_ENTERED)) <span class="comment">/* the user-space code fails to */</span></span><br><span class="line">	     <span class="comment">/*spawn a new thread if we leave this out */</span>) &#123;</span><br><span class="line">		proc-&gt;requested_threads++;</span><br><span class="line">		binder_inner_proc_unlock(proc);</span><br><span class="line">		binder_debug(BINDER_DEBUG_THREADS,</span><br><span class="line">			     <span class="string">&quot;%d:%d BR_SPAWN_LOOPER\n&quot;</span>,</span><br><span class="line">			     proc-&gt;pid, thread-&gt;pid);</span><br><span class="line">		<span class="keyword">if</span> (put_user(BR_SPAWN_LOOPER, (<span class="keyword">uint32_t</span> __user *)buffer))</span><br><span class="line">			<span class="keyword">return</span> -EFAULT;</span><br><span class="line">		binder_stat_br(proc, thread, BR_SPAWN_LOOPER);</span><br><span class="line">	&#125; <span class="keyword">else</span></span><br><span class="line">		binder_inner_proc_unlock(proc);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">status_t</span> <span class="title">IPCThreadState::executeCommand</span><span class="params">(<span class="keyword">int32_t</span> cmd)</span></span></span><br><span class="line"><span class="function">    BBinder* obj</span>;</span><br><span class="line">    RefBase::weakref_type* refs;</span><br><span class="line">    <span class="keyword">status_t</span> result = NO_ERROR;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in"><span class="keyword">switch</span></span> ((<span class="keyword">uint32_t</span>)cmd) &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">case</span> BR_SPAWN_LOOPER:</span><br><span class="line">        mProcess-&gt;<span class="built_in">spawnPooledThread</span>(<span class="literal">false</span>);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">        <span class="built_in">ALOGE</span>(<span class="string">&quot;*** BAD COMMAND %d received from Binder driver\n&quot;</span>, cmd);</span><br><span class="line">        result = UNKNOWN_ERROR;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>③ Binder其它线程 直接调用IPCThreadState::self()-&gt;joinThreadPool()将当前线程作为Binder主线程加入到Binder线程池中。</p>
+<p>joinThreadPool()永不退出、直到有错误发生。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">IPCThreadState::<span class="built_in">self</span>()-&gt;<span class="built_in">joinThreadPool</span>(); <span class="comment">//将当前线程当做Binder主线程添加到Binder</span></span><br></pre></td></tr></table></figure>
+
+<p>注意：Binde线程池的最大线程数，不会将Binder主线程统计在内，它限制的是Binder普通线程的个数。</p>
+
+    </div>
+
+    
+    
+    
+
+	<div>
+      
+          <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束 <i class="fa fa-paw"></i> 感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/09/21/Android%20Graphic%E7%9A%84%E7%90%86%E8%A7%A3/" rel="prev" title="Android Graphic的理解">
+                  <i class="fa fa-chevron-left"></i> Android Graphic的理解
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/11/09/android_binder/" rel="next" title="从bindService的流程来看Binder框架">
+                  从bindService的流程来看Binder框架 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  
+  <div class="comments giscus-container">
+  </div>
+  
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xifengcoder</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">405k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">6:09</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+<script class="next-config" data-name="giscus" type="application/json">{"enable":true,"repo":"xifengcoder/xifengcoder.github.io","repo_id":"MDEwOlJlcG9zaXRvcnk3MDk3Nzg4Ng==","category":"Announcements","category_id":"DIC_kwDOBDsJXs4Cfd9s","mapping":"pathname","strict":0,"reactions_enabled":1,"emit_metadata":0,"theme":"light","lang":"en","crossorigin":"anonymous","input_position":"bottom","loading":"lazy"}</script>
+
+<script>
+document.addEventListener('page:loaded', () => {
+  if (!CONFIG.page.comments) return;
+
+  NexT.utils.loadComments('.giscus-container')
+    .then(() => NexT.utils.getScript('https://giscus.app/client.js', {
+      attributes: {
+        async                   : true,
+        crossOrigin             : 'anonymous',
+        'data-repo'             : CONFIG.giscus.repo,
+        'data-repo-id'          : CONFIG.giscus.repo_id,
+        'data-category'         : CONFIG.giscus.category,
+        'data-category-id'      : CONFIG.giscus.category_id,
+        'data-mapping'          : CONFIG.giscus.mapping,
+        'data-strict'           : CONFIG.giscus.strict,
+        'data-reactions-enabled': CONFIG.giscus.reactions_enabled,
+        'data-emit-metadata'    : CONFIG.giscus.emit_metadata,
+        'data-theme'            : CONFIG.giscus.theme,
+        'data-lang'             : CONFIG.giscus.lang,
+        'data-input-position'   : CONFIG.giscus.input_position,
+        'data-loading'          : CONFIG.giscus.loading
+      },
+      parentNode: document.querySelector('.giscus-container')
+    }));
+});
+</script>
+
+</body>
+</html>
